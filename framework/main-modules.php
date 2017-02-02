@@ -20,6 +20,12 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 			'max_width',
 			'force_fullwidth',
 			'always_center_on_mobile',
+			'use_overlay',
+			'overlay_icon_color',
+			'hover_overlay_color',
+			'hover_icon',
+			'max_width_tablet',
+			'max_width_phone',
 		);
 
 		$this->fields_defaults = array(
@@ -30,6 +36,7 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 			'align'                   => array( 'left' ),
 			'force_fullwidth'         => array( 'off' ),
 			'always_center_on_mobile' => array( 'on' ),
+			'use_overlay'             => array( 'off' ),
 		);
 
 		$this->advanced_options = array(
@@ -58,7 +65,7 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 		$default_animation_direction = ET_Global_Settings::get_value( $animation_option_name );
 
 		// If user modifies default animation option via Customizer, we'll need to change the order
-		if ( 'left' !== $default_animation_direction && array_key_exists( $default_animation_direction, $animation_options_list ) ) {
+		if ( 'left' !== $default_animation_direction && ! empty( $default_animation_direction ) && array_key_exists( $default_animation_direction, $animation_options_list ) ) {
 			// The options, sans user's preferred direction
 			$animation_options_wo_default = $animation_options_list;
 			unset( $animation_options_wo_default[ $default_animation_direction ] );
@@ -106,6 +113,7 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				'affects'           => array(
 					'#et_pb_url',
 					'#et_pb_url_new_window',
+					'#et_pb_use_overlay'
 				),
 				'description'       => __( 'Here you can choose whether or not the image should open in Lightbox. Note: if you select to open the image in Lightbox, url options below will be ignored.', 'et_builder' ),
 			),
@@ -114,6 +122,9 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'depends_show_if' => 'off',
+				'affects'         => array(
+					'#et_pb_use_overlay',
+				),
 				'description'     => __( 'If you would like your image to be a link, input your destination URL here. No link will be created if this field is left blank.', 'et_builder' ),
 			),
 			'url_new_window' => array(
@@ -126,6 +137,46 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				),
 				'depends_show_if'   => 'off',
 				'description'       => __( 'Here you can choose whether or not your link opens in a new window', 'et_builder' ),
+			),
+			'use_overlay' => array(
+				'label'             => __( 'Image Overlay', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'layout',
+				'options'           => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_overlay_icon_color',
+					'#et_pb_hover_overlay_color',
+					'#et_pb_hover_icon',
+				),
+				'depends_default'   => true,
+				'description'       => __( 'If enabled, an overlay color and icon will be displayed when a visitors hovers over the image', 'et_builder' ),
+			),
+			'overlay_icon_color' => array(
+				'label'             => __( 'Overlay Icon Color', 'et_builder' ),
+				'type'              => 'color',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Here you can define a custom color for the overlay icon', 'et_builder' ),
+			),
+			'hover_overlay_color' => array(
+				'label'             => __( 'Hover Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Here you can define a custom color for the overlay', 'et_builder' ),
+			),
+			'hover_icon' => array(
+				'label'               => __( 'Hover Icon Picker', 'et_builder' ),
+				'type'                => 'text',
+				'option_category'     => 'configuration',
+				'class'               => array( 'et-pb-font-icon' ),
+				'renderer'            => 'et_pb_get_font_icon_list',
+				'renderer_with_field' => true,
+				'depends_show_if'     => 'on',
+				'description'       => __( 'Here you can define a custom icon for the overlay', 'et_builder' ),
 			),
 			'animation' => array(
 				'label'             => __( 'Animation', 'et_builder' ),
@@ -155,28 +206,12 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				),
 				'description'       => __( 'Here you can choose the image alignment.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'max_width' => array(
 				'label'           => __( 'Image Max Width', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
 			),
 			'force_fullwidth' => array(
@@ -199,6 +234,43 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 				),
 				'tab_slug'    => 'advanced',
 			),
+			'max_width_tablet' => array(
+				'type' => 'skip',
+			),
+			'max_width_phone' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
 		);
 
 		return $fields;
@@ -217,8 +289,14 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 		$sticky                  = $this->shortcode_atts['sticky'];
 		$align                   = $this->shortcode_atts['align'];
 		$max_width               = $this->shortcode_atts['max_width'];
+		$max_width_tablet        = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone         = $this->shortcode_atts['max_width_phone'];
 		$force_fullwidth         = $this->shortcode_atts['force_fullwidth'];
 		$always_center_on_mobile = $this->shortcode_atts['always_center_on_mobile'];
+		$overlay_icon_color      = $this->shortcode_atts['overlay_icon_color'];
+		$hover_overlay_color     = $this->shortcode_atts['hover_overlay_color'];
+		$hover_icon              = $this->shortcode_atts['hover_icon'];
+		$use_overlay             = $this->shortcode_atts['use_overlay'];
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
@@ -226,14 +304,17 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 			$module_class .= ' et_always_center_on_mobile';
 		}
 
-		if ( '' !== $max_width ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%',
-				'declaration' => sprintf(
-					'max-width: %1$s;',
-					esc_html( et_builder_process_range_value( $max_width ) )
-				),
-			) );
+		// overlay can be applied only if image has link or if lightbox enabled
+		$is_overlay_applied = 'on' === $use_overlay && ( 'on' === $show_in_lightbox || ( 'off' === $show_in_lightbox && '' !== $url ) ) ? 'on' : 'off';
+
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%%', 'max-width', $function_name );
 		}
 
 		if ( 'on' === $force_fullwidth ) {
@@ -263,11 +344,48 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 			) );
 		}
 
+		if ( 'on' === $is_overlay_applied ) {
+			if ( '' !== $overlay_icon_color ) {
+				ET_Builder_Element::set_style( $function_name, array(
+					'selector'    => '%%order_class%% .et_overlay:before',
+					'declaration' => sprintf(
+						'color: %1$s !important;',
+						esc_html( $overlay_icon_color )
+					),
+				) );
+			}
+
+			if ( '' !== $hover_overlay_color ) {
+				ET_Builder_Element::set_style( $function_name, array(
+					'selector'    => '%%order_class%% .et_overlay',
+					'declaration' => sprintf(
+						'background-color: %1$s;',
+						esc_html( $hover_overlay_color )
+					),
+				) );
+			}
+
+			$data_icon = '' !== $hover_icon
+				? sprintf(
+					' data-icon="%1$s"',
+					esc_attr( et_pb_process_font_icon( $hover_icon ) )
+				)
+				: '';
+
+			$overlay_output = sprintf(
+				'<span class="et_overlay%1$s"%2$s></span>',
+				( '' !== $hover_icon ? ' et_pb_inline_icon' : '' ),
+				$data_icon
+			);
+		}
+
 		$output = sprintf(
-			'<img src="%1$s" alt="%2$s"%3$s />',
+			'<img src="%1$s" alt="%2$s"%3$s />
+			%4$s',
 			esc_attr( $src ),
 			esc_attr( $alt ),
-			( '' !== $title_text ? sprintf( ' title="%1$s"', esc_attr( $title_text ) ) : '' )
+			( '' !== $title_text ? sprintf( ' title="%1$s"', esc_attr( $title_text ) ) : '' ),
+			'on' === $is_overlay_applied ? $overlay_output : ''
 		);
 
 		if ( 'on' === $show_in_lightbox ) {
@@ -287,14 +405,15 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 		$animation = '' === $animation ? ET_Global_Settings::get_value( 'et_pb_image-animation' ) : $animation;
 
 		$output = sprintf(
-			'<div%5$s class="et_pb_module et-waypoint et_pb_image%2$s%3$s%4$s">
+			'<div%5$s class="et_pb_module et-waypoint et_pb_image%2$s%3$s%4$s%6$s">
 				%1$s
 			</div>',
 			$output,
 			esc_attr( " et_pb_animation_{$animation}" ),
 			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( ltrim( $module_class ) ) ) : '' ),
 			( 'on' === $sticky ? esc_attr( ' et_pb_image_sticky' ) : '' ),
-			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' )
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			'on' === $is_overlay_applied ? ' et_pb_has_overlay' : ''
 		);
 
 		return $output;
@@ -383,6 +502,18 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 			'gallery_item_title' => array(
 				'label'    => __( 'Gallery Item Title', 'et_builder' ),
 				'selector' => '.et_pb_gallery_title',
+			),
+			'gallery_item_caption' => array(
+				'label'    => __( 'Gallery Item Caption', 'et_builder' ),
+				'selector' => '.et_pb_gallery_caption',
+			),
+			'gallery_pagination' => array(
+				'label'    => __( 'Gallery Pagination', 'et_builder' ),
+				'selector' => '.et_pb_gallery_pagination',
+			),
+			'gallery_pagination_active' => array(
+				'label'    => __( 'Pagination Active Page', 'et_builder' ),
+				'selector' => '.et_pb_gallery_pagination a.active',
 			),
 		);
 	}
@@ -480,23 +611,6 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'depends_default'   => true,
 				'description'       => __( "Here you can designate how fast the slider fades between each slide, if 'Automatic Animation' option is enabled above. The higher the number the longer the pause between each rotation.", 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'zoom_icon_color' => array(
 				'label'             => __( 'Zoom Icon Color', 'et_builder' ),
 				'type'              => 'color',
@@ -519,6 +633,37 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'renderer'            => 'et_pb_get_font_icon_list',
 				'renderer_with_field' => true,
 				'tab_slug'            => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 
@@ -744,6 +889,18 @@ class ET_Builder_Module_Video extends ET_Builder_Module {
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -753,13 +910,15 @@ class ET_Builder_Module_Video extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 
 		);
@@ -873,6 +1032,10 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				'label'    => __( 'Thumbnail Item', 'et_builder' ),
 				'selector' => '.et_pb_carousel_item',
 			),
+			'arrows' => array(
+				'label'    => __( 'Slider Arrows', 'et_builder' ),
+				'selector' => '.et-pb-slider-arrows a',
+			),
 		);
 	}
 
@@ -918,23 +1081,6 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				),
 				'description'       => __( 'This setting will make your slider controls either light or dark in color. Slider controls are either the arrows on the thumbnail track or the circles in dot navigation.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'play_icon_color' => array(
 				'label'             => __( 'Play Icon Color', 'et_builder' ),
 				'type'              => 'color',
@@ -946,6 +1092,37 @@ class ET_Builder_Module_Video_Slider extends ET_Builder_Module {
 				'type'              => 'color-alpha',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -1195,6 +1372,8 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 			'module_id',
 			'module_class',
 			'max_width',
+			'max_width_tablet',
+			'max_width_phone',
 		);
 
 		$this->fields_defaults = array(
@@ -1251,6 +1430,32 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Here you can create the content that will be used within the module.', 'et_builder' ),
 			),
+			'max_width' => array(
+				'label'           => __( 'Max Width', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'mobile_options'  => true,
+				'tab_slug'        => 'advanced',
+				'validate_unit'   => true,
+			),
+			'max_width_tablet' => array(
+				'type' => 'skip',
+			),
+			'max_width_phone' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -1260,20 +1465,15 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
-			'max_width' => array(
-				'label'           => __( 'Max Width', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'layout',
-				'tab_slug'        => 'advanced',
-				'validate_unit'   => true,
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -1285,19 +1485,21 @@ class ET_Builder_Module_Text extends ET_Builder_Module {
 		$background_layout    = $this->shortcode_atts['background_layout'];
 		$text_orientation     = $this->shortcode_atts['text_orientation'];
 		$max_width            = $this->shortcode_atts['max_width'];
+		$max_width_tablet     = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone      = $this->shortcode_atts['max_width_phone'];
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
 		$this->shortcode_content = et_builder_replace_code_content_entities( $this->shortcode_content );
 
-		if ( '' !== $max_width ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%',
-				'declaration' => sprintf(
-					'max-width: %1$s;',
-					esc_html( et_builder_process_range_value( $max_width ) )
-				),
-			) );
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%%', 'max-width', $function_name );
 		}
 
 		if ( is_rtl() && 'left' === $text_orientation ) {
@@ -1351,6 +1553,10 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 			'max_width',
 			'use_icon_font_size',
 			'icon_font_size',
+			'max_width_tablet',
+			'max_width_phone',
+			'icon_font_size_tablet',
+			'icon_font_size_phone',
 		);
 
 		$et_accent_color = et_builder_accent_color();
@@ -1583,28 +1789,12 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'option_category'   => 'basic_option',
 				'description'       => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'             => __( 'Admin Label', 'et_builder' ),
-				'type'              => 'text',
-				'description'       => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'             => __( 'CSS ID', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'             => __( 'CSS Class', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'max_width' => array(
 				'label'           => __( 'Image Max Width', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
 			),
 			'use_icon_font_size' => array(
@@ -1625,7 +1815,57 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 				'type'            => 'range',
 				'option_category' => 'font_option',
 				'tab_slug'        => 'advanced',
+				'default'         => '96px',
+				'range_settings' => array(
+					'min'  => '1',
+					'max'  => '120',
+					'step' => '1',
+				),
+				'mobile_options'  => true,
 				'depends_default' => true,
+			),
+			'max_width_tablet' => array (
+				'type' => 'skip',
+			),
+			'max_width_phone' => array (
+				'type' => 'skip',
+			),
+			'icon_font_size_tablet' => array(
+				'type' => 'skip',
+			),
+			'icon_font_size_phone' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -1651,29 +1891,33 @@ class ET_Builder_Module_Blurb extends ET_Builder_Module {
 		$circle_color          = $this->shortcode_atts['circle_color'];
 		$circle_border_color   = $this->shortcode_atts['circle_border_color'];
 		$max_width             = $this->shortcode_atts['max_width'];
+		$max_width_tablet      = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone       = $this->shortcode_atts['max_width_phone'];
 		$use_icon_font_size    = $this->shortcode_atts['use_icon_font_size'];
 		$icon_font_size        = $this->shortcode_atts['icon_font_size'];
+		$icon_font_size_tablet = $this->shortcode_atts['icon_font_size_tablet'];
+		$icon_font_size_phone  = $this->shortcode_atts['icon_font_size_phone'];
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
 		if ( 'off' !== $use_icon_font_size ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et-pb-icon',
-				'declaration' => sprintf(
-					'font-size: %1$s;',
-					esc_html( et_builder_process_range_value( $icon_font_size ) )
-				),
-			) );
+			$font_size_values = array(
+				'desktop' => $icon_font_size,
+				'tablet'  => $icon_font_size_tablet,
+				'phone'   => $icon_font_size_phone,
+			);
+
+			et_pb_generate_responsive_css( $font_size_values, '%%order_class%% .et-pb-icon', 'font-size', $function_name );
 		}
 
-		if ( '' !== $max_width ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_main_blurb_image img',
-				'declaration' => sprintf(
-					'max-width: %1$s;',
-					esc_html( et_builder_process_range_value( $max_width ) )
-				),
-			) );
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%% .et_pb_main_blurb_image img', 'max-width', $function_name );
 		}
 
 		if ( is_rtl() && 'left' === $text_orientation ) {
@@ -1821,28 +2065,15 @@ class ET_Builder_Module_Tabs extends ET_Builder_Module {
 				'label'    => __( 'Active Tab', 'et_builder' ),
 				'selector' => '.et_pb_tabs_controls li.et_pb_tab_active',
 			),
+			'tabs_content' => array(
+				'label'    => __( 'Tabs Content', 'et_builder' ),
+				'selector' => '.et_pb_all_tabs',
+			),
 		);
 	}
 
 	function get_fields() {
 		$fields = array(
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'active_tab_background_color' => array(
 				'label'             => __( 'Active Tab Background Color', 'et_builder' ),
 				'type'              => 'color-alpha',
@@ -1854,6 +2085,37 @@ class ET_Builder_Module_Tabs extends ET_Builder_Module {
 				'type'              => 'color-alpha',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -2055,6 +2317,10 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 			'hide_content_on_mobile',
 			'hide_cta_on_mobile',
 			'show_image_video_mobile',
+			'top_padding_tablet',
+			'top_padding_phone',
+			'bottom_padding_tablet',
+			'bottom_padding_phone',
 		);
 
 		$this->fields_defaults = array(
@@ -2117,6 +2383,14 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'label'    => __( 'Slide Active Controller', 'et_builder' ),
 				'selector' => '.et-pb-controllers .et-pb-active-control',
 			),
+			'slide_image' => array(
+				'label'    => __( 'Slide Image', 'et_builder' ),
+				'selector' => '.et_pb_slide_image',
+			),
+			'slide_arrows' => array(
+				'label'    => __( 'Slide Arrows', 'et_builder' ),
+				'selector' => '.et-pb-slider-arrows a',
+			),
 		);
 	}
 
@@ -2133,12 +2407,12 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'description'     => __( 'This setting will turn on and off the navigation arrows.', 'et_builder' ),
 			),
 			'show_pagination' => array(
-				'label'             => __( 'Controls', 'et_builder' ),
-				'type'              => 'select',
+				'label'             => __( 'Show Controls', 'et_builder' ),
+				'type'              => 'yes_no_button',
 				'option_category'   => 'configuration',
 				'options'           => array(
-					'on'  => __( 'Show Slider Controls', 'et_builder' ),
-					'off' => __( 'Hide Slider Controls', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
 				),
 				'description'       => __( 'This setting will turn on and off the circle buttons at the bottom of the slider.', 'et_builder' ),
 			),
@@ -2236,28 +2510,12 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				),
 				'depends_show_if'   => 'off',
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'top_padding' => array(
 				'label'           => __( 'Top Padding', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
 			),
 			'bottom_padding' => array(
@@ -2265,6 +2523,7 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
 			),
 			'hide_content_on_mobile' => array(
@@ -2297,6 +2556,49 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 				),
 				'tab_slug'        => 'advanced',
 			),
+			'top_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'top_padding_phone' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
 		);
 		return $fields;
 	}
@@ -2306,8 +2608,8 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 
 		$et_pb_slider_item_num = 0;
 
-		$parallax        = $this->shortcode_atts['parallax'];
-		$parallax_method = $this->shortcode_atts['parallax_method'];
+		$parallax                = $this->shortcode_atts['parallax'];
+		$parallax_method         = $this->shortcode_atts['parallax_method'];
 		$hide_content_on_mobile  = $this->shortcode_atts['hide_content_on_mobile'];
 		$hide_cta_on_mobile      = $this->shortcode_atts['hide_cta_on_mobile'];
 		$button_custom           = $this->shortcode_atts['custom_button'];
@@ -2341,6 +2643,10 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 		$top_padding             = $this->shortcode_atts['top_padding'];
 		$body_font_size 		 = $this->shortcode_atts['body_font_size'];
 		$bottom_padding          = $this->shortcode_atts['bottom_padding'];
+		$top_padding_tablet      = $this->shortcode_atts['top_padding_tablet'];
+		$top_padding_phone       = $this->shortcode_atts['top_padding_phone'];
+		$bottom_padding_tablet   = $this->shortcode_atts['bottom_padding_tablet'];
+		$bottom_padding_phone    = $this->shortcode_atts['bottom_padding_phone'];
 		$remove_inner_shadow     = $this->shortcode_atts['remove_inner_shadow'];
 		$hide_content_on_mobile  = $this->shortcode_atts['hide_content_on_mobile'];
 		$hide_cta_on_mobile      = $this->shortcode_atts['hide_cta_on_mobile'];
@@ -2354,24 +2660,24 @@ class ET_Builder_Module_Slider extends ET_Builder_Module {
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
-		if ( '' !== $top_padding ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description',
-				'declaration' => sprintf(
-					'padding-top: %1$s;',
-					esc_html( et_builder_process_range_value( $top_padding ) )
-				),
-			) );
+		if ( '' !== $top_padding || '' !== $top_padding_tablet || '' !== $top_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $top_padding,
+				'tablet'  => $top_padding_tablet,
+				'phone'   => $top_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description', 'padding-top', $function_name );
 		}
 
-		if ( '' !== $bottom_padding ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description',
-				'declaration' => sprintf(
-					'padding-bottom: %1$s;',
-					esc_html( et_builder_process_range_value( $bottom_padding ) )
-				),
-			) );
+		if ( '' !== $bottom_padding || '' !== $bottom_padding_tablet || '' !== $bottom_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $bottom_padding,
+				'tablet'  => $bottom_padding_tablet,
+				'phone'   => $bottom_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description', 'padding-bottom', $function_name );
 		}
 
 		if ( '' !== $bottom_padding || '' !== $top_padding ) {
@@ -2466,6 +2772,11 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			'content_new',
 			'arrows_custom_color',
 			'dot_nav_custom_color',
+			'use_bg_overlay',
+			'use_text_overlay',
+			'bg_overlay_color',
+			'text_overlay_color',
+			'text_border_radius',
 		);
 
 		$this->fields_defaults = array(
@@ -2493,7 +2804,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 						'range_settings' => array(
 							'min'  => '1',
 							'max'  => '100',
-							'step' => '1',
+							'step' => '0.1',
 						),
 					),
 				),
@@ -2508,7 +2819,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 						'range_settings' => array(
 							'min'  => '1',
 							'max'  => '100',
-							'step' => '1',
+							'step' => '0.1',
 						),
 					),
 				),
@@ -2535,6 +2846,10 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			'slide_button' => array(
 				'label'    => __( 'Slide Button', 'et_builder' ),
 				'selector' => 'a.et_pb_more_button',
+			),
+			'slide_image' => array(
+				'label'    => __( 'Slide Image', 'et_builder' ),
+				'selector' => '.et_pb_slide_image',
 			),
 		);
 	}
@@ -2609,6 +2924,46 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'choose_text'        => __( 'Choose a Slide Image', 'et_builder' ),
 				'update_text'        => __( 'Set As Slide Image', 'et_builder' ),
 				'description'        => __( 'If defined, this slide image will appear to the left of your slide text. Upload an image, or leave blank for a text-only slide.', 'et_builder' ),
+			),
+			'use_bg_overlay'      => array(
+				'label'           => __( 'Use Background Overlay', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'no', 'et_builder' ),
+					'on'  => __( 'yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_bg_overlay_color',
+				),
+				'description'     => __( 'When enabled, a custom overlay color will be added above your background image and behind your slider content.', 'et_builder' ),
+			),
+			'bg_overlay_color' => array(
+				'label'             => __( 'Background Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Use the color picker to choose a color for the background overlay.', 'et_builder' ),
+			),
+			'use_text_overlay'      => array(
+				'label'           => __( 'Use Text Overlay', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'no', 'et_builder' ),
+					'on'  => __( 'yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_text_overlay_color',
+				),
+				'description'     => __( 'When enabled, a background color is added behind the slider text to make it more readable atop background images.', 'et_builder' ),
+			),
+			'text_overlay_color' => array(
+				'label'             => __( 'Text Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Use the color picker to choose a color for the text overlay.', 'et_builder' ),
 			),
 			'alignment' => array(
 				'label'           => __( 'Slide Image Vertical Alignment', 'et_builder' ),
@@ -2707,6 +3062,18 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 				'type'        => 'text',
 				'description' => __( 'This will change the label of the slide in the builder for easy identification.', 'et_builder' ),
 			),
+			'text_border_radius' => array(
+				'label'           => __( 'Text Overlay Border Radius', 'et_builder' ),
+				'type'            => 'range',
+				'option_category' => 'layout',
+				'default'         => '3',
+				'range_settings'  => array(
+					'min'  => '0',
+					'max'  => '100',
+					'step' => '1',
+				),
+				'tab_slug'        => 'advanced',
+			),
 		);
 		return $fields;
 	}
@@ -2733,6 +3100,11 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		$button_custom        = $this->shortcode_atts['custom_button'];
 		$background_position  = $this->shortcode_atts['background_position'];
 		$background_size      = $this->shortcode_atts['background_size'];
+		$use_bg_overlay       = $this->shortcode_atts['use_bg_overlay'];
+		$bg_overlay_color     = $this->shortcode_atts['bg_overlay_color'];
+		$use_text_overlay     = $this->shortcode_atts['use_text_overlay'];
+		$text_overlay_color   = $this->shortcode_atts['text_overlay_color'];
+		$text_border_radius   = $this->shortcode_atts['text_border_radius'];
 
 		global $et_pb_slider_has_video, $et_pb_slider_parallax, $et_pb_slider_parallax_method, $et_pb_slider_hide_mobile, $et_pb_slider_custom_icon, $et_pb_slider_item_num;
 
@@ -2814,6 +3186,54 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			);
 		}
 
+		if ( 'on' === $use_bg_overlay && '' !== $bg_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slide .et_pb_slide_overlay_container',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $bg_overlay_color )
+				),
+			) );
+		}
+
+		if ( 'on' === $use_text_overlay && '' !== $text_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slide .et_pb_slide_title, %%order_class%%.et_pb_slide .et_pb_slide_content',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $text_overlay_color )
+				),
+			) );
+		}
+
+		if ( '' !== $text_border_radius ) {
+			$border_radius_value = et_builder_process_range_value( $text_border_radius );
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slider_with_text_overlay h2.et_pb_slide_title',
+				'declaration' => sprintf(
+					'-webkit-border-top-left-radius: %1$s;
+					-webkit-border-top-right-radius: %1$s;
+					-moz-border-radius-topleft: %1$s;
+					-moz-border-radius-topright: %1$s;
+					border-top-left-radius: %1$s;
+					border-top-right-radius: %1$s;',
+					esc_html( $border_radius_value )
+				),
+			) );
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slider_with_text_overlay .et_pb_slide_content',
+				'declaration' => sprintf(
+					'-webkit-border-bottom-right-radius: %1$s;
+					-webkit-border-bottom-left-radius: %1$s;
+					-moz-border-radius-bottomright: %1$s;
+					-moz-border-radius-bottomleft: %1$s;
+					border-bottom-right-radius: %1$s;
+					border-bottom-left-radius: %1$s;',
+					esc_html( $border_radius_value )
+				),
+			) );
+		}
+
 		$style = '' !== $style ? " style='{$style}'" : '';
 
 		$image = '' !== $image
@@ -2841,6 +3261,9 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		if ( '' !== $video_url ) $class .= ' et_pb_slide_with_video';
 
 		$class .= " et_pb_bg_layout_{$background_layout}";
+
+		$class .= 'on' === $use_bg_overlay ? ' et_pb_slider_with_overlay' : '';
+		$class .= 'on' === $use_text_overlay ? ' et_pb_slider_with_text_overlay' : '';
 
 		if ( 'bottom' !== $alignment ) {
 			$class .= " et_pb_media_alignment_{$alignment}";
@@ -2887,6 +3310,7 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 		$output = sprintf(
 			'<div class="et_pb_slide%6$s"%4$s%10$s%11$s>
 				%8$s
+				%12$s
 				<div class="et_pb_container clearfix">
 					%5$s
 					<div class="et_pb_slide_description">
@@ -2908,13 +3332,916 @@ class ET_Builder_Module_Slider_Item extends ET_Builder_Module {
 			( '' !== $background_image && 'on' === $et_pb_slider_parallax ? sprintf( '<div class="et_parallax_bg%2$s" style="background-image: url(%1$s);"></div>', esc_attr( $background_image ), ( 'off' === $et_pb_slider_parallax_method ? ' et_pb_parallax_css' : '' ) ) : '' ),
 			( 'on' === $et_pb_slider_hide_mobile['hide_content_on_mobile'] ? esc_attr( " {$hide_on_mobile_class}" ) : '' ),
 			$data_dot_nav_custom_color,
-			$data_arrows_custom_color
+			$data_arrows_custom_color,
+			'on' === $use_bg_overlay ? '<div class="et_pb_slide_overlay_container"></div>' : ''
 		);
 
 		return $output;
 	}
 }
 new ET_Builder_Module_Slider_Item;
+
+
+class ET_Builder_Module_Post_Slider extends ET_Builder_Module {
+	function init() {
+		$this->name = __( 'Post Slider', 'et_builder' );
+		$this->slug = 'et_pb_post_slider';
+
+		// need to use global settings from the slider module
+		$this->global_settings_slug = 'et_pb_slider';
+
+		$this->whitelisted_fields = array(
+			'show_arrows',
+			'show_pagination',
+			'auto',
+			'auto_speed',
+			'auto_ignore_hover',
+			'parallax',
+			'parallax_method',
+			'remove_inner_shadow',
+			'background_position',
+			'background_size',
+			'admin_label',
+			'module_id',
+			'module_class',
+			'top_padding',
+			'bottom_padding',
+			'hide_content_on_mobile',
+			'hide_cta_on_mobile',
+			'show_image_video_mobile',
+			'include_categories',
+			'posts_number',
+			'show_more_button',
+			'more_text',
+			'content_source',
+			'background_color',
+			'show_image',
+			'image_placement',
+			'background_image',
+			'background_layout',
+			'use_bg_overlay',
+			'use_text_overlay',
+			'bg_overlay_color',
+			'text_overlay_color',
+			'orderby',
+			'show_meta',
+			'use_manual_excerpt',
+			'excerpt_length',
+			'text_border_radius',
+			'arrows_custom_color',
+			'dot_nav_custom_color',
+			'top_padding_tablet',
+			'top_padding_phone',
+			'bottom_padding_tablet',
+			'bottom_padding_phone',
+		);
+
+		$this->fields_defaults = array(
+			'show_arrows'             => array( 'on' ),
+			'show_pagination'         => array( 'on' ),
+			'auto'                    => array( 'off' ),
+			'auto_speed'              => array( '7000' ),
+			'auto_ignore_hover'       => array( 'off' ),
+			'parallax'                => array( 'off' ),
+			'parallax_method'         => array( 'off' ),
+			'remove_inner_shadow'     => array( 'off' ),
+			'background_position'     => array( 'default' ),
+			'background_size'         => array( 'default' ),
+			'hide_content_on_mobile'  => array( 'off' ),
+			'hide_cta_on_mobile'      => array( 'off' ),
+			'show_image_video_mobile' => array( 'off' ),
+			'more_text'               => array( 'Read More' ),
+			'background_color'        => array( '' ),
+			'image_placement'         => array( 'background' ),
+			'background_layout'       => array( 'dark' ),
+			'orderby'                 => array( 'date_desc' ),
+			'excerpt_length'          => array( '270' ),
+			'use_bg_overlay'          => array( 'on' ),
+		);
+
+		$this->main_css_element = '%%order_class%%.et_pb_slider';
+		$this->advanced_options = array(
+			'fonts' => array(
+				'header' => array(
+					'label'    => __( 'Header', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} .et_pb_slide_description .et_pb_slide_title",
+					),
+				),
+				'body'   => array(
+					'label'    => __( 'Body', 'et_builder' ),
+					'css'      => array(
+						'line_height' => "{$this->main_css_element}",
+						'main' => "{$this->main_css_element} .et_pb_slide_content",
+						'important' => 'all',
+					),
+				),
+				'meta'   => array(
+					'label'    => __( 'Meta', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} .et_pb_slide_content .post-meta, {$this->main_css_element} .et_pb_slide_content .post-meta a",
+						'important' => 'all',
+					),
+					'line_height' => array(
+						'default' => '1em',
+					),
+					'font_size' => array(
+						'default' => '16px',
+					),
+					'letter_spacing' => array(
+						'default' => '0',
+					),
+				),
+			),
+			'button' => array(
+				'button' => array(
+					'label' => __( 'Button', 'et_builder' ),
+				),
+			),
+		);
+		$this->custom_css_options = array(
+			'slide_description' => array(
+				'label'    => __( 'Slide Description', 'et_builder' ),
+				'selector' => '.et_pb_slide_description',
+			),
+			'slide_title' => array(
+				'label'    => __( 'Slide Title', 'et_builder' ),
+				'selector' => '.et_pb_slide_description .et_pb_slide_title',
+			),
+			'slide_button' => array(
+				'label'    => __( 'Slide Button', 'et_builder' ),
+				'selector' => 'a.et_pb_more_button',
+			),
+			'slide_controllers' => array(
+				'label'    => __( 'Slide Controllers', 'et_builder' ),
+				'selector' => '.et-pb-controllers',
+			),
+			'slide_active_controller' => array(
+				'label'    => __( 'Slide Active Controller', 'et_builder' ),
+				'selector' => '.et-pb-controllers .et-pb-active-control',
+			),
+			'slide_image' => array(
+				'label'    => __( 'Slide Image', 'et_builder' ),
+				'selector' => '.et_pb_slide_image',
+			),
+			'slide_arrows' => array(
+				'label'    => __( 'Slide Arrows', 'et_builder' ),
+				'selector' => '.et-pb-slider-arrows a',
+			),
+		);
+	}
+
+	function get_fields() {
+		$fields = array(
+			'posts_number' => array(
+				'label'             => __( 'Posts Number', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'description'       => __( 'Choose how many posts you would like to display in the slider.', 'et_builder' ),
+			),
+			'include_categories' => array(
+				'label'            => __( 'Include Categories', 'et_builder' ),
+				'renderer'         => 'et_builder_include_categories_option',
+				'option_category'  => 'basic_option',
+				'renderer_options' => array(
+					'use_terms' => false,
+				),
+				'description'      => __( 'Choose which categories you would like to include in the slider.', 'et_builder' ),
+			),
+			'orderby' => array(
+				'label'             => __( 'Order By', 'et_builder' ),
+				'type'              => 'select',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'date_desc'  => __( 'Date: new to old', 'et_builder' ),
+					'date_asc'   => __( 'Date: old to new', 'et_builder' ),
+					'title_asc'  => __( 'Title: a-z', 'et_builder' ),
+					'title_desc' => __( 'Title: z-a', 'et_builder' ),
+					'rand'       => __( 'Random', 'et_builder' ),
+				),
+				'description'       => __( 'Here you can adjust the order in which posts are displayed.', 'et_builder' ),
+			),
+			'show_arrows'         => array(
+				'label'           => __( 'Show Arrows', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'description'     => __( 'This setting will turn on and off the navigation arrows.', 'et_builder' ),
+			),
+			'show_pagination' => array(
+				'label'             => __( 'Show Controls', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+				'description'       => __( 'This setting will turn on and off the circle buttons at the bottom of the slider.', 'et_builder' ),
+			),
+			'show_more_button' => array(
+				'label'             => __( 'Show Read More Button', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_more_text',
+				),
+				'description'       => __( 'This setting will turn on and off the read more button.', 'et_builder' ),
+			),
+			'more_text' => array(
+				'label'             => __( 'Button Text', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Define the text which will be displayed on "Read More" button. leave blank for default ( Read More )', 'et_builder' ),
+			),
+			'content_source' => array(
+				'label'             => __( 'Content Display', 'et_builder' ),
+				'type'              => 'select',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'off' => __( 'Show Excerpt', 'et_builder' ),
+					'on'  => __( 'Show Content', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_use_manual_excerpt',
+					'#et_pb_excerpt_length',
+				),
+				'description'       => __( 'Showing the full content will not truncate your posts in the slider. Showing the excerpt will only display excerpt text.', 'et_builder' ),
+			),
+			'use_manual_excerpt' => array(
+				'label'             => __( 'Use Post Excerpt if Defined', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+				'depends_show_if'   => 'off',
+				'description'       => __( 'Disable this option if you want to ignore manually defined excerpts and always generate it automatically.', 'et_builder' ),
+			),
+			'excerpt_length' => array(
+				'label'             => __( 'Automatic Excerpt Length', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'depends_show_if'   => 'off',
+				'description'       => __( 'Define the length of automatically generated excerpts. Leave blank for default ( 270 ) ', 'et_builder' ),
+			),
+			'show_meta' => array(
+				'label'           => __( 'Show Post Meta', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'description'     => __( 'This setting will turn on and off the meta section.', 'et_builder' ),
+			),
+			'background_color' => array(
+				'label'        => __( 'Background Color', 'et_builder' ),
+				'type'         => 'color-alpha',
+				'custom_color' => true,
+				'description'  => __( 'Use the color picker to choose a background color for this module.', 'et_builder' ),
+			),
+			'background_image' => array(
+				'label'              => __( 'Background Image', 'et_builder' ),
+				'type'               => 'upload',
+				'option_category'    => 'basic_option',
+				'upload_button_text' => __( 'Upload an image', 'et_builder' ),
+				'choose_text'        => __( 'Choose a Background', 'et_builder' ),
+				'update_text'        => __( 'Set As Background', 'et_builder' ),
+				'description'        => __( 'Upload your desired image, or type in the URL to the image you would like to use as the background for the slider.', 'et_builder' ),
+			),
+			'background_layout' => array(
+				'label'           => __( 'Text Color', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'color_option',
+				'options'         => array(
+					'dark'  => __( 'Light', 'et_builder' ),
+					'light' => __( 'Dark', 'et_builder' ),
+				),
+				'description'     => __( 'Here you can choose whether your text is light or dark. If you have a slide with a dark background, then choose light text. If you have a light background, then use dark text.' , 'et_builder' ),
+			),
+			'show_image' => array(
+				'label'             => __( 'Show Featured Image', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_image_placement',
+				),
+				'description'       => __( 'This setting will turn on and off the featured image in the slider.', 'et_builder' ),
+			),
+			'image_placement' => array(
+				'label'             => __( 'Image Placement', 'et_builder' ),
+				'type'              => 'select',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'background' => __( 'Background', 'et_builder' ),
+					'left'       => __( 'Left', 'et_builder' ),
+					'right'      => __( 'Right', 'et_builder' ),
+					'top'        => __( 'Top', 'et_builder' ),
+					'bottom'     => __( 'Bottom', 'et_builder' ),
+				),
+				'depends_show_if'   => 'on',
+				'affects' => array(
+					'#et_pb_parallax',
+				),
+				'description'       => __( 'Select how you would like to display the featured image in slides', 'et_builder' ),
+			),
+			'parallax' => array(
+				'label'           => __( 'Use Parallax effect', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_parallax_method',
+					'#et_pb_background_position',
+					'#et_pb_background_size',
+				),
+				'depends_show_if'    => 'background',
+				'description'        => __( 'Enabling this option will give your background images a fixed position as you scroll.', 'et_builder' ),
+			),
+			'parallax_method' => array(
+				'label'           => __( 'Parallax method', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'CSS', 'et_builder' ),
+					'on'  => __( 'True Parallax', 'et_builder' ),
+				),
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Define the method, used for the parallax effect.', 'et_builder' ),
+			),
+			'use_bg_overlay'      => array(
+				'label'           => __( 'Use Background Overlay', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_bg_overlay_color',
+				),
+				'description'     => __( 'When enabled, a custom overlay color will be added above your background image and behind your slider content.', 'et_builder' ),
+			),
+			'bg_overlay_color' => array(
+				'label'             => __( 'Background Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Use the color picker to choose a color for the background overlay.', 'et_builder' ),
+			),
+			'use_text_overlay'      => array(
+				'label'           => __( 'Use Text Overlay', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'no', 'et_builder' ),
+					'on'  => __( 'yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_text_overlay_color',
+				),
+				'description'     => __( 'When enabled, a background color is added behind the slider text to make it more readable atop background images.', 'et_builder' ),
+			),
+			'text_overlay_color' => array(
+				'label'             => __( 'Text Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Use the color picker to choose a color for the text overlay.', 'et_builder' ),
+			),
+			'remove_inner_shadow' => array(
+				'label'           => __( 'Remove Inner Shadow', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+			),
+			'background_position' => array(
+				'label'           => __( 'Background Image Position', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'layout',
+				'options' => array(
+					'default'       => __( 'Default', 'et_builder' ),
+					'top_left'      => __( 'Top Left', 'et_builder' ),
+					'top_center'    => __( 'Top Center', 'et_builder' ),
+					'top_right'     => __( 'Top Right', 'et_builder' ),
+					'center_right'  => __( 'Center Right', 'et_builder' ),
+					'center_left'   => __( 'Center Left', 'et_builder' ),
+					'bottom_left'   => __( 'Bottom Left', 'et_builder' ),
+					'bottom_center' => __( 'Bottom Center', 'et_builder' ),
+					'bottom_right'  => __( 'Bottom Right', 'et_builder' ),
+				),
+				'depends_show_if'   => 'off',
+			),
+			'background_size' => array(
+				'label'           => __( 'Background Image Size', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'layout',
+				'options'         => array(
+					'default' => __( 'Default', 'et_builder' ),
+					'contain' => __( 'Fit', 'et_builder' ),
+					'initial' => __( 'Actual Size', 'et_builder' ),
+				),
+				'depends_show_if'   => 'off',
+			),
+			'auto' => array(
+				'label'           => __( 'Automatic Animation', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_auto_speed, #et_pb_auto_ignore_hover',
+				),
+				'description'        => __( 'If you would like the slider to slide automatically, without the visitor having to click the next button, enable this option and then adjust the rotation speed below if desired.', 'et_builder' ),
+			),
+			'auto_speed' => array(
+				'label'             => __( 'Automatic Animation Speed (in ms)', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'depends_default'   => true,
+				'description'       => __( "Here you can designate how fast the slider fades between each slide, if 'Automatic Animation' option is enabled above. The higher the number the longer the pause between each rotation.", 'et_builder' ),
+			),
+			'auto_ignore_hover' => array(
+				'label'           => __( 'Continue Automatic Slide on Hover', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'depends_default' => true,
+				'options'         => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'description' => __( 'Turning this on will allow automatic sliding to continue on mouse hover.', 'et_builder' ),
+			),
+			'top_padding' => array(
+				'label'           => __( 'Top Padding', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'bottom_padding' => array(
+				'label'           => __( 'Bottom Padding', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'hide_content_on_mobile' => array(
+				'label'           => __( 'Hide Content On Mobile', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'tab_slug'          => 'advanced',
+			),
+			'hide_cta_on_mobile' => array(
+				'label'           => __( 'Hide CTA On Mobile', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'tab_slug'          => 'advanced',
+			),
+			'show_image_video_mobile' => array(
+				'label'           => __( 'Show Image On Mobile', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'tab_slug'        => 'advanced',
+			),
+			'text_border_radius' => array(
+				'label'           => __( 'Text Overlay Border Radius', 'et_builder' ),
+				'type'            => 'range',
+				'option_category' => 'layout',
+				'default'         => '3',
+				'range_settings'  => array(
+					'min'  => '0',
+					'max'  => '100',
+					'step' => '1',
+				),
+				'tab_slug'        => 'advanced',
+			),
+			'arrows_custom_color' => array(
+				'label'        => __( 'Arrows Custom Color', 'et_builder' ),
+				'type'         => 'color',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'dot_nav_custom_color' => array(
+				'label'        => __( 'Dot Nav Custom Color', 'et_builder' ),
+				'type'         => 'color',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'top_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'top_padding_phone' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_phone' => array(
+				'type' => 'skip',
+			),
+		);
+		return $fields;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$module_id               = $this->shortcode_atts['module_id'];
+		$module_class            = $this->shortcode_atts['module_class'];
+		$show_arrows             = $this->shortcode_atts['show_arrows'];
+		$show_pagination         = $this->shortcode_atts['show_pagination'];
+		$parallax                = $this->shortcode_atts['parallax'];
+		$parallax_method         = $this->shortcode_atts['parallax_method'];
+		$auto                    = $this->shortcode_atts['auto'];
+		$auto_speed              = $this->shortcode_atts['auto_speed'];
+		$auto_ignore_hover       = $this->shortcode_atts['auto_ignore_hover'];
+		$top_padding             = $this->shortcode_atts['top_padding'];
+		$body_font_size          = $this->shortcode_atts['body_font_size'];
+		$bottom_padding          = $this->shortcode_atts['bottom_padding'];
+		$remove_inner_shadow     = $this->shortcode_atts['remove_inner_shadow'];
+		$hide_content_on_mobile  = $this->shortcode_atts['hide_content_on_mobile'];
+		$hide_cta_on_mobile      = $this->shortcode_atts['hide_cta_on_mobile'];
+		$show_image_video_mobile = $this->shortcode_atts['show_image_video_mobile'];
+		$background_position     = $this->shortcode_atts['background_position'];
+		$background_size         = $this->shortcode_atts['background_size'];
+		$posts_number            = $this->shortcode_atts['posts_number'];
+		$include_categories      = $this->shortcode_atts['include_categories'];
+		$show_more_button        = $this->shortcode_atts['show_more_button'];
+		$more_text               = $this->shortcode_atts['more_text'];
+		$content_source          = $this->shortcode_atts['content_source'];
+		$background_color        = $this->shortcode_atts['background_color'];
+		$show_image              = $this->shortcode_atts['show_image'];
+		$image_placement         = $this->shortcode_atts['image_placement'];
+		$background_image        = $this->shortcode_atts['background_image'];
+		$background_layout       = $this->shortcode_atts['background_layout'];
+		$use_bg_overlay          = $this->shortcode_atts['use_bg_overlay'];
+		$bg_overlay_color        = $this->shortcode_atts['bg_overlay_color'];
+		$use_text_overlay        = $this->shortcode_atts['use_text_overlay'];
+		$text_overlay_color      = $this->shortcode_atts['text_overlay_color'];
+		$orderby                 = $this->shortcode_atts['orderby'];
+		$show_meta               = $this->shortcode_atts['show_meta'];
+		$button_custom           = $this->shortcode_atts['custom_button'];
+		$custom_icon             = $this->shortcode_atts['button_icon'];
+		$use_manual_excerpt      = $this->shortcode_atts['use_manual_excerpt'];
+		$excerpt_length          = $this->shortcode_atts['excerpt_length'];
+		$text_border_radius      = $this->shortcode_atts['text_border_radius'];
+		$dot_nav_custom_color    = $this->shortcode_atts['dot_nav_custom_color'];
+		$arrows_custom_color     = $this->shortcode_atts['arrows_custom_color'];
+		$top_padding_tablet      = $this->shortcode_atts['top_padding_tablet'];
+		$top_padding_phone       = $this->shortcode_atts['top_padding_phone'];
+		$bottom_padding_tablet   = $this->shortcode_atts['bottom_padding_tablet'];
+		$bottom_padding_phone    = $this->shortcode_atts['bottom_padding_phone'];
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		$hide_on_mobile_class = self::HIDE_ON_MOBILE;
+
+		if ( '' !== $top_padding || '' !== $top_padding_tablet || '' !== $top_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $top_padding,
+				'tablet'  => $top_padding_tablet,
+				'phone'   => $top_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description', 'padding-top', $function_name );
+		}
+
+		if ( '' !== $bottom_padding || '' !== $bottom_padding_tablet || '' !== $bottom_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $bottom_padding,
+				'tablet'  => $bottom_padding_tablet,
+				'phone'   => $bottom_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description', 'padding-bottom', $function_name );
+		}
+
+		if ( '' !== $bottom_padding || '' !== $top_padding ) {
+			ET_Builder_Module::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide_description, .et_pb_slider_fullwidth_off%%order_class%% .et_pb_slide_description',
+				'declaration' => 'padding-right: 0; padding-left: 0;',
+			) );
+		}
+
+		if ( 'default' !== $background_position && 'off' === $parallax ) {
+			$processed_position = str_replace( '_', ' ', $background_position );
+
+			ET_Builder_Module::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide',
+				'declaration' => sprintf(
+					'background-position: %1$s;',
+					esc_html( $processed_position )
+				),
+			) );
+		}
+
+		if ( 'default' !== $background_size && 'off' === $parallax ) {
+			ET_Builder_Module::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide',
+				'declaration' => sprintf(
+					'-moz-background-size: %1$s;
+					-webkit-background-size: %1$s;
+					background-size: %1$s;',
+					esc_html( $background_size )
+				),
+			) );
+		}
+
+		if ( '' !== $background_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_post_slider',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $background_color )
+				),
+			) );
+		}
+
+		if ( '' !== $background_image ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%, %%order_class%%.et_pb_bg_layout_dark, %%order_class%%.et_pb_bg_layout_light',
+				'declaration' => sprintf(
+					'background-image: url(%1$s);',
+					esc_html( $background_image )
+				),
+			) );
+		}
+
+		if ( 'on' === $use_bg_overlay && '' !== $bg_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide .et_pb_slide_overlay_container',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $bg_overlay_color )
+				),
+			) );
+		}
+
+		if ( 'on' === $use_text_overlay && '' !== $text_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide .et_pb_slide_title, %%order_class%% .et_pb_slide .et_pb_slide_content',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $text_overlay_color )
+				),
+			) );
+		}
+
+		if ( '' !== $text_border_radius ) {
+			$border_radius_value = et_builder_process_range_value( $text_border_radius );
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slider_with_text_overlay h2.et_pb_slide_title',
+				'declaration' => sprintf(
+					'-webkit-border-top-left-radius: %1$s;
+					-webkit-border-top-right-radius: %1$s;
+					-moz-border-radius-topleft: %1$s;
+					-moz-border-radius-topright: %1$s;
+					border-top-left-radius: %1$s;
+					border-top-right-radius: %1$s;',
+					esc_html( $border_radius_value )
+				),
+			) );
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slider_with_text_overlay .et_pb_slide_content',
+				'declaration' => sprintf(
+					'-webkit-border-bottom-right-radius: %1$s;
+					-webkit-border-bottom-left-radius: %1$s;
+					-moz-border-radius-bottomright: %1$s;
+					-moz-border-radius-bottomleft: %1$s;
+					border-bottom-right-radius: %1$s;
+					border-bottom-left-radius: %1$s;',
+					esc_html( $border_radius_value )
+				),
+			) );
+		}
+
+		$fullwidth = 'et_pb_fullwidth_slider' === $function_name ? 'on' : 'off';
+
+		$class  = '';
+		$class .= 'off' === $fullwidth ? ' et_pb_slider_fullwidth_off' : '';
+		$class .= 'off' === $show_arrows ? ' et_pb_slider_no_arrows' : '';
+		$class .= 'off' === $show_pagination ? ' et_pb_slider_no_pagination' : '';
+		$class .= 'on' === $parallax ? ' et_pb_slider_parallax' : '';
+		$class .= 'on' === $auto ? ' et_slider_auto et_slider_speed_' . esc_attr( $auto_speed ) : '';
+		$class .= 'on' === $auto_ignore_hover ? ' et_slider_auto_ignore_hover' : '';
+		$class .= 'on' === $remove_inner_shadow ? ' et_pb_slider_no_shadow' : '';
+		$class .= 'on' === $show_image_video_mobile ? ' et_pb_slider_show_image' : '';
+		$class .= ' et_pb_post_slider_image_' . $image_placement;
+		$class .= 'on' === $use_bg_overlay ? ' et_pb_slider_with_overlay' : '';
+		$class .= 'on' === $use_text_overlay ? ' et_pb_slider_with_text_overlay' : '';
+
+		$data_dot_nav_custom_color = '' !== $dot_nav_custom_color
+			? sprintf( ' data-dots_color="%1$s"', esc_attr( $dot_nav_custom_color ) )
+			: '';
+
+		$data_arrows_custom_color = '' !== $arrows_custom_color
+			? sprintf( ' data-arrows_color="%1$s"', esc_attr( $arrows_custom_color ) )
+			: '';
+
+		$args = array( 'posts_per_page' => (int) $posts_number );
+
+		if ( '' !== $include_categories ) {
+			$args['cat'] = $include_categories;
+		}
+
+		if ( 'date_desc' !== $orderby ) {
+			switch( $orderby ) {
+				case 'date_asc' :
+					$args['orderby'] = 'date';
+					$args['order'] = 'ASC';
+					break;
+				case 'title_asc' :
+					$args['orderby'] = 'title';
+					$args['order'] = 'ASC';
+					break;
+				case 'title_desc' :
+					$args['orderby'] = 'title';
+					$args['order'] = 'DESC';
+					break;
+				case 'rand' :
+					$args['orderby'] = 'rand';
+					break;
+			}
+		}
+
+		ob_start();
+
+		query_posts( $args );
+
+		if ( have_posts() ) {
+			while ( have_posts() ) {
+				the_post();
+
+				$slide_class = 'off' !== $show_image && in_array( $image_placement, array( 'left', 'right' ) ) && has_post_thumbnail() ? ' et_pb_slide_with_image' : '';
+				$slide_class .= " et_pb_bg_layout_{$background_layout}";
+			?>
+			<div class="et_pb_slide et_pb_media_alignment_center<?php echo $slide_class; ?>" <?php if ( 'on' !== $parallax && 'off' !== $show_image && 'background' === $image_placement ) { printf( 'style="background-image:url(%1$s)"', esc_attr( wp_get_attachment_url( get_post_thumbnail_id() ) ) );  } ?><?php echo $data_dot_nav_custom_color; echo $data_arrows_custom_color; ?>>
+				<?php if ( 'on' === $parallax && 'off' !== $show_image && 'background' === $image_placement ) { ?>
+					<div class="et_parallax_bg<?php if ( 'off' === $parallax_method ) { echo ' et_pb_parallax_css'; } ?>" style="background-image: url(<?php echo wp_get_attachment_url( get_post_thumbnail_id() ); ?>);"></div>
+				<?php } ?>
+				<?php if ( 'on' === $use_bg_overlay ) { ?>
+					<div class="et_pb_slide_overlay_container"></div>
+				<?php } ?>
+				<div class="et_pb_container clearfix">
+					<?php if ( 'off' !== $show_image && has_post_thumbnail() && ! in_array( $image_placement, array( 'background', 'bottom' ) ) ) { ?>
+						<div class="et_pb_slide_image">
+							<?php the_post_thumbnail(); ?>
+						</div>
+					<?php } ?>
+					<div class="et_pb_slide_description">
+						<h2 class="et_pb_slide_title"><?php the_title(); ?></h2>
+						<div class="et_pb_slide_content <?php if ( 'on' === $hide_content_on_mobile ) { echo $hide_on_mobile_class; } ?>">
+							<?php
+							if ( 'off' !== $show_meta ) {
+								printf(
+									'<p class="post-meta">%1$s | %2$s | %3$s | %4$s</p>',
+									sprintf( __( 'by %s', 'et_builder' ), '<span class="author vcard">' .  et_pb_get_the_author_posts_link() . '</span>' ),
+									sprintf( __( '%s', 'et_builder' ), '<span class="published">' . get_the_date() . '</span>' ),
+									get_the_category_list(', '),
+									sprintf( _nx( '1 Comment', '%s Comments', get_comments_number(), 'number of comments', 'et_builder' ), number_format_i18n( get_comments_number() ) )
+								);
+							}
+							?>
+							<?php
+								$post_content = get_the_content();
+								// do not display the content if it contains Blog, Post Slider, Fullwidth Post Slider, or Portfolio modules to avoid infinite loops
+								if ( ! has_shortcode( $post_content, 'et_pb_blog' ) && ! has_shortcode( $post_content, 'et_pb_portfolio' ) && ! has_shortcode( $post_content, 'et_pb_post_slider' ) && ! has_shortcode( $post_content, 'et_pb_fullwidth_post_slider' ) ) {
+									if ( 'on' === $content_source ) {
+										global $more;
+
+										// page builder doesn't support more tag, so display the_content() in case of post made with page builder
+										if ( et_pb_is_pagebuilder_used( get_the_ID() ) ) {
+											$more = 1;
+											the_content();
+										} else {
+											$more = null;
+											the_content( '' );
+										}
+									} else {
+										if ( has_excerpt() && 'off' !== $use_manual_excerpt ) {
+											the_excerpt();
+										} else {
+											truncate_post( intval( $excerpt_length ) );
+										}
+									}
+								} else if ( has_excerpt() ) {
+									the_excerpt();
+								}
+							?>
+						</div>
+						<?php if ( 'off' !== $show_more_button && '' !== $more_text ) {
+								printf(
+									'<a href="%1$s" class="et_pb_more_button et_pb_button%4$s%5$s"%3$s>%2$s</a>',
+									get_permalink(),
+									$more_text,
+									'' !== $custom_icon && 'on' === $button_custom ? sprintf(
+										' data-icon="%1$s"',
+										esc_attr( et_pb_process_font_icon( $custom_icon ) )
+									) : '',
+									'' !== $custom_icon && 'on' === $button_custom ? ' et_pb_custom_button_icon' : '',
+									'on' === $hide_cta_on_mobile ? esc_attr( " {$hide_on_mobile_class}" ) : ''
+								);
+							}
+						?>
+					</div> <!-- .et_pb_slide_description -->
+					<?php if ( 'off' !== $show_image && has_post_thumbnail() && 'bottom' === $image_placement ) { ?>
+						<div class="et_pb_slide_image">
+							<?php the_post_thumbnail(); ?>
+						</div>
+					<?php } ?>
+				</div> <!-- .et_pb_container -->
+			</div> <!-- .et_pb_slide -->
+		<?php
+			} // end while
+			wp_reset_query();
+		} // end if
+
+		$content = ob_get_contents();
+
+		ob_end_clean();
+
+		$output = sprintf(
+			'<div%3$s class="et_pb_module et_pb_slider et_pb_post_slider%1$s%4$s">
+				<div class="et_pb_slides">
+					%2$s
+				</div> <!-- .et_pb_slides -->
+			</div> <!-- .et_pb_slider -->
+			',
+			$class,
+			$content,
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' )
+		);
+
+		return $output;
+	}
+}
+new ET_Builder_Module_Post_Slider;
 
 class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 	function init() {
@@ -3094,23 +4421,6 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'quote_icon_color' => array(
 				'label'             => __( 'Quote Icon Color', 'et_builder' ),
 				'type'              => 'color',
@@ -3144,6 +4454,37 @@ class ET_Builder_Module_Testimonial extends ET_Builder_Module {
 					'max'  => '200',
 					'step' => '1',
 				),
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -3342,6 +4683,10 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 				'label'    => __( 'Pricing Title', 'et_builder' ),
 				'selector' => '.et_pb_pricing_heading h2',
 			),
+			'pricing_subtitle' => array(
+				'label'    => __( 'Pricing Subtitle', 'et_builder' ),
+				'selector' => '.et_pb_pricing_heading .et_pb_best_value',
+			),
 			'pricing_top' => array(
 				'label'    => __( 'Pricing Top', 'et_builder' ),
 				'selector' => '.et_pb_pricing_content_top',
@@ -3350,9 +4695,25 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 				'label'    => __( 'Price', 'et_builder' ),
 				'selector' => '.et_pb_et_price',
 			),
+			'currency' => array(
+				'label'    => __( 'Currency', 'et_builder' ),
+				'selector' => '.et_pb_dollar_sign',
+			),
+			'frequency' => array(
+				'label'    => __( 'Frequency', 'et_builder' ),
+				'selector' => '.et_pb_frequency',
+			),
 			'pricing_content' => array(
 				'label'    => __( 'Pricing Content', 'et_builder' ),
 				'selector' => '.et_pb_pricing_content',
+			),
+			'pricing_item' => array(
+				'label'    => __( 'Pricing Item', 'et_builder' ),
+				'selector' => 'ul.et_pb_pricing li',
+			),
+			'pricing_item_excluded' => array(
+				'label'    => __( 'Excluded Item', 'et_builder' ),
+				'selector' => 'ul.et_pb_pricing li.et_pb_not_available',
 			),
 			'pricing_button' => array(
 				'label'    => __( 'Pricing Button', 'et_builder' ),
@@ -3453,23 +4814,6 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 
 	function get_fields() {
 		$fields = array(
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'featured_table_background_color' => array(
 				'label'             => __( 'Featured Table Background Color', 'et_builder' ),
 				'type'              => 'color-alpha',
@@ -3565,6 +4909,37 @@ class ET_Builder_Module_Pricing_Tables extends ET_Builder_Module {
 					'on'  => __( 'Yes', 'et_builder' ),
 				),
 				'tab_slug' => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -3854,6 +5229,10 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 				'label'    => __( 'Pricing Title', 'et_builder' ),
 				'selector' => '.et_pb_pricing_heading h2',
 			),
+			'pricing_subtitle' => array(
+				'label'    => __( 'Pricing Subtitle', 'et_builder' ),
+				'selector' => '.et_pb_pricing_heading .et_pb_best_value',
+			),
 			'pricing_top' => array(
 				'label'    => __( 'Pricing Top', 'et_builder' ),
 				'selector' => '.et_pb_pricing_content_top',
@@ -3862,9 +5241,25 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 				'label'    => __( 'Price', 'et_builder' ),
 				'selector' => '.et_pb_et_price',
 			),
+			'currency' => array(
+				'label'    => __( 'Currency', 'et_builder' ),
+				'selector' => '.et_pb_dollar_sign',
+			),
+			'frequency' => array(
+				'label'    => __( 'Frequency', 'et_builder' ),
+				'selector' => '.et_pb_frequency',
+			),
 			'pricing_content' => array(
 				'label'    => __( 'Pricing Content', 'et_builder' ),
 				'selector' => '.et_pb_pricing_content',
+			),
+			'pricing_item' => array(
+				'label'    => __( 'Pricing Item', 'et_builder' ),
+				'selector' => 'ul.et_pb_pricing li',
+			),
+			'pricing_item_excluded' => array(
+				'label'    => __( 'Excluded Item', 'et_builder' ),
+				'selector' => 'ul.et_pb_pricing li.et_pb_not_available',
 			),
 			'pricing_button' => array(
 				'label'    => __( 'Pricing Button', 'et_builder' ),
@@ -4025,6 +5420,8 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 			'module_id',
 			'module_class',
 			'max_width',
+			'max_width_tablet',
+			'max_width_phone',
 		);
 
 		$this->fields_defaults = array(
@@ -4075,6 +5472,10 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 			'promo_button' => array(
 				'label'    => __( 'Promo Button', 'et_builder' ),
 				'selector' => '.et_pb_promo_button',
+			),
+			'promo_title' => array(
+				'label'    => __( 'Promo Title', 'et_builder' ),
+				'selector' => '.et_pb_promo_description h2',
 			),
 		);
 	}
@@ -4151,6 +5552,32 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
+			'max_width' => array(
+				'label'           => __( 'Max Width', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'max_width_tablet' => array(
+				'type' => 'skip',
+			),
+			'max_width_phone' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -4160,20 +5587,15 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
-			'max_width' => array(
-				'label'           => __( 'Max Width', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'layout',
-				'tab_slug'        => 'advanced',
-				'validate_unit'   => true,
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -4191,6 +5613,8 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 		$use_background_color = $this->shortcode_atts['use_background_color'];
 		$url_new_window       = $this->shortcode_atts['url_new_window'];
 		$max_width            = $this->shortcode_atts['max_width'];
+		$max_width_tablet     = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone      = $this->shortcode_atts['max_width_phone'];
 		$custom_icon          = $this->shortcode_atts['button_icon'];
 		$button_custom        = $this->shortcode_atts['custom_button'];
 
@@ -4200,15 +5624,16 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 			$text_orientation = 'right';
 		}
 
-		if ( '' !== $max_width ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%',
-				'declaration' => sprintf(
-					'max-width: %1$s;%2$s',
-					esc_html( et_builder_process_range_value( $max_width ) ),
-					( 'center' === $text_orientation ? ' margin: 0 auto;' : '' )
-				),
-			) );
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
+
+			$additional_css = 'center' === $text_orientation ? '; margin: 0 auto;' : '';
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%%', 'max-width', $function_name, $additional_css );
 		}
 
 		$class = " et_pb_module et_pb_bg_layout_{$background_layout} et_pb_text_align_{$text_orientation}";
@@ -4251,6 +5676,163 @@ class ET_Builder_Module_CTA extends ET_Builder_Module {
 	}
 }
 new ET_Builder_Module_CTA;
+
+class ET_Builder_Module_Button extends ET_Builder_Module {
+	function init() {
+		$this->name = __( 'Button', 'et_builder' );
+		$this->slug = 'et_pb_button';
+
+		$this->whitelisted_fields = array(
+			'button_url',
+			'url_new_window',
+			'button_text',
+			'background_layout',
+			'button_alignment',
+			'admin_label',
+			'module_id',
+			'module_class',
+		);
+
+		$this->fields_defaults = array(
+			'url_new_window'    => array( 'off' ),
+			'background_color'  => array( et_builder_accent_color(), 'add_default_setting' ),
+			'background_layout' => array( 'light' ),
+		);
+
+		$this->main_css_element = '%%order_class%%';
+		$this->advanced_options = array(
+			'button' => array(
+				'button' => array(
+					'label' => __( 'Button', 'et_builder' ),
+					'css' => array(
+						'main' => $this->main_css_element,
+					),
+				),
+			),
+		);
+	}
+
+	function get_fields() {
+		$fields = array(
+			'button_url' => array(
+				'label'           => __( 'Button URL', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'basic_option',
+				'description'     => __( 'Input the destination URL for your button.', 'et_builder' ),
+			),
+			'url_new_window' => array(
+				'label'           => __( 'Url Opens', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'In The Same Window', 'et_builder' ),
+					'on'  => __( 'In The New Tab', 'et_builder' ),
+				),
+				'description'       => __( 'Here you can choose whether or not your link opens in a new window', 'et_builder' ),
+			),
+			'button_text' => array(
+				'label'           => __( 'Button Text', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'basic_option',
+				'description'     => __( 'Input your desired button text.', 'et_builder' ),
+			),
+			'button_alignment' => array(
+				'label'           => __( 'Button alignment', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'left'   => __( 'Left', 'et_builder' ),
+					'center' => __( 'Center', 'et_builder' ),
+					'right'  => __( 'Right', 'et_builder' ),
+				),
+				'description'     => __( 'Here you can define the alignemnt of Button', 'et_builder' ),
+			),
+			'background_layout' => array(
+				'label'           => __( 'Text Color', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'color_option',
+				'options'         => array(
+					'light' => __( 'Dark', 'et_builder' ),
+					'dark'  => __( 'Light', 'et_builder' ),
+				),
+				'description'     => __( 'Here you can choose whether your text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+		);
+		return $fields;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$module_id         = $this->shortcode_atts['module_id'];
+		$module_class      = $this->shortcode_atts['module_class'];
+		$button_url        = $this->shortcode_atts['button_url'];
+		$button_text       = $this->shortcode_atts['button_text'];
+		$background_layout = $this->shortcode_atts['background_layout'];
+		$url_new_window    = $this->shortcode_atts['url_new_window'];
+		$custom_icon       = $this->shortcode_atts['button_icon'];
+		$button_custom     = $this->shortcode_atts['custom_button'];
+		$button_alignment  = $this->shortcode_atts['button_alignment'];
+
+		// Nothing to output if neither Button Text nor Button URL defined
+		if ( '' === $button_text && '' === $button_url ) {
+			return;
+		}
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		$module_class .= " et_pb_module et_pb_bg_layout_{$background_layout}";
+
+		$output = sprintf(
+			'<div class="et_pb_button_module_wrapper et_pb_module%8$s">
+				<a class="et_pb_button%5$s%7$s" href="%1$s"%3$s%4$s%6$s>%2$s</a>
+			</div>',
+			esc_url( $button_url ),
+			'' !== $button_text ? esc_html( $button_text ) : esc_url( $button_url ),
+			( 'on' === $url_new_window ? ' target="_blank"' : '' ),
+			'' !== $custom_icon && 'on' === $button_custom ? sprintf(
+				' data-icon="%1$s"',
+				esc_attr( et_pb_process_font_icon( $custom_icon ) )
+			) : '',
+			'' !== $custom_icon && 'on' === $button_custom ? ' et_pb_custom_button_icon' : '',
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' ),
+			'right' === $button_alignment || 'center' === $button_alignment ? sprintf( ' et_pb_button_alignment_%1$s', esc_attr( $button_alignment ) )  : ''
+		);
+
+		return $output;
+	}
+}
+new ET_Builder_Module_Button;
 
 class ET_Builder_Module_Audio extends ET_Builder_Module {
 	function init() {
@@ -4313,9 +5895,29 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 				'label'    => __( 'Audio Content', 'et_builder' ),
 				'selector' => '.et_pb_audio_module_content',
 			),
+			'audio_title' => array(
+				'label'    => __( 'Audio Title', 'et_builder' ),
+				'selector' => '.et_pb_audio_module_content h2',
+			),
 			'audio_meta' => array(
 				'label'    => __( 'Audio Meta', 'et_builder' ),
 				'selector' => '.et_audio_module_meta',
+			),
+			'audio_buttons' => array(
+				'label'    => __( 'Player Buttons', 'et_builder' ),
+				'selector' => "{$this->main_css_element} .mejs-button.mejs-playpause-button button:before,{$this->main_css_element} .mejs-button.mejs-volume-button.mejs-mute button:before",
+			),
+			'audio_timer' => array(
+				'label'    => __( 'Player Timer', 'et_builder' ),
+				'selector' => '.mejs-time.mejs-currenttime-container.custom',
+			),
+			'audio_sliders' => array(
+				'label'    => __( 'Player Sliders', 'et_builder' ),
+				'selector' => "{$this->main_css_element} .et_audio_container .mejs-controls .mejs-time-rail .mejs-time-total,{$this->main_css_element} .et_audio_container .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total",
+			),
+			'audio_sliders_current' => array(
+				'label'    => __( 'Player Sliders Current', 'et_builder' ),
+				'selector' => "{$this->main_css_element} .et_audio_container .mejs-controls .mejs-time-rail .mejs-time-current,{$this->main_css_element} .et_audio_container .mejs-controls .mejs-time-rail .mejs-time-handle,{$this->main_css_element} .et_audio_container .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current,{$this->main_css_element} .et_audio_container .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-handle",
 			),
 		);
 	}
@@ -4374,6 +5976,18 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 				),
 				'description'       => __( 'Here you can choose whether your text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -4383,15 +5997,16 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
-
 		);
 		return $fields;
 	}
@@ -4556,6 +6171,10 @@ class ET_Builder_Module_Signup extends ET_Builder_Module {
 				'label'    => __( 'Newsletter Form', 'et_builder' ),
 				'selector' => '.et_pb_newsletter_form',
 			),
+			'newsletter_fields' => array(
+				'label'    => __( 'Newsletter Fields', 'et_builder' ),
+				'selector' => '.et_pb_newsletter_form input',
+			),
 			'newsletter_button' => array(
 				'label'    => __( 'Newsletter Button', 'et_builder' ),
 				'selector' => '.et_pb_newsletter_button',
@@ -4685,23 +6304,6 @@ class ET_Builder_Module_Signup extends ET_Builder_Module {
 				'option_category'   => 'basic_option',
 				'description'       => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'form_field_background_color' => array(
 				'label'             => __( 'Form Field Background Color', 'et_builder' ),
 				'type'              => 'color-alpha',
@@ -4745,6 +6347,37 @@ class ET_Builder_Module_Signup extends ET_Builder_Module {
 				'custom_color'      => true,
 				'depends_default'   => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -5025,15 +6658,19 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 		);
 		$this->custom_css_options = array(
 			'newsletter_description' => array(
-				'label'    => __( 'Newsletter Description', 'et_builder' ),
+				'label'    => __( 'Login Description', 'et_builder' ),
 				'selector' => '.et_pb_newsletter_description',
 			),
 			'newsletter_form' => array(
-				'label'    => __( 'Newsletter Form', 'et_builder' ),
+				'label'    => __( 'Login Form', 'et_builder' ),
 				'selector' => '.et_pb_newsletter_form',
 			),
+			'newsletter_fields' => array(
+				'label'    => __( 'Login Fields', 'et_builder' ),
+				'selector' => '.et_pb_newsletter_form input',
+			),
 			'newsletter_button' => array(
-				'label'    => __( 'Newsletter Button', 'et_builder' ),
+				'label'    => __( 'Login Button', 'et_builder' ),
 				'selector' => '.et_pb_newsletter_button',
 			),
 		);
@@ -5099,23 +6736,6 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 				'option_category'   => 'basic_option',
 				'description'       => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'form_field_background_color' => array(
 				'label'             => __( 'Form Field Background Color', 'et_builder' ),
 				'type'              => 'color-alpha',
@@ -5159,6 +6779,37 @@ class ET_Builder_Module_Login extends ET_Builder_Module {
 				'custom_color'      => true,
 				'depends_default'   => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -5467,23 +7118,6 @@ class ET_Builder_Module_Portfolio extends ET_Builder_Module {
 				),
 				'description'        => __( 'Here you can choose whether your text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'zoom_icon_color' => array(
 				'label'             => __( 'Zoom Icon Color', 'et_builder' ),
 				'type'              => 'color',
@@ -5504,6 +7138,37 @@ class ET_Builder_Module_Portfolio extends ET_Builder_Module {
 				'renderer'            => 'et_pb_get_font_icon_list',
 				'renderer_with_field' => true,
 				'tab_slug'            => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -5783,6 +7448,14 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module {
 				'label'    => __( 'Portfolio Post Meta', 'et_builder' ),
 				'selector' => '.et_pb_portfolio_item .post-meta',
 			),
+			'portfolio_pagination' => array(
+				'label'    => __( 'Portfolio Pagination', 'et_builder' ),
+				'selector' => '.et_pb_portofolio_pagination',
+			),
+			'portfolio_pagination_active' => array(
+				'label'    => __( 'Pagination Active Page', 'et_builder' ),
+				'selector' => '.et_pb_portofolio_pagination a.active',
+			),
 		);
 	}
 
@@ -5850,23 +7523,6 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module {
 				),
 				'description'        => __( 'Here you can choose whether your text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'hover_icon' => array(
 				'label'               => __( 'Hover Icon Picker', 'et_builder' ),
 				'type'                => 'text',
@@ -5887,6 +7543,37 @@ class ET_Builder_Module_Filterable_Portfolio extends ET_Builder_Module {
 				'type'              => 'color-alpha',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -6101,6 +7788,10 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 			'bar_top_padding',
 			'bar_bottom_padding',
 			'border_radius',
+			'bar_bottom_padding_tablet',
+			'bar_top_padding_tablet',
+			'bar_bottom_padding_phone',
+			'bar_top_padding_phone',
 		);
 
 		$this->fields_defaults = array(
@@ -6185,6 +7876,52 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 					'off' => __( 'Off', 'et_builder' ),
 				),
 			),
+			'bar_top_padding' => array(
+				'label'           => __( 'Bar Top Padding', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'bar_bottom_padding' => array(
+				'label'           => __( 'Bar Bottom Padding', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'border_radius' => array(
+				'label'             => __( 'Border Radius', 'et_builder' ),
+				'type'              => 'range',
+				'option_category'   => 'layout',
+				'tab_slug'          => 'advanced',
+			),
+			'bar_bottom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'bar_bottom_padding_phone' => array(
+				'type' => 'skip',
+			),
+			'bar_top_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'bar_top_padding_phone' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -6194,33 +7931,15 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
-			'bar_top_padding' => array(
-				'label'           => __( 'Bar Top Padding', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'layout',
-				'tab_slug'        => 'advanced',
-				'validate_unit'   => true,
-			),
-			'bar_bottom_padding' => array(
-				'label'           => __( 'Bar Bottom Padding', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'layout',
-				'tab_slug'        => 'advanced',
-				'validate_unit'   => true,
-			),
-			'border_radius' => array(
-				'label'             => __( 'Border Radius', 'et_builder' ),
-				'type'              => 'range',
-				'option_category'   => 'layout',
-				'tab_slug'          => 'advanced',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -6229,20 +7948,28 @@ class ET_Builder_Module_Bar_Counters extends ET_Builder_Module {
 	function pre_shortcode_content() {
 		global $et_pb_counters_settings;
 
-		$background_color   = $this->shortcode_atts['background_color'];
-		$bar_bg_color       = $this->shortcode_atts['bar_bg_color'];
-		$use_percentages    = $this->shortcode_atts['use_percentages'];
-		$bar_top_padding    = $this->shortcode_atts['bar_top_padding'];
-		$bar_bottom_padding = $this->shortcode_atts['bar_bottom_padding'];
-		$border_radius      = $this->shortcode_atts['border_radius'];
+		$background_color          = $this->shortcode_atts['background_color'];
+		$bar_bg_color              = $this->shortcode_atts['bar_bg_color'];
+		$use_percentages           = $this->shortcode_atts['use_percentages'];
+		$bar_top_padding           = $this->shortcode_atts['bar_top_padding'];
+		$bar_bottom_padding        = $this->shortcode_atts['bar_bottom_padding'];
+		$bar_top_padding_tablet    = $this->shortcode_atts['bar_top_padding_tablet'];
+		$bar_bottom_padding_tablet = $this->shortcode_atts['bar_bottom_padding_tablet'];
+		$bar_top_padding_phone     = $this->shortcode_atts['bar_top_padding_phone'];
+		$bar_bottom_padding_phone  = $this->shortcode_atts['bar_bottom_padding_phone'];
+		$border_radius             = $this->shortcode_atts['border_radius'];
 
 		$et_pb_counters_settings = array(
-			'background_color'   => $background_color,
-			'bar_bg_color'       => $bar_bg_color,
-			'use_percentages'    => $use_percentages,
-			'bar_top_padding'    => $bar_top_padding,
-			'bar_bottom_padding' => $bar_bottom_padding,
-			'border_radius'      => $border_radius,
+			'background_color'          => $background_color,
+			'bar_bg_color'              => $bar_bg_color,
+			'use_percentages'           => $use_percentages,
+			'bar_top_padding'           => $bar_top_padding,
+			'bar_bottom_padding'        => $bar_bottom_padding,
+			'bar_top_padding_tablet'    => $bar_top_padding_tablet,
+			'bar_bottom_padding_tablet' => $bar_bottom_padding_tablet,
+			'bar_top_padding_phone'     => $bar_top_padding_phone,
+			'bar_bottom_padding_phone'  => $bar_bottom_padding_phone,
+			'border_radius'             => $border_radius,
 		);
 	}
 
@@ -6390,24 +8117,25 @@ class ET_Builder_Module_Bar_Counters_Item extends ET_Builder_Module {
 			) );
 		}
 
-		if ( isset( $et_pb_counters_settings['bar_top_padding'] ) && '' !== $et_pb_counters_settings['bar_top_padding'] ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_counter_amount',
-				'declaration' => sprintf(
-					'padding-top: %1$s;',
-					esc_html( et_builder_process_range_value( $et_pb_counters_settings['bar_top_padding'] ) )
-				),
-			) );
+
+		if ( ( isset( $et_pb_counters_settings['bar_top_padding'] ) && '' !== $et_pb_counters_settings['bar_top_padding'] ) || ( isset( $et_pb_counters_settings['bar_top_padding_tablet'] ) && '' !== $et_pb_counters_settings['bar_top_padding_tablet'] ) || ( isset( $et_pb_counters_settings['bar_top_padding_phone'] ) && '' !== $et_pb_counters_settings['bar_top_padding_phone'] ) ) {
+			$padding_values = array(
+				'desktop' => isset( $et_pb_counters_settings['bar_top_padding'] ) ? $et_pb_counters_settings['bar_top_padding'] : '',
+				'tablet'  => isset( $et_pb_counters_settings['bar_top_padding_tablet'] ) ? $et_pb_counters_settings['bar_top_padding_tablet'] : '',
+				'phone'   => isset( $et_pb_counters_settings['bar_top_padding_phone'] ) ? $et_pb_counters_settings['bar_top_padding_phone'] : '',
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_counter_amount', 'padding-top', $function_name );
 		}
 
-		if ( isset( $et_pb_counters_settings['bar_bottom_padding'] ) && '' !== $et_pb_counters_settings['bar_bottom_padding'] ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_counter_amount',
-				'declaration' => sprintf(
-					'padding-bottom: %1$s;',
-					esc_html( et_builder_process_range_value( $et_pb_counters_settings['bar_bottom_padding'] ) )
-				),
-			) );
+		if ( ( isset( $et_pb_counters_settings['bar_bottom_padding'] ) && '' !== $et_pb_counters_settings['bar_bottom_padding'] ) || ( isset( $et_pb_counters_settings['bar_bottom_padding_tablet'] ) && '' !== $et_pb_counters_settings['bar_bottom_padding_tablet'] ) || ( isset( $et_pb_counters_settings['bar_bottom_padding_phone'] ) && '' !== $et_pb_counters_settings['bar_bottom_padding_phone'] ) ) {
+			$padding_values = array(
+				'desktop' => isset( $et_pb_counters_settings['bar_bottom_padding'] ) ? $et_pb_counters_settings['bar_bottom_padding'] : '',
+				'tablet'  => isset( $et_pb_counters_settings['bar_bottom_padding_tablet'] ) ? $et_pb_counters_settings['bar_bottom_padding_tablet'] : '',
+				'phone'   => isset( $et_pb_counters_settings['bar_bottom_padding_phone'] ) ? $et_pb_counters_settings['bar_bottom_padding_phone'] : '',
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_counter_amount', 'padding-bottom', $function_name );
 		}
 
 		if ( '' !== $background_color ) {
@@ -6515,12 +8243,16 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 		);
 		$this->custom_css_options = array(
 			'percent' => array(
-				'label'    => __( 'Percent', 'et_builder' ),
+				'label'    => __( 'Percent Container', 'et_builder' ),
 				'selector' => '.percent',
 			),
 			'circle_counter_title' => array(
 				'label'    => __( 'Circle Counter Title', 'et_builder' ),
 				'selector' => 'h3',
+			),
+			'percent_text' => array(
+				'label'    => __( 'Percent Text', 'et_builder' ),
+				'selector' => '.percent p',
 			),
 		);
 	}
@@ -6565,23 +8297,6 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 				'type'              => 'color-alpha',
 				'description'       => __( 'This will change the fill color for the bar.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'circle_color' => array(
 				'label'             => __( 'Circle Color', 'et_builder' ),
 				'type'              => 'color',
@@ -6598,6 +8313,37 @@ class ET_Builder_Module_Circle_Counter extends ET_Builder_Module {
 					'step' => '0.05',
 				),
 				'tab_slug' => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -6672,6 +8418,17 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 			'background_layout' => array( 'light' ),
 		);
 
+		$this->custom_css_options = array(
+			'percent' => array(
+				'label'    => __( 'Percent', 'et_builder' ),
+				'selector' => '.percent',
+			),
+			'number_counter_title' => array(
+				'label'    => __( 'Number Counter Title', 'et_builder' ),
+				'selector' => 'h3',
+			),
+		);
+
 		$this->main_css_element = '%%order_class%%.et_pb_number_counter';
 		$this->advanced_options = array(
 			'fonts' => array(
@@ -6712,17 +8469,6 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 		if ( et_is_builder_plugin_active() ) {
 			$this->advanced_options['fonts']['number']['css']['important'] = 'all';
 		}
-
-		$this->custom_css_options = array(
-			'percent' => array(
-				'label'    => __( 'Percent', 'et_builder' ),
-				'selector' => '.percent',
-			),
-			'number_counter_title' => array(
-				'label'    => __( 'Number Counter Title', 'et_builder' ),
-				'selector' => 'h3',
-			),
-		);
 	}
 
 	function get_fields() {
@@ -6764,6 +8510,18 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 				),
 				'description' => __( 'Here you can choose whether your title text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -6773,13 +8531,15 @@ class ET_Builder_Module_Number_Counter extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -6837,6 +8597,8 @@ class ET_Builder_Module_Accordion extends ET_Builder_Module {
 			'open_toggle_background_color',
 			'closed_toggle_background_color',
 			'icon_color',
+			'closed_toggle_text_color',
+			'open_toggle_text_color',
 		);
 
 		$this->main_css_element = '%%order_class%%.et_pb_accordion';
@@ -6901,26 +8663,15 @@ class ET_Builder_Module_Accordion extends ET_Builder_Module {
 
 	function get_fields() {
 		$fields = array(
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'open_toggle_background_color' => array(
 				'label'             => __( 'Open Toggle Background Color', 'et_builder' ),
 				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
+			'open_toggle_text_color' => array(
+				'label'             => __( 'Open Toggle Text Color', 'et_builder' ),
+				'type'              => 'color',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 			),
@@ -6930,11 +8681,48 @@ class ET_Builder_Module_Accordion extends ET_Builder_Module {
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 			),
+			'closed_toggle_text_color' => array(
+				'label'             => __( 'Closed Toggle Text Color', 'et_builder' ),
+				'type'              => 'color',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
 			'icon_color' => array(
 				'label'             => __( 'Icon Color', 'et_builder' ),
 				'type'              => 'color',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -6953,6 +8741,8 @@ class ET_Builder_Module_Accordion extends ET_Builder_Module {
 		$open_toggle_background_color   = $this->shortcode_atts['open_toggle_background_color'];
 		$closed_toggle_background_color = $this->shortcode_atts['closed_toggle_background_color'];
 		$icon_color                     = $this->shortcode_atts['icon_color'];
+		$closed_toggle_text_color       = $this->shortcode_atts['closed_toggle_text_color'];
+		$open_toggle_text_color         = $this->shortcode_atts['open_toggle_text_color'];
 
 		global $et_pb_accordion_item_number;
 
@@ -6984,6 +8774,26 @@ class ET_Builder_Module_Accordion extends ET_Builder_Module {
 				'declaration' => sprintf(
 					'color: %1$s;',
 					esc_html( $icon_color )
+				),
+			) );
+		}
+
+		if ( '' !== $closed_toggle_text_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_toggle_close h5.et_pb_toggle_title',
+				'declaration' => sprintf(
+					'color: %1$s !important;',
+					esc_html( $closed_toggle_text_color )
+				),
+			) );
+		}
+
+		if ( '' !== $open_toggle_text_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_toggle_open h5.et_pb_toggle_title',
+				'declaration' => sprintf(
+					'color: %1$s !important;',
+					esc_html( $open_toggle_text_color )
 				),
 			) );
 		}
@@ -7121,6 +8931,8 @@ class ET_Builder_Module_Toggle extends ET_Builder_Module {
 			'open_toggle_background_color',
 			'closed_toggle_background_color',
 			'icon_color',
+			'closed_toggle_text_color',
+			'open_toggle_text_color',
 		);
 
 		$this->fields_defaults = array(
@@ -7200,26 +9012,15 @@ class ET_Builder_Module_Toggle extends ET_Builder_Module {
 				'option_category'   => 'basic_option',
 				'description'       => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'open_toggle_background_color' => array(
 				'label'             => __( 'Open Toggle Background Color', 'et_builder' ),
 				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
+			'open_toggle_text_color' => array(
+				'label'             => __( 'Open Toggle Text Color', 'et_builder' ),
+				'type'              => 'color',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 			),
@@ -7229,24 +9030,63 @@ class ET_Builder_Module_Toggle extends ET_Builder_Module {
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 			),
+			'closed_toggle_text_color' => array(
+				'label'             => __( 'Closed Toggle Text Color', 'et_builder' ),
+				'type'              => 'color',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
 			'icon_color' => array(
 				'label'             => __( 'Icon Color', 'et_builder' ),
 				'type'              => 'color',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
 		);
 		return $fields;
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
-		$module_id    = $this->shortcode_atts['module_id'];
-		$module_class = $this->shortcode_atts['module_class'];
-		$title        = $this->shortcode_atts['title'];
-		$open         = $this->shortcode_atts['open'];
-		$open_toggle_background_color = $this->shortcode_atts['open_toggle_background_color'];
+		$module_id                      = $this->shortcode_atts['module_id'];
+		$module_class                   = $this->shortcode_atts['module_class'];
+		$title                          = $this->shortcode_atts['title'];
+		$open                           = $this->shortcode_atts['open'];
+		$open_toggle_background_color   = $this->shortcode_atts['open_toggle_background_color'];
 		$closed_toggle_background_color = $this->shortcode_atts['closed_toggle_background_color'];
-		$icon_color = $this->shortcode_atts['icon_color'];
+		$icon_color                     = $this->shortcode_atts['icon_color'];
+		$closed_toggle_text_color       = $this->shortcode_atts['closed_toggle_text_color'];
+		$open_toggle_text_color         = $this->shortcode_atts['open_toggle_text_color'];
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
@@ -7276,6 +9116,26 @@ class ET_Builder_Module_Toggle extends ET_Builder_Module {
 				'declaration' => sprintf(
 					'color: %1$s;',
 					esc_html( $icon_color )
+				),
+			) );
+		}
+
+		if ( '' !== $closed_toggle_text_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_toggle_close h5.et_pb_toggle_title',
+				'declaration' => sprintf(
+					'color: %1$s !important;',
+					esc_html( $closed_toggle_text_color )
+				),
+			) );
+		}
+
+		if ( '' !== $open_toggle_text_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_toggle_open h5.et_pb_toggle_title',
+				'declaration' => sprintf(
+					'color: %1$s !important;',
+					esc_html( $open_toggle_text_color )
 				),
 			) );
 		}
@@ -7317,6 +9177,8 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 	function init() {
 		$this->name = __( 'Contact Form', 'et_builder' );
 		$this->slug = 'et_pb_contact_form';
+		$this->child_slug      = 'et_pb_contact_field';
+		$this->child_item_text = __( 'Field', 'et_builder' );
 
 		$this->whitelisted_fields = array(
 			'captcha',
@@ -7327,10 +9189,15 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 			'module_class',
 			'form_background_color',
 			'input_border_radius',
+			'custom_message',
+			'use_redirect',
+			'redirect_url',
+			'success_message',
 		);
 
 		$this->fields_defaults = array(
-			'captcha' => array( 'on' ),
+			'captcha'      => array( 'on' ),
+			'use_redirect' => array( 'off' ),
 		);
 
 		$this->main_css_element = '%%order_class%%.et_pb_contact_form_container';
@@ -7372,6 +9239,22 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 				'label'    => __( 'Contact Button', 'et_builder' ),
 				'selector' => '.et_pb_contact_submit',
 			),
+			'contact_fields' => array(
+				'label'    => __( 'Form Fields', 'et_builder' ),
+				'selector' => '.et_pb_contact_left input',
+			),
+			'text_field' => array(
+				'label'    => __( 'Message Field', 'et_builder' ),
+				'selector' => 'textarea.et_pb_contact_message',
+			),
+			'captcha_field' => array(
+				'label'    => __( 'Captcha Field', 'et_builder' ),
+				'selector' => 'input.et_pb_contact_captcha',
+			),
+			'captcha_label' => array(
+				'label'    => __( 'Captcha Text', 'et_builder' ),
+				'selector' => '.et_pb_contact_right p',
+			),
 		);
 	}
 
@@ -7399,22 +9282,37 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Define a title for your contact form.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			'custom_message' => array(
+				'label'           => __( 'Message Pattern', 'et_builder' ),
+				'type'            => 'textarea',
+				'option_category' => 'configuration',
+				'description'     => __( 'Here you can define the custom pattern for the email Message. Fields should be included in following format - <strong>%%field_id%%</strong>. For example if you want to include the field with id = <strong>phone</strong> and field with id = <strong>message</strong>, then you can use the following pattern: <strong>My message is %%message%% and phone number is %%phone%%</strong>. Leave blank for default.', 'et_builder' ),
 			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
+			'use_redirect' => array(
+				'label'           => __( 'Enable Redirect URL', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_redirect_url',
+				),
+				'description' => __( 'Redirect users after successful form submission.', 'et_builder' ),
+			),
+			'redirect_url' => array(
+				'label'           => __( 'Redirect URL', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'depends_show_if' => 'on',
+				'description'     => __( 'Type the Redirect URL', 'et_builder' ),
 			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
+			'success_message' => array(
+				'label'           => __( 'Success Message', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'description'     => __( 'Type the message you want to display after successful form submission. Leave blank for default', 'et_builder' ),
 			),
 			'form_background_color' => array(
 				'label'             => __( 'Form Background Color', 'et_builder' ),
@@ -7425,11 +9323,59 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 			'input_border_radius'   => array(
 				'label'             => __( 'Input Border Radius', 'et_builder' ),
 				'type'              => 'range',
+				'default'           => '0',
+				'range_settings'    => array(
+					'min'  => '0',
+					'max'  => '100',
+					'step' => '1',
+				),
 				'option_category'   => 'layout',
 				'tab_slug'          => 'advanced',
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
 		);
 		return $fields;
+	}
+
+	function predefined_child_modules() {
+		$output = sprintf(
+			'[et_pb_contact_field field_title="%1$s" field_type="input" field_id="Name" required_mark="on" fullwidth_field="off" /][et_pb_contact_field field_title="%2$s" field_type="email" field_id="Email" required_mark="on" fullwidth_field="off" /][et_pb_contact_field field_title="%3$s" field_type="text" field_id="Message" required_mark="on" /]',
+			__( 'Name', 'et_builder' ),
+			__( 'Email Address', 'et_builder' ),
+			__( 'Message', 'et_builder' )
+		);
+
+		return $output;
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
@@ -7442,6 +9388,12 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 		$input_border_radius   = $this->shortcode_atts['input_border_radius'];
 		$button_custom         = $this->shortcode_atts['custom_button'];
 		$custom_icon           = $this->shortcode_atts['button_icon'];
+		$custom_message        = $this->shortcode_atts['custom_message'];
+		$use_redirect          = $this->shortcode_atts['use_redirect'];
+		$redirect_url          = $this->shortcode_atts['redirect_url'];
+		$success_message       = $this->shortcode_atts['success_message'];
+
+		global $et_pb_contact_form_num;
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
@@ -7465,25 +9417,58 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 			) );
 		}
 
+		$success_message = '' !== $success_message ? $success_message : __( 'Thanks for contacting us', 'et_builder' );
+
 		$et_pb_contact_form_num = $this->shortcode_callback_num();
+
+		$content = $this->shortcode_content;
 
 		$et_error_message = '';
 		$et_contact_error = false;
-		$contact_email = isset( $_POST['et_pb_contact_email_' . $et_pb_contact_form_num] ) ? sanitize_email( $_POST['et_pb_contact_email_' . $et_pb_contact_form_num] ) : '';
+		$current_form_fields = isset( $_POST['et_pb_contact_email_fields_' . $et_pb_contact_form_num] ) ? $_POST['et_pb_contact_email_fields_' . $et_pb_contact_form_num] : '';
+		$contact_email = '';
+		$processed_fields_values = array();
 
-		if ( isset( $_POST['et_pb_contactform_submit_' . $et_pb_contact_form_num] ) ) {
-			if ( empty( $_POST['et_pb_contact_name_' . $et_pb_contact_form_num] ) || empty( $contact_email ) || empty( $_POST['et_pb_contact_message_' . $et_pb_contact_form_num] ) ) {
-				$et_error_message .= sprintf( '<p>%1$s</p>', esc_html__( 'Make sure you fill all fields.', 'et_builder' ) );
-				$et_contact_error = true;
-			}
+		// check that the form was submitted and et_pb_contactform_validate field is empty to protect from spam
+		if ( isset( $_POST['et_pb_contactform_submit_' . $et_pb_contact_form_num] ) && empty( $_POST['et_pb_contactform_validate_' . $et_pb_contact_form_num] ) ) {
+			if ( '' !== $current_form_fields ) {
+				$fields_data_json = str_replace( '\\', '' ,  $current_form_fields );
+				$fields_data_array = json_decode( $fields_data_json, true );
 
-			if ( 'on' === $captcha && ( ! isset( $_POST['et_pb_contact_captcha_' . $et_pb_contact_form_num] ) || empty( $_POST['et_pb_contact_captcha_' . $et_pb_contact_form_num] ) ) ) {
-				$et_error_message .= sprintf( '<p>%1$s</p>', esc_html__( 'Make sure you entered the captcha.', 'et_builder' ) );
-				$et_contact_error = true;
-			}
+				// check whether captcha field is not empty
+				if ( 'on' === $captcha && ( ! isset( $_POST['et_pb_contact_captcha_' . $et_pb_contact_form_num] ) || empty( $_POST['et_pb_contact_captcha_' . $et_pb_contact_form_num] ) ) ) {
+					$et_error_message .= sprintf( '<p class="et_pb_contact_error_text">%1$s</p>', esc_html__( 'Make sure you entered the captcha.', 'et_builder' ) );
+					$et_contact_error = true;
+				}
 
-			if ( ! is_email( $contact_email ) ) {
-				$et_error_message .= sprintf( '<p>%1$s</p>', esc_html__( 'Invalid Email.', 'et_builder' ) );
+				// check all fields on current form and generate error message if needed
+				if ( ! empty( $fields_data_array ) ) {
+					foreach( $fields_data_array as $index => $value ) {
+						// check all the required fields, generate error message if required field is empty
+						if ( 'required' === $value['required_mark'] && empty( $_POST[ $value['field_id'] ] ) ) {
+							$et_error_message .= sprintf( '<p class="et_pb_contact_error_text">%1$s</p>', esc_html__( 'Make sure you fill in all required fields.', 'et_builder' ) );
+							$et_contact_error = true;
+							continue;
+						}
+
+						// additional check for email field
+						if ( 'email' === $value['field_type'] && ! empty( $_POST[ $value['field_id'] ] ) ) {
+							$contact_email = sanitize_email( $_POST[ $value['field_id'] ] );
+							if ( ! is_email( $contact_email ) ) {
+								$et_error_message .= sprintf( '<p class="et_pb_contact_error_text">%1$s</p>', esc_html__( 'Invalid Email.', 'et_builder' ) );
+								$et_contact_error = true;
+							}
+						}
+
+						// prepare the array of processed field values in convenient format
+						if ( false === $et_contact_error ) {
+							$processed_fields_values[ $value['original_id'] ]['value'] = isset( $_POST[ $value['field_id'] ] ) ? $_POST[ $value['field_id'] ] : '';
+							$processed_fields_values[ $value['original_id'] ]['label'] = $value['field_label'];
+						}
+					}
+				}
+			} else {
+				$et_error_message .= sprintf( '<p class="et_pb_contact_error_text">%1$s</p>', esc_html__( 'Make sure you fill in all required fields.', 'et_builder' ) );
 				$et_contact_error = true;
 			}
 		} else {
@@ -7501,7 +9486,30 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 
 			$et_site_name = get_option( 'blogname' );
 
-			$contact_name 	= stripslashes( sanitize_text_field( $_POST['et_pb_contact_name_' . $et_pb_contact_form_num] ) );
+			$contact_name = isset( $processed_fields_values['name'] ) ? stripslashes( sanitize_text_field( $processed_fields_values['name']['value'] ) ) : '';
+
+			if ( '' !== $custom_message ) {
+				$message_pattern = $custom_message;
+				// insert the data from contact form into the message pattern
+				foreach ( $processed_fields_values as $key => $value ) {
+					$message_pattern = str_ireplace( "%%{$key}%%", $value['value'], $message_pattern );
+				}
+			} else {
+				// use default message pattern if custom pattern is not defined
+				$message_pattern = isset( $processed_fields_values['message']['value'] ) ? $processed_fields_values['message']['value'] : '';
+
+				// Add all custom fields into the message body by default
+				foreach ( $processed_fields_values as $key => $value ) {
+					if ( ! in_array( $key, array( 'message', 'name', 'email' ) ) ) {
+						$message_pattern .= "\r\n";
+						$message_pattern .= sprintf(
+							'%1$s: %2$s',
+							'' !== $value['label'] ? $value['label'] : $key,
+							$value['value']
+						);
+					}
+				}
+			}
 
 			$headers[] = "From: \"{$contact_name}\" <{$contact_email}>";
 			$headers[] = "Reply-To: <{$contact_email}>";
@@ -7510,21 +9518,17 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 				sprintf( __( 'New Message From %1$s%2$s', 'et_builder' ),
 					sanitize_text_field( html_entity_decode( $et_site_name ) ),
 					( '' !== $title ? sprintf( _x( ' - %s', 'contact form title separator', 'et_builder' ), sanitize_text_field( html_entity_decode( $title ) ) ) : '' )
-				), stripslashes( wp_strip_all_tags( $_POST['et_pb_contact_message_' . $et_pb_contact_form_num] ) ), apply_filters( 'et_contact_page_headers', $headers, $contact_name, $contact_email ) );
+				), stripslashes( wp_strip_all_tags( $message_pattern ) ), apply_filters( 'et_contact_page_headers', $headers, $contact_name, $contact_email ) );
 
-			$et_error_message = sprintf( '<p>%1$s</p>', esc_html__( 'Thanks for contacting us', 'et_builder' ) );
+			$et_error_message = sprintf( '<p>%1$s</p>', esc_html( $success_message ) );
 		}
 
 		$form = '';
 
-		$name_label = __( 'Name', 'et_builder' );
-		$email_label = __( 'Email Address', 'et_builder' );
-		$message_label = __( 'Message', 'et_builder' );
-
 		$et_pb_captcha = sprintf( '
 			<div class="et_pb_contact_right">
 				<p class="clearfix">
-					<span class="et_pb_contact_captcha_question">%1$s</span> = <input type="text" size="2" class="input et_pb_contact_captcha" data-first_digit="%3$s" data-second_digit="%4$s" value="" name="et_pb_contact_captcha_%2$s">
+					<span class="et_pb_contact_captcha_question">%1$s</span> = <input type="text" size="2" class="input et_pb_contact_captcha" data-first_digit="%3$s" data-second_digit="%4$s" value="" name="et_pb_contact_captcha_%2$s" data-required_mark="required">
 				</p>
 			</div> <!-- .et_pb_contact_right -->',
 			sprintf( '%1$s + %2$s', esc_html( $et_pb_first_digit ), esc_html( $et_pb_second_digit ) ),
@@ -7533,44 +9537,26 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 			esc_attr( $et_pb_second_digit )
 		);
 
-		if ( $et_contact_error )
+		if ( '' === trim( $content ) ) {
+			$content = do_shortcode( $this->predefined_child_modules() );
+		}
+
+		if ( $et_contact_error ) {
 			$form = sprintf( '
 				<div class="et_pb_contact">
 					<form class="et_pb_contact_form clearfix" method="post" action="%1$s">
-						<div class="et_pb_contact_left">
-							<p class="clearfix">
-								<label for="et_pb_contact_name_%13$s" class="et_pb_contact_form_label">%2$s</label>
-								<input type="text" id="et_pb_contact_name_%13$s" class="input et_pb_contact_name" value="%3$s" name="et_pb_contact_name_%13$s">
-							</p>
-							<p class="clearfix">
-								<label for="et_pb_contact_email_%13$s" class="et_pb_contact_form_label">%4$s</label>
-								<input type="text" id="et_pb_contact_email_%13$s" class="input et_pb_contact_email" value="%5$s" name="et_pb_contact_email_%13$s">
-							</p>
-						</div> <!-- .et_pb_contact_left -->
-
-						<div class="clear"></div>
-						<p class="clearfix">
-							<label for="et_pb_contact_message_%13$s" class="et_pb_contact_form_label">%7$s</label>
-							<textarea name="et_pb_contact_message_%13$s" id="et_pb_contact_message_%13$s" class="et_pb_contact_message input">%8$s</textarea>
-						</p>
-
-						<input type="hidden" value="et_contact_proccess" name="et_pb_contactform_submit_%13$s">
-
-						<button type="submit" class="et_pb_contact_submit et_pb_button%12$s"%11$s>%9$s</button>
-
-						%6$s
-
-						%10$s
+						%8$s
+						<input type="hidden" value="et_contact_proccess" name="et_pb_contactform_submit_%7$s">
+						<input type="text" value="" name="et_pb_contactform_validate_%7$s" class="et_pb_contactform_validate_field" />
+						<div class="et_contact_bottom_container">
+							%2$s
+							<button type="submit" class="et_pb_contact_submit et_pb_button%6$s"%5$s>%3$s</button>
+						</div>
+						%4$s
 					</form>
 				</div> <!-- .et_pb_contact -->',
 				esc_url( get_permalink( get_the_ID() ) ),
-				$name_label,
-				( isset( $_POST['et_pb_contact_name_' . $et_pb_contact_form_num] ) ? esc_attr( $_POST['et_pb_contact_name_' . $et_pb_contact_form_num] ) : $name_label ),
-				$email_label,
-				( isset( $_POST['et_pb_contact_email_' . $et_pb_contact_form_num] ) ? esc_attr( $_POST['et_pb_contact_email_' . $et_pb_contact_form_num] ) : $email_label ),
 				(  'on' === $captcha ? $et_pb_captcha : '' ),
-				$message_label,
-				( isset( $_POST['et_pb_contact_message_' . $et_pb_contact_form_num] ) ? esc_attr( $_POST['et_pb_contact_message_' . $et_pb_contact_form_num] ) : $message_label ),
 				__( 'Submit', 'et_builder' ),
 				wp_nonce_field( 'et-pb-contact-form-submit', '_wpnonce-et-pb-contact-form-submitted', true, false ),
 				'' !== $custom_icon && 'on' === $button_custom ? sprintf(
@@ -7578,11 +9564,13 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 					esc_attr( et_pb_process_font_icon( $custom_icon ) )
 				) : '',
 				'' !== $custom_icon && 'on' === $button_custom ? ' et_pb_custom_button_icon' : '',
-				esc_attr( $et_pb_contact_form_num )
+				esc_attr( $et_pb_contact_form_num ),
+				$content
 			);
+		}
 
 		$output = sprintf( '
-			<div id="%4$s" class="et_pb_module et_pb_contact_form_container clearfix%5$s">
+			<div id="%4$s" class="et_pb_module et_pb_contact_form_container clearfix%5$s" data-form_unique_num="%6$s"%7$s>
 				%1$s
 				<div class="et-pb-contact-message">%2$s</div>
 				%3$s
@@ -7595,13 +9583,216 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module {
 				? esc_attr( $module_id )
 				: esc_attr( 'et_pb_contact_form_' . $et_pb_contact_form_num )
 			),
-			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' )
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' ),
+			esc_attr( $et_pb_contact_form_num ),
+			'on' === $use_redirect && '' !== $redirect_url ? sprintf( ' data-redirect_url="%1$s"', esc_attr( $redirect_url ) ) : ''
 		);
 
 		return $output;
 	}
 }
 new ET_Builder_Module_Contact_Form;
+
+class ET_Builder_Module_Contact_Form_item extends ET_Builder_Module {
+	function init() {
+		$this->name            = __( 'Field', 'et_builder' );
+		$this->slug            = 'et_pb_contact_field';
+		$this->type            = 'child';
+		$this->child_title_var = 'field_id';
+
+		$this->whitelisted_fields = array(
+			'field_title',
+			'field_type',
+			'field_id',
+			'required_mark',
+			'fullwidth_field',
+			'input_border_radius',
+			'field_background_color',
+		);
+
+		$this->advanced_setting_title_text = __( 'New Field', 'et_builder' );
+		$this->settings_text               = __( 'Field Settings', 'et_builder' );
+		$this->main_css_element = '%%order_class%%.et_pb_contact_field .input';
+		$this->advanced_options = array(
+			'fonts' => array(
+				'form_field'   => array(
+					'label'    => __( 'Field', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element}",
+					),
+				),
+			),
+			'border' => array(
+				'css'      => array(
+					'main' => "{$this->main_css_element}",
+				),
+				'settings' => array(
+					'color' => 'alpha',
+				),
+			),
+		);
+	}
+
+	function get_fields() {
+		$fields = array(
+			'field_id' => array(
+				'label'       => __( 'Field ID', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'Define the unique ID of this field. You should use only English characters without special characters and spaces.', 'et_builder' ),
+			),
+			'field_title' => array(
+				'label'       => __( 'Title', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'Here you can define the content that will be placed within the current tab.', 'et_builder' ),
+			),
+			'field_type' => array(
+				'label'       => __( 'Type', 'et_builder' ),
+				'type'        => 'select',
+				'option_category' => 'basic_option',
+				'options'         => array(
+					'input' => __( 'Input Field', 'et_builder' ),
+					'email' => __( 'Email Field', 'et_builder' ),
+					'text'  => __( 'Textarea', 'et_builder' ),
+				),
+				'description' => __( 'Choose the type of field', 'et_builder' ),
+			),
+			'required_mark' => array(
+				'label'           => __( 'Required Field', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+				'description' => __( 'Define whether the field should be required or optional', 'et_builder' ),
+			),
+			'fullwidth_field' => array(
+				'label'           => __( 'Make Fullwidth', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+				'description' => __( 'If enabled, the field will take 100% of the width of the content area, otherwise it will take 50%', 'et_builder' ),
+			),
+			'field_background_color' => array(
+				'label'             => __( 'Background Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
+			'input_border_radius'   => array(
+				'label'             => __( 'Border Radius', 'et_builder' ),
+				'type'              => 'range',
+				'default'           => '0',
+				'range_settings'    => array(
+					'min'  => '0',
+					'max'  => '100',
+					'step' => '1',
+				),
+				'option_category'   => 'layout',
+				'tab_slug'          => 'advanced',
+			),
+		);
+		return $fields;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$field_title            = $this->shortcode_atts['field_title'];
+		$field_type             = $this->shortcode_atts['field_type'];
+		$field_id               = $this->shortcode_atts['field_id'];
+		$required_mark          = $this->shortcode_atts['required_mark'];
+		$fullwidth_field        = $this->shortcode_atts['fullwidth_field'];
+		$field_background_color = $this->shortcode_atts['field_background_color'];
+		$input_border_radius    = $this->shortcode_atts['input_border_radius'];
+
+		global $et_pb_contact_form_num;
+
+		// do not output the fields with empty ID
+		if ( '' === $field_id ) {
+			return;
+		}
+
+		$field_id = strtolower( $field_id );
+
+		$current_module_num = '' === $et_pb_contact_form_num ? 0 : intval( $et_pb_contact_form_num ) + 1;
+
+		$module_class = ET_Builder_Element::add_module_order_class( '', $function_name );
+
+		$this->half_width_counter = ! isset( $this->half_width_counter ) ? 0 : $this->half_width_counter;
+
+		// count fields to add the et_pb_contact_field_last properly
+		if ( 'off' === $fullwidth_field ) {
+			$this->half_width_counter++;
+		} else {
+			$this->half_width_counter = 0;
+		}
+
+		$input_field = '';
+
+		if ( '' !== $field_background_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .input',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $field_background_color )
+				),
+			) );
+		}
+
+		if ( ! in_array( $input_border_radius, array( '', '0' ) ) ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .input',
+				'declaration' => sprintf(
+					'-moz-border-radius: %1$s; -webkit-border-radius: %1$s; border-radius: %1$s;',
+					esc_html( et_builder_process_range_value( $input_border_radius ) )
+				),
+			) );
+		}
+
+		switch( $field_type ) {
+			case 'text':
+				$input_field = sprintf(
+					'<textarea name="et_pb_contact_%3$s_%2$s" id="et_pb_contact_%3$s_%2$s" class="et_pb_contact_message input" data-required_mark="%5$s" data-field_type="%4$s" data-original_id="%3$s">%1$s</textarea>',
+					( isset( $_POST['et_pb_contact_' . $field_id . '_' . $current_module_num] ) ? esc_attr( $_POST['et_pb_contact_' . $field_id . '_' . $current_module_num] ) : $field_title ),
+					esc_attr( $current_module_num ),
+					esc_attr( $field_id ),
+					esc_attr( $field_type ),
+					'off' === $required_mark ? 'not_required' : 'required'
+				);
+				break;
+			case 'input' :
+			case 'email' :
+				$input_field = sprintf(
+					'<input type="text" id="et_pb_contact_%3$s_%2$s" class="input" value="%1$s" name="et_pb_contact_%3$s_%2$s" data-required_mark="%5$s" data-field_type="%4$s" data-original_id="%3$s">',
+					( isset( $_POST['et_pb_contact_' . $field_id . '_' . $current_module_num] ) ? esc_attr( $_POST['et_pb_contact_' . $field_id . '_' . $current_module_num] ) : $field_title ),
+					esc_attr( $current_module_num ),
+					esc_attr( $field_id ),
+					esc_attr( $field_type ),
+					'off' === $required_mark ? 'not_required' : 'required'
+				);
+				break;
+		}
+
+		$output = sprintf(
+			'<p class="et_pb_contact_field%5$s%6$s%7$s">
+				<label for="et_pb_contact_%3$s_%2$s" class="et_pb_contact_form_label">%1$s</label>
+				%4$s
+			</p>',
+			esc_html( $field_title ),
+			esc_attr( $current_module_num ),
+			esc_attr( $field_id ),
+			$input_field,
+			esc_attr( $module_class ),
+			'off' === $fullwidth_field ? ' et_pb_contact_field_half' : '',
+			0 === $this->half_width_counter % 2 ? ' et_pb_contact_field_last' : ''
+		);
+
+		return $output;
+	}
+}
+new ET_Builder_Module_Contact_Form_item;
 
 class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 	function init() {
@@ -7682,23 +9873,6 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 				),
 				'description' => __( 'Here you can choose whether your text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'remove_border' => array(
 				'label'           => __( 'Remove Border Separator', 'et_builder' ),
 				'type'            => 'yes_no_button',
@@ -7708,6 +9882,37 @@ class ET_Builder_Module_Sidebar extends ET_Builder_Module {
 					'on'  => __( 'Yes', 'et_builder' ),
 				),
 				'tab_slug' => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -7839,23 +10044,6 @@ class ET_Builder_Module_Divider extends ET_Builder_Module {
 				'option_category' => 'layout',
 				'description'     => __( 'Define how much space should be added below the divider.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'divider_style' => array(
 				'label'             => __( 'Divider Style', 'et_builder' ),
 				'type'              => 'select',
@@ -7892,6 +10080,37 @@ class ET_Builder_Module_Divider extends ET_Builder_Module {
 					'off' => __( 'No', 'et_builder' ),
 				),
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -8127,23 +10346,6 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Input the main text content for your module here.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'icon_color' => array(
 				'label'             => __( 'Icon Color', 'et_builder' ),
 				'type'              => 'color',
@@ -8155,6 +10357,37 @@ class ET_Builder_Module_Team_Member extends ET_Builder_Module {
 				'type'              => 'color',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -8297,6 +10530,10 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 			'module_class',
 			'masonry_tile_background_color',
 			'use_dropshadow',
+			'use_overlay',
+			'overlay_icon_color',
+			'hover_overlay_color',
+			'hover_icon',
 		);
 
 		$this->fields_defaults = array(
@@ -8314,6 +10551,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 			'offset_number'     => array( 0, 'only_default_setting' ),
 			'background_layout' => array( 'light' ),
 			'use_dropshadow'    => array( 'off' ),
+			'use_overlay'       => array( 'off' ),
 		);
 
 		$this->main_css_element = '%%order_class%% .et_pb_post';
@@ -8353,6 +10591,14 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 			'pagenavi' => array(
 				'label'    => __( 'Pagenavi', 'et_builder' ),
 				'selector' => '.wp_pagenavi',
+			),
+			'featured_image' => array(
+				'label'    => __( 'Featured Image', 'et_builder' ),
+				'selector' => '.et_pb_image_container',
+			),
+			'read_more' => array(
+				'label'    => __( 'Read More Button', 'et_builder' ),
+				'selector' => '.et_pb_post .more-link',
 			),
 		);
 	}
@@ -8485,6 +10731,45 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 				'option_category' => 'configuration',
 				'description'     => __( 'Choose how many posts you would like to offset by', 'et_builder' ),
 			),
+			'use_overlay' => array(
+				'label'             => __( 'Featured Image Overlay', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'layout',
+				'options'           => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_overlay_icon_color',
+					'#et_pb_hover_overlay_color',
+					'#et_pb_hover_icon',
+				),
+				'description'       => __( 'If enabled, an overlay color and icon will be displayed when a visitors hovers over the featured image of a post.', 'et_builder' ),
+			),
+			'overlay_icon_color' => array(
+				'label'             => __( 'Overlay Icon Color', 'et_builder' ),
+				'type'              => 'color',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Here you can define a custom color for the overlay icon', 'et_builder' ),
+			),
+			'hover_overlay_color' => array(
+				'label'             => __( 'Hover Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Here you can define a custom color for the overlay', 'et_builder' ),
+			),
+			'hover_icon' => array(
+				'label'               => __( 'Hover Icon Picker', 'et_builder' ),
+				'type'                => 'text',
+				'option_category'     => 'configuration',
+				'class'               => array( 'et-pb-font-icon' ),
+				'renderer'            => 'et_pb_get_font_icon_list',
+				'renderer_with_field' => true,
+				'depends_show_if'     => 'on',
+				'description'         => __( 'Here you can define a custom icon for the overlay', 'et_builder' ),
+			),
 			'background_layout' => array(
 				'label'       => __( 'Text Color', 'et_builder' ),
 				'type'        => 'select',
@@ -8495,23 +10780,6 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 				),
 				'depends_default' => true,
 				'description' => __( 'Here you can choose whether your text should be light or dark. If you are working with a dark background, then your text should be light. If your background is light, then your text should be set to dark.', 'et_builder' ),
-			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
 			),
 			'masonry_tile_background_color' => array(
 				'label'             => __( 'Grid Tile Background Color', 'et_builder' ),
@@ -8531,29 +10799,64 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 				'tab_slug'          => 'advanced',
 				'depends_show_if'   => 'off',
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
 		);
 		return $fields;
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
-		$module_id          = $this->shortcode_atts['module_id'];
-		$module_class       = $this->shortcode_atts['module_class'];
-		$fullwidth          = $this->shortcode_atts['fullwidth'];
-		$posts_number       = $this->shortcode_atts['posts_number'];
-		$include_categories = $this->shortcode_atts['include_categories'];
-		$meta_date          = $this->shortcode_atts['meta_date'];
-		$show_thumbnail     = $this->shortcode_atts['show_thumbnail'];
-		$show_content       = $this->shortcode_atts['show_content'];
-		$show_author        = $this->shortcode_atts['show_author'];
-		$show_date          = $this->shortcode_atts['show_date'];
-		$show_categories    = $this->shortcode_atts['show_categories'];
-		$show_comments      = $this->shortcode_atts['show_comments'];
-		$show_pagination    = $this->shortcode_atts['show_pagination'];
-		$background_layout  = $this->shortcode_atts['background_layout'];
-		$show_more          = $this->shortcode_atts['show_more'];
-		$offset_number      = $this->shortcode_atts['offset_number'];
+		$module_id           = $this->shortcode_atts['module_id'];
+		$module_class        = $this->shortcode_atts['module_class'];
+		$fullwidth           = $this->shortcode_atts['fullwidth'];
+		$posts_number        = $this->shortcode_atts['posts_number'];
+		$include_categories  = $this->shortcode_atts['include_categories'];
+		$meta_date           = $this->shortcode_atts['meta_date'];
+		$show_thumbnail      = $this->shortcode_atts['show_thumbnail'];
+		$show_content        = $this->shortcode_atts['show_content'];
+		$show_author         = $this->shortcode_atts['show_author'];
+		$show_date           = $this->shortcode_atts['show_date'];
+		$show_categories     = $this->shortcode_atts['show_categories'];
+		$show_comments       = $this->shortcode_atts['show_comments'];
+		$show_pagination     = $this->shortcode_atts['show_pagination'];
+		$background_layout   = $this->shortcode_atts['background_layout'];
+		$show_more           = $this->shortcode_atts['show_more'];
+		$offset_number       = $this->shortcode_atts['offset_number'];
 		$masonry_tile_background_color = $this->shortcode_atts['masonry_tile_background_color'];
-		$use_dropshadow     = $this->shortcode_atts['use_dropshadow'];
+		$use_dropshadow      = $this->shortcode_atts['use_dropshadow'];
+		$overlay_icon_color  = $this->shortcode_atts['overlay_icon_color'];
+		$hover_overlay_color = $this->shortcode_atts['hover_overlay_color'];
+		$hover_icon          = $this->shortcode_atts['hover_icon'];
+		$use_overlay         = $this->shortcode_atts['use_overlay'];
 
 		global $paged;
 
@@ -8575,6 +10878,43 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 				),
 			) );
 		}
+
+		if ( '' !== $overlay_icon_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_overlay:before',
+				'declaration' => sprintf(
+					'color: %1$s !important;',
+					esc_html( $overlay_icon_color )
+				),
+			) );
+		}
+
+		if ( '' !== $hover_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_overlay',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $hover_overlay_color )
+				),
+			) );
+		}
+
+		if ( 'on' === $use_overlay ) {
+			$data_icon = '' !== $hover_icon
+				? sprintf(
+					' data-icon="%1$s"',
+					esc_attr( et_pb_process_font_icon( $hover_icon ) )
+				)
+				: '';
+
+			$overlay_output = sprintf(
+				'<span class="et_overlay%1$s"%2$s></span>',
+				( '' !== $hover_icon ? ' et_pb_inline_icon' : '' ),
+				$data_icon
+			);
+		}
+
+		$overlay_class = 'on' === $use_overlay ? ' et_pb_has_overlay' : '';
 
 		if ( 'on' !== $fullwidth ){
 			if ( 'on' === $use_dropshadow ) {
@@ -8645,7 +10985,7 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 					$no_thumb_class = '';
 				} ?>
 
-			<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' . $no_thumb_class ); ?>>
+			<article id="post-<?php the_ID(); ?>" <?php post_class( 'et_pb_post' . $no_thumb_class . $overlay_class  ); ?>>
 
 			<?php
 				et_divi_post_format_content();
@@ -8662,8 +11002,11 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 						et_pb_gallery_images( 'slider' );
 					elseif ( '' !== $thumb && 'on' === $show_thumbnail ) :
 						if ( 'on' !== $fullwidth ) echo '<div class="et_pb_image_container">'; ?>
-							<a href="<?php the_permalink(); ?>">
+							<a href="<?php the_permalink(); ?>" class="entry-featured-image-url">
 								<?php print_thumbnail( $thumb, $thumbnail["use_timthumb"], $titletext, $width, $height ); ?>
+								<?php if ( 'on' === $use_overlay ) {
+									echo $overlay_output;
+								} ?>
 							</a>
 					<?php
 						if ( 'on' !== $fullwidth ) echo '</div> <!-- .et_pb_image_container -->';
@@ -8718,8 +11061,8 @@ class ET_Builder_Module_Blog extends ET_Builder_Module {
 
 					$post_content = get_the_content();
 
-					// do not display the content if it contains Blog or Portfolio modules to avoid infinite loops
-					if ( ! has_shortcode( $post_content, 'et_pb_blog' ) && ! has_shortcode( $post_content, 'et_pb_portfolio' ) ) {
+					// do not display the content if it contains Blog, Post Slider, Fullwidth Post Slider, or Portfolio modules to avoid infinite loops
+					if ( ! has_shortcode( $post_content, 'et_pb_blog' ) && ! has_shortcode( $post_content, 'et_pb_portfolio' ) && ! has_shortcode( $post_content, 'et_pb_post_slider' ) && ! has_shortcode( $post_content, 'et_pb_fullwidth_post_slider' ) ) {
 						if ( 'on' === $show_content ) {
 							global $more;
 
@@ -8885,6 +11228,10 @@ class ET_Builder_Module_Shop extends ET_Builder_Module {
 				'label'    => __( 'Price', 'et_builder' ),
 				'selector' => 'li.product .price',
 			),
+			'price_old' => array(
+				'label'    => __( 'Old Price', 'et_builder' ),
+				'selector' => 'li.product .price del span.amount',
+			),
 		);
 	}
 
@@ -8953,23 +11300,6 @@ class ET_Builder_Module_Shop extends ET_Builder_Module {
 				),
 				'description'        => __( 'Choose how your products should be ordered.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'sale_badge_color' => array(
 				'label'             => __( 'Sale Badge Color', 'et_builder' ),
 				'type'              => 'color',
@@ -8996,6 +11326,37 @@ class ET_Builder_Module_Shop extends ET_Builder_Module {
 				'renderer'            => 'et_pb_get_font_icon_list',
 				'renderer_with_field' => true,
 				'tab_slug'            => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -9260,6 +11621,18 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 				'depends_default'   => true,
 				'description'       => __( 'Here you can define a custom background color for your countdown timer.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -9269,13 +11642,15 @@ class ET_Builder_Module_Countdown_Timer extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -9427,23 +11802,6 @@ class ET_Builder_Module_Map extends ET_Builder_Module {
 				),
 				'description' => __( 'Here you can choose whether the zoom level will be controlled by mouse wheel or not.', 'et_builder' ),
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'use_grayscale_filter' => array(
 				'label'           => __( 'Use Grayscale Filter', 'et_builder' ),
 				'type'            => 'yes_no_button',
@@ -9462,6 +11820,37 @@ class ET_Builder_Module_Map extends ET_Builder_Module {
 				'type'            => 'range',
 				'option_category' => 'configuration',
 				'tab_slug'        => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -9645,6 +12034,10 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 				'label'    => __( 'Social Icon', 'et_builder' ),
 				'selector' => 'li a.icon',
 			),
+			'follow_button' => array(
+				'label'    => __( 'Follow Button', 'et_builder' ),
+				'selector' => 'li a.follow_button',
+			),
 		);
 	}
 
@@ -9690,6 +12083,18 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 				),
 				'description' => __( 'Here you can choose whether or not to include the follow button next to the icon.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -9699,13 +12104,15 @@ class ET_Builder_Module_Social_Media_Follow extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -9781,6 +12188,10 @@ class ET_Builder_Module_Social_Media_Follow_Item extends ET_Builder_Module {
 			'social_icon' => array(
 				'label'    => __( 'Social Icon', 'et_builder' ),
 				'selector' => 'a.icon',
+			),
+			'follow_button' => array(
+				'label'    => __( 'Follow Button', 'et_builder' ),
+				'selector' => 'a.follow_button',
 			),
 		);
 	}
@@ -10028,6 +12439,20 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				),
 			),
 		);
+		$this->custom_css_options = array(
+			'post_title' => array(
+				'label'    => __( 'Title', 'et_builder' ),
+				'selector' => 'h1',
+			),
+			'post_meta' => array(
+				'label'    => __( 'Meta', 'et_builder' ),
+				'selector' => '.et_pb_title_meta_container',
+			),
+			'post_image' => array(
+				'label'    => __( 'Featured Image', 'et_builder' ),
+				'selector' => '.et_pb_title_featured_container',
+			),
+		);
 	}
 
 	function get_fields() {
@@ -10212,6 +12637,18 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'custom_color'      => true,
 				'tab_slug' => 'advanced',
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -10221,13 +12658,15 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 
@@ -10370,6 +12809,893 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 }
 new ET_Builder_Module_Post_Title;
 
+class ET_Builder_Module_Search extends ET_Builder_Module {
+	function init() {
+		$this->name = __( 'Search', 'et_builder' );
+		$this->slug = 'et_pb_search';
+
+		$this->whitelisted_fields = array(
+			'background_layout',
+			'text_orientation',
+			'admin_label',
+			'module_id',
+			'module_class',
+			'max_width',
+			'include_categories',
+			'exclude_posts',
+			'exclude_pages',
+			'button_color',
+			'field_bg',
+			'hide_button',
+			'placeholder',
+			'placeholder_color',
+			'max_width_tablet',
+			'max_width_phone',
+		);
+
+		$this->fields_defaults = array(
+			'background_layout' => array( 'light' ),
+			'text_orientation'  => array( 'left' ),
+		);
+
+		$this->main_css_element = '%%order_class%%';
+		$this->advanced_options = array(
+			'fonts' => array(
+				'input' => array(
+					'label'    => __( 'Input', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} input.et_pb_s",
+						'placeholder' => true,
+					),
+					'line_height'    => array(
+						'default' => '1em',
+					),
+					'font_size'      => array(
+						'default' => '14px',
+					),
+					'letter_spacing' => array(
+						'default' => '0px',
+					),
+				),
+				'button' => array(
+					'label'          => __( 'Button', 'et_builder' ),
+					'css'            => array(
+						'main' => "{$this->main_css_element} input.et_pb_searchsubmit",
+					),
+					'line_height'    => array(
+						'default' => '1em',
+					),
+					'font_size'      => array(
+						'default' => '14px',
+					),
+					'letter_spacing' => array(
+						'default' => '0px',
+					),
+				),
+			),
+			'custom_margin_padding' => array(
+				'css' => array(
+					'main'      => "{$this->main_css_element} input.et_pb_s",
+					'important' => 'all',
+				),
+			),
+		);
+
+		$this->custom_css_options = array(
+			'input_field' => array(
+				'label'    => __( 'Input Field', 'et_builder' ),
+				'selector' => 'input.et_pb_s',
+			),
+			'button'      => array(
+				'label'    => __( 'Button', 'et_builder' ),
+				'selector' => 'input.et_pb_searchsubmit',
+			),
+		);
+	}
+
+	function get_fields() {
+		$fields = array(
+			'background_layout' => array(
+				'label'           => __( 'Text Color', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'light' => __( 'Dark', 'et_builder' ),
+					'dark'  => __( 'Light', 'et_builder' ),
+				),
+				'description'     => __( 'Here you can choose the value of your text. If you are working with a dark background, then your text should be set to light. If you are working with a light background, then your text should be dark.', 'et_builder' ),
+			),
+			'text_orientation' => array(
+				'label'           => __( 'Text Orientation', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'layout',
+				'options'         => array(
+					'left'   => __( 'Left', 'et_builder' ),
+					'right'  => __( 'Right', 'et_builder' ),
+					'center' => __( 'Center', 'et_builder' ),
+				),
+				'description'     => __( 'This controls the how your text is aligned within the module.', 'et_builder' ),
+			),
+			'exclude_pages' => array(
+				'label'           => __( 'Exclude Pages', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'description'     => __( 'Turning this on will exclude Pages from search results', 'et_builder' ),
+			),
+			'exclude_posts' => array(
+				'label'           => __( 'Exclude Posts', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects'         => array(
+					'#et_pb_include_categories',
+				),
+				'description'     => __( 'Turning this on will exclude Posts from search results', 'et_builder' ),
+			),
+			'include_categories' => array(
+				'label'            => __( 'Exclude Categories', 'et_builder' ),
+				'renderer'         => 'et_builder_include_categories_option',
+				'option_category'  => 'basic_option',
+				'renderer_options' => array(
+					'use_terms' => false,
+				),
+				'depends_show_if'  => 'off',
+				'description'      => __( 'Choose which categories you would like to exclude from the search results.', 'et_builder' ),
+			),
+			'hide_button' => array(
+				'label'           => __( 'Hide Button', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'description'     => __( 'Turning this on will hide the Search button', 'et_builder' ),
+			),
+			'placeholder' => array(
+				'label'       => __( 'Placeholder Text', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'Type the text you want to use as placeholder for the search field.', 'et_builder' ),
+			),
+			'max_width' => array(
+				'label'           => __( 'Max Width', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'max_width_tablet' => array(
+				'type' => 'skip',
+			),
+			'max_width_phone' => array(
+				'type' => 'skip',
+			),
+			'button_color' => array(
+				'label'        => __( 'Button and Border Color', 'et_builder' ),
+				'type'         => 'color-alpha',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'field_bg' => array(
+				'label'        => __( 'Input Field Background Color', 'et_builder' ),
+				'type'         => 'color-alpha',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'placeholder_color' => array(
+				'label'        => __( 'Placeholder Color', 'et_builder' ),
+				'type'         => 'color-alpha',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+		);
+		return $fields;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$module_id          = $this->shortcode_atts['module_id'];
+		$module_class       = $this->shortcode_atts['module_class'];
+		$background_layout  = $this->shortcode_atts['background_layout'];
+		$text_orientation   = $this->shortcode_atts['text_orientation'];
+		$exclude_categories = $this->shortcode_atts['include_categories'];
+		$max_width          = $this->shortcode_atts['max_width'];
+		$exclude_posts      = $this->shortcode_atts['exclude_posts'];
+		$exclude_pages      = $this->shortcode_atts['exclude_pages'];
+		$button_color       = $this->shortcode_atts['button_color'];
+		$field_bg           = $this->shortcode_atts['field_bg'];
+		$hide_button        = $this->shortcode_atts['hide_button'];
+		$placeholder        = $this->shortcode_atts['placeholder'];
+		$placeholder_color  = $this->shortcode_atts['placeholder_color'];
+		$max_width_tablet   = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone    = $this->shortcode_atts['max_width_phone'];
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		$this->shortcode_content = et_builder_replace_code_content_entities( $this->shortcode_content );
+
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%%', 'max-width', $function_name );
+		}
+
+		if ( '' !== $button_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% input.et_pb_searchsubmit',
+				'declaration' => sprintf(
+					'background: %1$s !important;border-color:%1$s !important;',
+					esc_html( $button_color )
+				),
+			) );
+
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% input.et_pb_s',
+				'declaration' => sprintf(
+					'border-color:%1$s !important;',
+					esc_html( $button_color )
+				),
+			) );
+		}
+
+		if ( '' !== $field_bg ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% input.et_pb_s',
+				'declaration' => sprintf(
+					'background: %1$s;',
+					esc_html( $field_bg )
+				),
+			) );
+		}
+
+		if ( '' !== $placeholder_color ) {
+			$placeholder_selectors = array(
+				'%%order_class%% form input.et_pb_s::-webkit-input-placeholder',
+				'%%order_class%% form input.et_pb_s::-moz-placeholder',
+				'%%order_class%% form input.et_pb_s:-ms-input-placeholder',
+			);
+
+			foreach ( $placeholder_selectors as $single_selector ) {
+				ET_Builder_Element::set_style( $function_name, array(
+					'selector'    => $single_selector,
+					'declaration' => sprintf(
+						'color: %1$s !important;',
+						esc_html( $placeholder_color )
+					),
+				) );
+			}
+		}
+
+		if ( is_rtl() && 'left' === $text_orientation ) {
+			$text_orientation = 'right';
+		}
+
+		$class = " et_pb_module et_pb_bg_layout_{$background_layout} et_pb_text_align_{$text_orientation}";
+		$class .= 'on' === $hide_button ? ' et_pb_hide_search_button' : '';
+
+		$output = sprintf(
+			'<div%3$s class="et_pb_search%2$s%4$s">
+				<form role="search" method="get" class="et_pb_searchform" action="%1$s">
+					<div>
+						<label class="screen-reader-text" for="s">Search for:</label>
+						<input type="text" value="" name="s" class="et_pb_s"%8$s>
+						<input type="hidden" name="et_pb_searchform_submit" value="et_search_proccess" />
+						%5$s
+						%6$s
+						%7$s
+						<input type="submit" value="Search" class="et_pb_searchsubmit">
+					</div>
+				</form>
+			</div> <!-- .et_pb_text -->',
+			esc_url( home_url( '/' ) ),
+			esc_attr( $class ),
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' ),
+			'' !== $exclude_categories ? sprintf( '<input type="hidden" name="et_pb_search_cat" value="%1$s" />', esc_attr( $exclude_categories ) ) : '',
+			'on' !== $exclude_posts ? '<input type="hidden" name="et_pb_include_posts" value="yes" />' : '',
+			'on' !== $exclude_pages ? '<input type="hidden" name="et_pb_include_pages" value="yes" />' : '',
+			'' !== $placeholder ? sprintf( ' placeholder="%1$s"', esc_attr( $placeholder ) ) : ''
+		);
+
+		return $output;
+	}
+}
+new ET_Builder_Module_Search;
+
+class ET_Builder_Module_Comments extends ET_Builder_Module {
+	function init() {
+		$this->name = __( 'Comments', 'et_builder' );
+		$this->slug = 'et_pb_comments';
+
+		$this->whitelisted_fields = array(
+			'admin_label',
+			'module_id',
+			'module_class',
+			'form_background_color',
+			'input_border_radius',
+			'show_count',
+			'show_reply',
+			'show_avatar',
+			'background_layout',
+		);
+
+		$this->fields_defaults = array(
+			'input_border_radius' => array( '0px', 'add_default_setting' ),
+			'background_layout'   => array( 'light' ),
+		);
+
+		$this->main_css_element = '%%order_class%%';
+
+		$this->advanced_options = array(
+			'custom_margin_padding' => array(
+				'css' => array(
+					'important' => 'all',
+				),
+			),
+			'fonts' => array(
+				'meta' => array(
+					'label'          => __( 'Meta', 'et_builder' ),
+					'css'            => array(
+						'main'      => "{$this->main_css_element} .comment_postinfo span",
+						'important' => 'all',
+					),
+					'line_height'    => array(
+						'default' => '1em',
+					),
+					'font_size'      => array(
+						'default' => '14px',
+					),
+					'letter_spacing' => array(
+						'default' => '0px',
+					),
+				),
+				'body' => array(
+					'label'          => __( 'Comment', 'et_builder' ),
+					'css'            => array(
+						'main' => "{$this->main_css_element} .comment-content",
+					),
+					'line_height'    => array(
+						'default' => '1em',
+					),
+					'font_size'      => array(
+						'default' => '14px',
+					),
+					'letter_spacing' => array(
+						'default' => '0px',
+					),
+				),
+				'form_field' => array(
+					'label'          => __( 'Field', 'et_builder' ),
+					'css'            => array(
+						'main'      => "{$this->main_css_element} #commentform textarea, {$this->main_css_element} #commentform input[type='text'], {$this->main_css_element} #commentform input[type='email'], {$this->main_css_element} #commentform input[type='url'], {$this->main_css_element} #commentform label",
+						'important' => 'all',
+					),
+					'line_height'    => array(
+						'default' => '1em',
+					),
+					'font_size'      => array(
+						'default' => '18px',
+					),
+					'letter_spacing' => array(
+						'default' => '0px',
+					),
+				),
+			),
+			'border' => array(
+				'label'    => __( 'Field border', 'et_builder' ),
+				'css'      => array(
+					'main'      => "{$this->main_css_element} #commentform textarea, {$this->main_css_element} #commentform input[type='text'], {$this->main_css_element} #commentform input[type='email'], {$this->main_css_element} #commentform input[type='url']",
+					'important' => 'all',
+				),
+				'settings' => array(
+					'color' => 'alpha',
+				),
+			),
+			'button' => array(
+				'button' => array(
+					'label' => __( 'Button', 'et_builder' ),
+				),
+			),
+		);
+
+		$this->custom_css_options = array(
+			'main_header' => array(
+				'label'    => __( 'Comments Count', 'et_builder' ),
+				'selector' => 'h1#comments',
+			),
+			'comment_body' => array(
+				'label'    => __( 'Comment Body', 'et_builder' ),
+				'selector' => '.comment-body',
+			),
+			'comment_meta' => array(
+				'label'    => __( 'Comment Meta', 'et_builder' ),
+				'selector' => '.comment_postinfo',
+			),
+			'comment_content' => array(
+				'label'    => __( 'Comment Content', 'et_builder' ),
+				'selector' => '.comment_area .comment-content',
+			),
+			'comment_avatar' => array(
+				'label'    => __( 'Comment Avatar', 'et_builder' ),
+				'selector' => '.comment_avatar',
+			),
+			'reply_button' => array(
+				'label'    => __( 'Reply Button', 'et_builder' ),
+				'selector' => '.comment-reply-link.et_pb_button',
+			),
+			'new_title' => array(
+				'label'    => __( 'New Comment Title', 'et_builder' ),
+				'selector' => 'h3#reply-title',
+			),
+			'message_field' => array(
+				'label'    => __( 'Message Field', 'et_builder' ),
+				'selector' => '.comment-form-comment textarea#comment',
+			),
+			'name_field' => array(
+				'label'    => __( 'Name Field', 'et_builder' ),
+				'selector' => '.comment-form-author input',
+			),
+			'email_field' => array(
+				'label'    => __( 'Email Field', 'et_builder' ),
+				'selector' => '.comment-form-email input',
+			),
+			'website_field' => array(
+				'label'    => __( 'Website Field', 'et_builder' ),
+				'selector' => '.comment-form-url input',
+			),
+			'submit_button' => array(
+				'label'    => __( 'Submit Button', 'et_builder' ),
+				'selector' => '.form-submit input#submit',
+			),
+		);
+	}
+
+	function get_fields() {
+
+		$fields = array(
+			'show_avatar' => array(
+				'label'           => __( 'Show author avatar', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+			),
+			'show_reply' => array(
+				'label'           => __( 'Show reply button', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+			),
+			'show_count' => array(
+				'label'           => __( 'Show comments count', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+			),
+			'background_layout' => array(
+				'label'           => __( 'Text Color', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'color_option',
+				'options'         => array(
+					'light' => __( 'Dark', 'et_builder' ),
+					'dark'  => __( 'Light', 'et_builder' ),
+				),
+				'description'     => __( 'Here you can choose the value of your text. If you are working with a dark background, then your text should be set to light. If you are working with a light background, then your text should be dark.', 'et_builder' ),
+			),
+			'form_background_color' => array(
+				'label'        => __( 'Fields Background Color', 'et_builder' ),
+				'type'         => 'color-alpha',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'input_border_radius' => array(
+				'label'           => __( 'Fields Border Radius', 'et_builder' ),
+				'type'            => 'range',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+		);
+
+		return $fields;
+	}
+
+	function et_pb_comments_template() {
+		return dirname(__FILE__) . '/comments_template.php';
+	}
+
+	function et_pb_modify_comments_request( $params ) {
+		// modify the request parameters the way it doesn't change the result just to make request with unique parameters
+		$params->query_vars['type__not_in'] = 'et_pb_comments_random_type_' . $this->et_pb_unique_comments_module_class;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$module_id             = $this->shortcode_atts['module_id'];
+		$module_class          = $this->shortcode_atts['module_class'];
+		$button_custom         = $this->shortcode_atts['custom_button'];
+		$custom_icon           = $this->shortcode_atts['button_icon'];
+		$form_background_color = $this->shortcode_atts['form_background_color'];
+		$input_border_radius   = $this->shortcode_atts['input_border_radius'];
+		$show_avatar           = $this->shortcode_atts['show_avatar'];
+		$show_reply            = $this->shortcode_atts['show_reply'];
+		$show_count            = $this->shortcode_atts['show_count'];
+		$background_layout     = $this->shortcode_atts['background_layout'];
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		$this->et_pb_unique_comments_module_class = $module_class; // use this variable to make the comments request unique for each module instance
+
+		if ( '' !== $form_background_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% #commentform textarea, %%order_class%% #commentform input[type="text"], %%order_class%% #commentform input[type="email"], %%order_class%% #commentform input[type="url"]',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $form_background_color )
+				),
+			) );
+		}
+
+		if ( ! in_array( $input_border_radius, array( '', '0' ) ) ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% #commentform textarea, %%order_class%% #commentform input[type="text"], %%order_class%% #commentform input[type="email"], %%order_class%% #commentform input[type="url"]',
+				'declaration' => sprintf(
+					'-moz-border-radius: %1$s; -webkit-border-radius: %1$s; border-radius: %1$s;',
+					esc_html( et_builder_process_range_value( $input_border_radius ) )
+				),
+			) );
+		}
+
+		$module_class .= 'off' === $show_avatar ? ' et_pb_no_avatar' : '';
+		$module_class .= 'off' === $show_reply ? ' et_pb_no_reply_button' : '';
+		$module_class .= 'off' === $show_count ? ' et_pb_no_comments_count' : '';
+
+		$module_class .= ' et_pb_bg_layout_' . $background_layout;
+
+		// Modify the comments request to make sure it's unique.
+		// Otherwise WP generates SQL error and doesn't allow multiple comments sections on single page
+		add_action( 'pre_get_comments', array( $this, 'et_pb_modify_comments_request' ), 1 );
+
+		// include custom comments_template to display the comment section with Divi style
+		add_filter( 'comments_template', array( $this, 'et_pb_comments_template' ) );
+
+		ob_start();
+		comments_template( '', true );
+		$comments_content = ob_get_contents();
+		ob_end_clean();
+
+		// remove all the actions and filters to not break the default comments section from theme
+		remove_filter( 'comments_template', array( $this, 'et_pb_comments_template' ) );
+		remove_action( 'pre_get_comments', array( $this, 'et_pb_modify_comments_request' ), 1 );
+
+		$comments_custom_icon = 'on' === $button_custom ? $custom_icon : '';
+
+		$output = sprintf(
+			'<div%3$s class="et_pb_module et_pb_comments_module %2$s"%4$s>
+				%1$s
+			</div>',
+			$comments_content,
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' ),
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			'' !== $comments_custom_icon ? sprintf( ' data-icon="%1$s"', esc_attr( et_pb_process_font_icon( $comments_custom_icon ) ) ) : ''
+		);
+
+		return $output;
+	}
+}
+new ET_Builder_Module_Comments;
+
+class ET_Builder_Module_Posts_Navigation extends ET_Builder_Module {
+	function init() {
+		$this->name = __( 'Post Navigation', 'et_builder' );
+		$this->slug = 'et_pb_post_nav';
+		$this->main_css_element = '%%order_class%%';
+
+		$this->defaults = array();
+
+		$this->whitelisted_fields = array(
+			'in_same_term',
+			'taxonomy_name',
+			'hide_prev',
+			'hide_next',
+			'prev_text',
+			'next_text',
+			'module_id',
+			'module_class',
+		);
+
+		$this->advanced_options = array(
+			'fonts' => array(
+				'title' => array(
+					'label'    => __( 'Links', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} span a, {$this->main_css_element} span a span",
+					),
+					'line_height' => array(
+						'default' => '1em',
+					),
+					'font_size' => array(
+						'default' => '14px',
+					),
+					'letter_spacing' => array(
+						'default' => '0px',
+					),
+				),
+			),
+			'border'                => array(
+				'css' => array(
+					'main' => "{$this->main_css_element} span.nav-previous a, {$this->main_css_element} span.nav-next a",
+				),
+			),
+			'custom_margin_padding' => array(
+				'css' => array(
+					'main' => "{$this->main_css_element} span.nav-previous a, {$this->main_css_element} span.nav-next a",
+				),
+			),
+		);
+
+		$this->custom_css_options = array(
+			'links' => array(
+				'label'    => __( 'Links', 'et_builder' ),
+				'selector' => 'span a',
+			),
+			'prev_link' => array(
+				'label'    => __( 'Previous Link', 'et_builder' ),
+				'selector' => 'span.nav-previous a',
+			),
+			'prev_link_arrow' => array(
+				'label'    => __( 'Previous Link Arrow', 'et_builder' ),
+				'selector' => 'span.nav-previous a span',
+			),
+			'next_link' => array(
+				'label'    => __( 'Next Link', 'et_builder' ),
+				'selector' => 'span.nav-next a',
+			),
+			'next_link_arrow' => array(
+				'label'    => __( 'Next Link Arrow', 'et_builder' ),
+				'selector' => 'span.nav-next a span',
+			),
+		);
+	}
+
+	function get_fields() {
+		$fields = array(
+			'in_same_term' => array(
+				'label'           => __( 'In the same category', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_taxonomy_name',
+				),
+				'description'       => __( 'Here you can define whether previous and next posts must be within the same taxonomy term as the current post', 'et_builder' ),
+			),
+			'taxonomy_name' => array(
+				'label'           => __( 'Custom Taxonomy Name', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'depends_show_if' => 'on',
+				'description'     => __( 'Leave blank if you\'re using this module on a Project or Post. Otherwise type the taxonomy name to make the \'In the Same Category\' option work correctly', 'et_builder' ),
+			),
+			'hide_prev' => array(
+				'label'           => __( 'Hide Previous Post Link', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_prev_text',
+				),
+				'description'       => __( 'Here you can choose whether to hide or show the previous post link', 'et_builder' ),
+			),
+			'hide_next' => array(
+				'label'           => __( 'Hide Next Post Link', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_next_text',
+				),
+				'description'       => __( 'Here you can choose whether to hide or show the next post link', 'et_builder' ),
+			),
+			'prev_text' => array(
+				'label'           => __( 'Previous Link Text', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'depends_show_if' => 'off',
+				'description'     => __( 'Define custom text for the previous link. You can use the <strong>%title</strong> variable to include the post title. Leave blank for default.', 'et_builder' ),
+			),
+			'next_text' => array(
+				'label'           => __( 'Next Link Text', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'depends_show_if' => 'off',
+				'description'     => __( 'Define custom text for the next link. You can use the <strong>%title</strong> variable to include the post title. Leave blank for default.', 'et_builder' ),
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+		);
+		return $fields;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$module_id     = $this->shortcode_atts['module_id'];
+		$module_class  = $this->shortcode_atts['module_class'];
+		$in_same_term  = $this->shortcode_atts['in_same_term'];
+		$taxonomy_name = $this->shortcode_atts['taxonomy_name'];
+		$hide_prev     = $this->shortcode_atts['hide_prev'];
+		$hide_next     = $this->shortcode_atts['hide_next'];
+		$prev_text     = $this->shortcode_atts['prev_text'];
+		$next_text     = $this->shortcode_atts['next_text'];
+
+		// do not output anything if both prev and next links are disabled
+		if ( 'on' === $hide_prev && 'on' === $hide_next ) {
+			return;
+		}
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		$previous_link_text = '' !== $prev_text ? esc_html( $prev_text ) : '%title';
+		$next_link_text = '' !== $next_text ? esc_html( $next_text ) : '%title';
+		$in_same_term = 'on' === $in_same_term && ! is_page() ? true : false;
+
+		if ( '' === $taxonomy_name ) {
+			$current_taxonomy = is_singular( 'project' ) ? 'project_category' : 'category';
+		} else {
+			$current_taxonomy = sanitize_text_field( $taxonomy_name );
+		}
+
+		ob_start();
+		$previous_post_link = get_previous_post_link( '%link', '<span class="meta-nav">' . _x( '&larr;', 'Previous post link', 'et_builder' ) . '</span> ' . $previous_link_text, $in_same_term, '', $current_taxonomy );
+		$next_post_link     = get_next_post_link( '%link', $next_link_text . ' <span class="meta-nav">' . _x( '&rarr;', 'Next post link', 'et_builder' ) . '</span>', $in_same_term, '', $current_taxonomy );
+
+		if ( 'on' !== $hide_prev && '' !== $previous_post_link ) { ?>
+			<span class="nav-previous">
+				<?php echo $previous_post_link; ?>
+			</span>
+		<?php }
+
+		if ( 'on' !== $hide_next && '' !== $next_post_link ) { ?>
+			<span class="nav-next">
+				<?php echo $next_post_link; ?>
+			</span>
+		<?php }
+
+		$page_links = ob_get_contents();
+
+		ob_end_clean();
+
+		$output = sprintf(
+			'<div class="et_pb_posts_nav et_pb_module nav-single%2$s"%1$s>
+				%3$s
+			</div>',
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( ltrim( $module_class ) ) ) : '' ),
+			$page_links
+		);
+
+		return $output;
+	}
+}
+new ET_Builder_Module_Posts_Navigation;
+
+
 class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 	function init() {
 		$this->name             = __( 'Fullwidth Header', 'et_builder' );
@@ -10387,16 +13713,14 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 			'scroll_down_icon',
 			'scroll_down_icon_color',
 			'scroll_down_icon_size',
-			'title_font',
+			'scroll_down_icon_size_tablet',
+			'scroll_down_icon_size_phone',
 			'title_font_color',
-			'title_font_size',
-			'subhead_font',
 			'subhead_font_color',
-			'subhead_font_size',
-			'content_font',
 			'content_font_color',
-			'content_font_size',
 			'max_width',
+			'max_width_tablet',
+			'max_width_phone',
 			'button_one_text',
 			'button_one_url',
 			'button_two_text',
@@ -10443,6 +13767,64 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 			),
 		);
 		$this->advanced_options = array(
+			'fonts' => array(
+				'title' => array(
+					'label'    => __( 'Title', 'et_builder' ),
+					'css'      => array(
+						'main' => "%%order_class%%.et_pb_fullwidth_header .header-content h1",
+					),
+					'font_size' => array(
+						'toggle_slug'  => 'title_styles',
+						'default'      => '30px',
+					),
+					'font' => array(
+						'toggle_slug'  => 'title_styles',
+					),
+					'hide_line_height'    => true,
+					'hide_text_color'     => true,
+					'hide_letter_spacing' => true,
+				),
+				'subhead' => array(
+					'label'    => __( 'Subhead', 'et_builder' ),
+					'css'      => array(
+						'main' => "%%order_class%%.et_pb_fullwidth_header .et_pb_fullwidth_header_subhead",
+					),
+					'font_size' => array(
+						'toggle_slug'  => 'subhead_styles',
+					),
+					'font' => array(
+						'toggle_slug'  => 'subhead_styles',
+					),
+					'hide_line_height'    => true,
+					'hide_text_color'     => true,
+					'hide_letter_spacing' => true,
+				),
+				'content' => array(
+					'label'    => __( 'Content', 'et_builder' ),
+					'css'      => array(
+						'main' => "%%order_class%%.et_pb_fullwidth_header p",
+					),
+					'font_size' => array(
+						'toggle_slug'  => 'content_styles',
+						'default'      => '14px',
+					),
+					'font' => array(
+						'toggle_slug'  => 'content_styles',
+					),
+					'hide_line_height'    => true,
+					'hide_text_color'     => true,
+					'hide_letter_spacing' => true,
+				),
+			),
+			'button' => array(
+				'button' => array(
+					'label' => __( 'Button', 'et_builder' ),
+					'css'      => array(
+						'main' => ".et_pb_slider {$this->main_css_element}.et_pb_slide .et_pb_button",
+					),
+				),
+			),
+
 			'button' => array(
 				'button_one' => array(
 					'label' => __( 'Button One', 'et_builder' ),
@@ -10467,6 +13849,30 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 			'header_image' => array(
 				'label'    => __( 'Header Image', 'et_builder' ),
 				'selector' => '.et_pb_fullwidth_header_container .header-image img',
+			),
+			'logo' => array(
+				'label'    => __( 'Logo', 'et_builder' ),
+				'selector' => '.header-content img',
+			),
+			'title' => array(
+				'label'    => __( 'Title', 'et_builder' ),
+				'selector' => '.header-content h1',
+			),
+			'subtitle' => array(
+				'label'    => __( 'Subtitle', 'et_builder' ),
+				'selector' => '.header-content .et_pb_fullwidth_header_subhead',
+			),
+			'button_1' => array(
+				'label'    => __( 'Button One', 'et_builder' ),
+				'selector' => '.header-content .et_pb_button_one',
+			),
+			'button_2' => array(
+				'label'    => __( 'Button Two', 'et_builder' ),
+				'selector' => '.header-content .et_pb_button_two',
+			),
+			'scroll_button' => array(
+				'label'    => __( 'Scroll Down Button', 'et_builder' ),
+				'selector' => '.et_pb_fullwidth_header_scroll a .et-pb-icon',
 			),
 		);
 	}
@@ -10549,13 +13955,14 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'label'           => __( 'Scroll Down Icon Size', 'et_builder' ),
 				'type'            => 'range',
 				'option_category' => 'layout',
+				'mobile_options'  => true,
 				'tab_slug'        => 'advanced',
 			),
-			'title_font' => array(
-				'label'           => __( 'Title Font', 'et_builder' ),
-				'type'            => 'font',
-				'tab_slug'        => 'advanced',
-				'toggle_slug'     => 'title_styles',
+			'scroll_down_icon_size_tablet' => array(
+				'type' => 'skip',
+			),
+			'scroll_down_icon_size_phone' => array(
+				'type' => 'skip',
 			),
 			'title_font_color' => array(
 				'label'             => __( 'Title Font Color', 'et_builder' ),
@@ -10564,39 +13971,12 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'tab_slug'          => 'advanced',
 				'toggle_slug'       => 'title_styles',
 			),
-			'title_font_size' => array(
-				'label'           => __( 'Title Font Size', 'et_builder' ),
-				'type'            => 'range',
-				'default'         => '30px',
-				'option_category' => 'font_option',
-				'tab_slug'        => 'advanced',
-				'toggle_slug'     => 'title_styles',
-			),
-			'subhead_font' => array(
-				'label'           => __( 'Subhead Font', 'et_builder' ),
-				'type'            => 'font',
-				'tab_slug'        => 'advanced',
-				'toggle_slug'     => 'subhead_styles',
-			),
 			'subhead_font_color' => array(
 				'label'             => __( 'Subhead Font Color', 'et_builder' ),
 				'type'              => 'color',
 				'custom_color'      => true,
 				'tab_slug'          => 'advanced',
 				'toggle_slug'       => 'subhead_styles',
-			),
-			'subhead_font_size' => array(
-				'label'           => __( 'Subhead Font Size', 'et_builder' ),
-				'type'            => 'range',
-				'option_category' => 'font_option',
-				'tab_slug'        => 'advanced',
-				'toggle_slug'     => 'subhead_styles',
-			),
-			'content_font' => array(
-				'label'           => __( 'Content Font', 'et_builder' ),
-				'type'            => 'font',
-				'tab_slug'        => 'advanced',
-				'toggle_slug'     => 'content_styles',
 			),
 			'content_font_color' => array(
 				'label'             => __( 'Content Font Color', 'et_builder' ),
@@ -10605,20 +13985,19 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'tab_slug'          => 'advanced',
 				'toggle_slug'       => 'content_styles',
 			),
-			'content_font_size' => array(
-				'label'           => __( 'Content Font Size', 'et_builder' ),
-				'type'            => 'range',
-				'default'         => '14px',
-				'option_category' => 'font_option',
-				'tab_slug'        => 'advanced',
-				'toggle_slug'     => 'content_styles',
-			),
 			'max_width' => array(
 				'label'           => __( 'Text Max Width', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
+			),
+			'max_width_tablet' => array(
+				'type' => 'skip',
+			),
+			'max_width_phone' => array(
+				'type' => 'skip',
 			),
 			'button_one_text' => array(
 				'label'           => sprintf( __( 'Button %1$s Text', 'et_builder' ), '#1' ),
@@ -10738,14 +14117,24 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				),
 				'description'        => __( 'This controls the orientation of the image within the module.', 'et_builder' ),
 			),
-
 			'content_new' => array(
 				'label'           => __( 'Content', 'et_builder' ),
 				'type'            => 'tiny_mce',
 				'option_category' => 'basic_option',
 				'description'     => __( 'Here you can define the content that will be placed within the infobox for the pin.', 'et_builder' ),
 			),
-
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -10755,60 +14144,59 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
-
 		);
 		return $fields;
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
-		$module_id                   = $this->shortcode_atts['module_id'];
-		$module_class                = $this->shortcode_atts['module_class'];
-		$title                       = $this->shortcode_atts['title'];
-		$subhead                     = $this->shortcode_atts['subhead'];
-		$background_layout           = $this->shortcode_atts['background_layout'];
-		$text_orientation            = $this->shortcode_atts['text_orientation'];
-		$title_font                  = $this->shortcode_atts['title_font'];
-		$title_font_color            = $this->shortcode_atts['title_font_color'];
-		$title_font_size             = $this->shortcode_atts['title_font_size'];
-		$subhead_font                = $this->shortcode_atts['subhead_font'];
-		$subhead_font_color          = $this->shortcode_atts['subhead_font_color'];
-		$subhead_font_size           = $this->shortcode_atts['subhead_font_size'];
-		$content_font                = $this->shortcode_atts['content_font'];
-		$content_font_color          = $this->shortcode_atts['content_font_color'];
-		$content_font_size           = $this->shortcode_atts['content_font_size'];
-		$button_one_text             = $this->shortcode_atts['button_one_text'];
-		$button_one_url              = $this->shortcode_atts['button_one_url'];
-		$button_two_text             = $this->shortcode_atts['button_two_text'];
-		$button_two_url              = $this->shortcode_atts['button_two_url'];
-		$header_fullscreen           = $this->shortcode_atts['header_fullscreen'];
-		$header_scroll_down          = $this->shortcode_atts['header_scroll_down'];
-		$scroll_down_icon            = $this->shortcode_atts['scroll_down_icon'];
-		$scroll_down_icon_color      = $this->shortcode_atts['scroll_down_icon_color'];
-		$scroll_down_icon_size       = $this->shortcode_atts['scroll_down_icon_size'];
-		$background_url              = $this->shortcode_atts['background_url'];
-		$background_color            = $this->shortcode_atts['background_color'];
-		$background_overlay_color    = $this->shortcode_atts['background_overlay_color'];
-		$parallax                    = $this->shortcode_atts['parallax'];
-		$parallax_method             = $this->shortcode_atts['parallax_method'];
-		$logo_image_url              = $this->shortcode_atts['logo_image_url'];
-		$header_image_url            = $this->shortcode_atts['header_image_url'];
-		$content_orientation         = $this->shortcode_atts['content_orientation'];
-		$image_orientation           = $this->shortcode_atts['image_orientation'];
-		$custom_icon_1               = $this->shortcode_atts['button_one_icon'];
-		$button_custom_1             = $this->shortcode_atts['custom_button_one'];
-		$custom_icon_2               = $this->shortcode_atts['button_two_icon'];
-		$button_custom_2             = $this->shortcode_atts['custom_button_two'];
-		$max_width                   = $this->shortcode_atts['max_width'];
-		$logo_title                  = $this->shortcode_atts['logo_title'];
-		$logo_alt_text               = $this->shortcode_atts['logo_alt_text'];
+		$module_id                    = $this->shortcode_atts['module_id'];
+		$module_class                 = $this->shortcode_atts['module_class'];
+		$title                        = $this->shortcode_atts['title'];
+		$subhead                      = $this->shortcode_atts['subhead'];
+		$background_layout            = $this->shortcode_atts['background_layout'];
+		$text_orientation             = $this->shortcode_atts['text_orientation'];
+		$title_font_color             = $this->shortcode_atts['title_font_color'];
+		$subhead_font_color           = $this->shortcode_atts['subhead_font_color'];
+		$content_font_color           = $this->shortcode_atts['content_font_color'];
+		$button_one_text              = $this->shortcode_atts['button_one_text'];
+		$button_one_url               = $this->shortcode_atts['button_one_url'];
+		$button_two_text              = $this->shortcode_atts['button_two_text'];
+		$button_two_url               = $this->shortcode_atts['button_two_url'];
+		$header_fullscreen            = $this->shortcode_atts['header_fullscreen'];
+		$header_scroll_down           = $this->shortcode_atts['header_scroll_down'];
+		$scroll_down_icon             = $this->shortcode_atts['scroll_down_icon'];
+		$scroll_down_icon_color       = $this->shortcode_atts['scroll_down_icon_color'];
+		$scroll_down_icon_size        = $this->shortcode_atts['scroll_down_icon_size'];
+		$scroll_down_icon_size_tablet = $this->shortcode_atts['scroll_down_icon_size_tablet'];
+		$scroll_down_icon_size_phone  = $this->shortcode_atts['scroll_down_icon_size_phone'];
+		$background_url               = $this->shortcode_atts['background_url'];
+		$background_color             = $this->shortcode_atts['background_color'];
+		$background_overlay_color     = $this->shortcode_atts['background_overlay_color'];
+		$parallax                     = $this->shortcode_atts['parallax'];
+		$parallax_method              = $this->shortcode_atts['parallax_method'];
+		$logo_image_url               = $this->shortcode_atts['logo_image_url'];
+		$header_image_url             = $this->shortcode_atts['header_image_url'];
+		$content_orientation          = $this->shortcode_atts['content_orientation'];
+		$image_orientation            = $this->shortcode_atts['image_orientation'];
+		$custom_icon_1                = $this->shortcode_atts['button_one_icon'];
+		$button_custom_1              = $this->shortcode_atts['custom_button_one'];
+		$custom_icon_2                = $this->shortcode_atts['button_two_icon'];
+		$button_custom_2              = $this->shortcode_atts['custom_button_two'];
+		$max_width                    = $this->shortcode_atts['max_width'];
+		$max_width_tablet             = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone              = $this->shortcode_atts['max_width_phone'];
+		$logo_title                   = $this->shortcode_atts['logo_title'];
+		$logo_alt_text                = $this->shortcode_atts['logo_alt_text'];
 
 		if ( is_rtl() && 'left' === $text_orientation ) {
 			$text_orientation = 'right';
@@ -10816,24 +14204,17 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
-		if ( '' !== $max_width ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .header-content',
-				'declaration' => sprintf(
-					'max-width: %1$s !important;',
-					esc_html( et_builder_process_range_value( $max_width ) )
-				),
-			) );
-		}
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
 
-		if ( '' !== $title_font ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header .header-content h1',
-				'declaration' => sprintf(
-					'%1$s',
-					et_builder_set_element_font( $title_font )
-				),
-			) );
+
+			$additional_css = ' !important;';
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%% .header-content', 'max-width', $function_name, $additional_css );
 		}
 
 		if ( '' !== $title_font_color ) {
@@ -10842,26 +14223,6 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 				'declaration' => sprintf(
 					'color: %1$s !important;',
 					esc_html( $title_font_color )
-				),
-			) );
-		}
-
-		if ( '' !== $title_font_size ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header .header-content h1',
-				'declaration' => sprintf(
-					'font-size: %1$s;',
-					esc_html( et_builder_process_range_value( $title_font_size ) )
-				),
-			) );
-		}
-
-		if ( '' !== $subhead_font ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header .et_pb_fullwidth_header_subhead',
-				'declaration' => sprintf(
-					'%1$s',
-					et_builder_set_element_font( $subhead_font )
 				),
 			) );
 		}
@@ -10876,42 +14237,12 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 			) );
 		}
 
-		if ( '' !== $subhead_font_size ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header .et_pb_fullwidth_header_subhead',
-				'declaration' => sprintf(
-					'font-size: %1$s;',
-					esc_html( et_builder_process_range_value( $subhead_font_size ) )
-				),
-			) );
-		}
-
-		if ( '' !== $content_font ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header p',
-				'declaration' => sprintf(
-					'%1$s',
-					et_builder_set_element_font( $content_font )
-				),
-			) );
-		}
-
 		if ( '' !== $content_font_color ) {
 			ET_Builder_Element::set_style( $function_name, array(
 				'selector'    => '%%order_class%%.et_pb_fullwidth_header p',
 				'declaration' => sprintf(
 					'color: %1$s !important;',
 					esc_html( $content_font_color )
-				),
-			) );
-		}
-
-		if ( '' !== $content_font_size ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header p',
-				'declaration' => sprintf(
-					'font-size: %1$s;',
-					esc_html( et_builder_process_range_value( $content_font_size ) )
 				),
 			) );
 		}
@@ -10926,14 +14257,14 @@ class ET_Builder_Module_Fullwidth_Header extends ET_Builder_Module {
 			) );
 		}
 
-		if ( '' !== $scroll_down_icon_size ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%.et_pb_fullwidth_header .et_pb_fullwidth_header_scroll a .et-pb-icon',
-				'declaration' => sprintf(
-					'font-size: %1$s;',
-					esc_html( et_builder_process_range_value( $scroll_down_icon_size ) )
-				),
-			) );
+		if ( '' !== $scroll_down_icon_size || '' !== $scroll_down_icon_size_tablet || '' !== $scroll_down_icon_size_phone ) {
+			$icon_size_values = array(
+				'desktop' => $scroll_down_icon_size,
+				'tablet'  => $scroll_down_icon_size_tablet,
+				'phone'   => $scroll_down_icon_size_phone,
+			);
+
+			et_pb_generate_responsive_css( $icon_size_values, '%%order_class%%.et_pb_fullwidth_header .et_pb_fullwidth_header_scroll a .et-pb-icon', 'font-size', $function_name );
 		}
 
 		if ( '' !== $background_color ) {
@@ -11140,6 +14471,25 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 			),
 		);
 
+		$this->custom_css_options = array(
+			'menu_link' => array(
+				'label'    => __( 'Menu Link', 'et_builder' ),
+				'selector' => '.fullwidth-menu-nav li a',
+			),
+			'active_menu_link' => array(
+				'label'    => __( 'Active Menu Link', 'et_builder' ),
+				'selector' => '.fullwidth-menu-nav li.current-menu-item a',
+			),
+			'dropdown_container' => array(
+				'label'    => __( 'Dropdown Menu Container', 'et_builder' ),
+				'selector' => '.fullwidth-menu-nav li ul.sub-menu',
+			),
+			'dropdown_links' => array(
+				'label'    => __( 'Dropdown Menu Links', 'et_builder' ),
+				'selector' => '.fullwidth-menu-nav li ul.sub-menu a',
+			),
+		);
+
 		$this->fields_defaults = array(
 			'background_color'  => array( '#ffffff', 'only_default_setting' ),
 			'background_layout' => array( 'light' ),
@@ -11192,23 +14542,6 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 					'upwards'   => __( 'Upwards', 'et_builder' ),
 				),
 				'description' => __( 'Here you can choose the direction that your sub-menus will open. You can choose to have them open downwards or upwards.', 'et_builder' ),
-			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
 			),
 			'fullwidth_menu' => array(
 				'label'           => __( 'Make Menu Links Fullwidth', 'et_builder' ),
@@ -11268,7 +14601,37 @@ class ET_Builder_Module_Fullwidth_Menu extends ET_Builder_Module {
 				'custom_color' => true,
 				'tab_slug'     => 'advanced',
 			),
-
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
 		);
 		return $fields;
 	}
@@ -11488,6 +14851,11 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 			'hide_content_on_mobile',
 			'hide_cta_on_mobile',
 			'show_image_video_mobile',
+			'bottom_padding_tablet',
+			'bottom_padding_phone',
+			'top_padding_tablet',
+			'top_padding_phone',
+
 		);
 
 		$this->fields_defaults = array(
@@ -11552,6 +14920,14 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 			'slide_active_controller' => array(
 				'label'    => __( 'Slide Active Controller', 'et_builder' ),
 				'selector' => '.et-pb-controllers .et-pb-active-control',
+			),
+			'slide_image' => array(
+				'label'    => __( 'Slide Image', 'et_builder' ),
+				'selector' => '.et_pb_slide_image',
+			),
+			'slide_arrows' => array(
+				'label'    => __( 'Slide Arrows', 'et_builder' ),
+				'selector' => '.et-pb-slider-arrows a',
 			),
 		);
 	}
@@ -11670,28 +15046,12 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 				),
 				'depends_show_if'   => 'off',
 			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'           => __( 'CSS ID', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'           => __( 'CSS Class', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
 			'top_padding' => array(
 				'label'           => __( 'Top Padding', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
 			),
 			'bottom_padding' => array(
@@ -11699,7 +15059,20 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 				'type'            => 'text',
 				'option_category' => 'layout',
 				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
 				'validate_unit'   => true,
+			),
+			'top_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'top_padding_phone' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_phone' => array(
+				'type' => 'skip',
 			),
 			'hide_content_on_mobile' => array(
 				'label'           => __( 'Hide Content On Mobile', 'et_builder' ),
@@ -11730,6 +15103,37 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 					'on'  => __( 'Yes', 'et_builder' ),
 				),
 				'tab_slug'          => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -11774,6 +15178,10 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 		$auto_ignore_hover       = $this->shortcode_atts['auto_ignore_hover'];
 		$top_padding             = $this->shortcode_atts['top_padding'];
 		$bottom_padding          = $this->shortcode_atts['bottom_padding'];
+		$top_padding_tablet      = $this->shortcode_atts['top_padding_tablet'];
+		$bottom_padding_tablet   = $this->shortcode_atts['bottom_padding_tablet'];
+		$top_padding_phone       = $this->shortcode_atts['top_padding_phone'];
+		$bottom_padding_phone    = $this->shortcode_atts['bottom_padding_phone'];
 		$remove_inner_shadow     = $this->shortcode_atts['remove_inner_shadow'];
 		$show_image_video_mobile = $this->shortcode_atts['show_image_video_mobile'];
 		$background_position     = $this->shortcode_atts['background_position'];
@@ -11785,24 +15193,24 @@ class ET_Builder_Module_Fullwidth_Slider extends ET_Builder_Module {
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
-		if ( '' !== $top_padding ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_slide_description',
-				'declaration' => sprintf(
-					'padding-top: %1$s;',
-					esc_html( et_builder_process_range_value( $top_padding ) )
-				),
-			) );
+		if ( '' !== $top_padding || '' !== $top_padding_tablet || '' !== $top_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $top_padding,
+				'tablet'  => $top_padding_tablet,
+				'phone'   => $top_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description', 'padding-top', $function_name );
 		}
 
-		if ( '' !== $bottom_padding ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%% .et_pb_slide_description',
-				'declaration' => sprintf(
-					'padding-bottom: %1$s;',
-					esc_html( et_builder_process_range_value( $bottom_padding ) )
-				),
-			) );
+		if ( '' !== $bottom_padding || '' !== $bottom_padding_tablet || '' !== $bottom_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $bottom_padding,
+				'tablet'  => $bottom_padding_tablet,
+				'phone'   => $bottom_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description', 'padding-bottom', $function_name );
 		}
 
 		if ( 'default' !== $background_position && 'off' === $parallax ) {
@@ -11866,6 +15274,9 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module {
 		$this->slug       = 'et_pb_fullwidth_portfolio';
 		$this->fullwidth  = true;
 
+		// need to use global settings from the slider module
+		$this->global_settings_slug = 'et_pb_portfolio';
+
 		$this->whitelisted_fields = array(
 			'title',
 			'fullwidth',
@@ -11876,9 +15287,69 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module {
 			'background_layout',
 			'auto',
 			'auto_speed',
+			'hover_icon',
+			'hover_overlay_color',
+			'zoom_icon_color',
 			'admin_label',
 			'module_id',
 			'module_class',
+		);
+
+		$this->main_css_element = '%%order_class%%';
+
+		$this->advanced_options = array(
+			'fonts' => array(
+				'title'   => array(
+					'label'    => __( 'Title', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} h3",
+						'important' => 'all',
+					),
+				),
+				'caption' => array(
+					'label'    => __( 'Meta', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} .post-meta, {$this->main_css_element} .post-meta a",
+					),
+				),
+			),
+			'background' => array(
+				'settings' => array(
+					'color' => 'alpha',
+				),
+			),
+			'border' => array(
+				'css' => array(
+					'main' => "{$this->main_css_element} .et_pb_portfolio_item",
+				),
+			),
+		);
+
+		$this->custom_css_options = array(
+			'portfolio_title' => array(
+				'label'    => __( 'Portfolio Title', 'et_builder' ),
+				'selector' => '> h2',
+			),
+			'portfolio_item' => array(
+				'label'    => __( 'Portfolio Item', 'et_builder' ),
+				'selector' => '.et_pb_portfolio_item',
+			),
+			'portfolio_overlay' => array(
+				'label'    => __( 'Item Overlay', 'et_builder' ),
+				'selector' => 'span.et_overlay',
+			),
+			'portfolio_item_title' => array(
+				'label'    => __( 'Item Title', 'et_builder' ),
+				'selector' => '.meta h3',
+			),
+			'portfolio_meta' => array(
+				'label'    => __( 'Meta', 'et_builder' ),
+				'selector' => '.meta p',
+			),
+			'portfolio_arrows' => array(
+				'label'    => __( 'Navigation Arrows', 'et_builder' ),
+				'selector' => '.et-pb-slider-arrows a',
+			),
 		);
 
 		$this->fields_defaults = array(
@@ -11975,6 +15446,39 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module {
 				'depends_default'   => true,
 				'description'       => __( "Here you can designate how fast the carousel rotates, if 'Automatic Carousel Rotation' option is enabled above. The higher the number the longer the pause between each rotation. (Ex. 1000 = 1 sec)", 'et_builder' ),
 			),
+			'zoom_icon_color' => array(
+				'label'             => __( 'Zoom Icon Color', 'et_builder' ),
+				'type'              => 'color',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
+			'hover_overlay_color' => array(
+				'label'             => __( 'Hover Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'tab_slug'          => 'advanced',
+			),
+			'hover_icon' => array(
+				'label'               => __( 'Hover Icon Picker', 'et_builder' ),
+				'type'                => 'text',
+				'option_category'     => 'configuration',
+				'class'               => array( 'et-pb-font-icon' ),
+				'renderer'            => 'et_pb_get_font_icon_list',
+				'renderer_with_field' => true,
+				'tab_slug'            => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -11984,30 +15488,58 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
-		$title              = $this->shortcode_atts['title'];
-		$module_id          = $this->shortcode_atts['module_id'];
-		$module_class       = $this->shortcode_atts['module_class'];
-		$fullwidth          = $this->shortcode_atts['fullwidth'];
-		$include_categories = $this->shortcode_atts['include_categories'];
-		$posts_number       = $this->shortcode_atts['posts_number'];
-		$show_title         = $this->shortcode_atts['show_title'];
-		$show_date          = $this->shortcode_atts['show_date'];
-		$background_layout  = $this->shortcode_atts['background_layout'];
-		$auto               = $this->shortcode_atts['auto'];
-		$auto_speed         = $this->shortcode_atts['auto_speed'];
+		$title               = $this->shortcode_atts['title'];
+		$module_id           = $this->shortcode_atts['module_id'];
+		$module_class        = $this->shortcode_atts['module_class'];
+		$fullwidth           = $this->shortcode_atts['fullwidth'];
+		$include_categories  = $this->shortcode_atts['include_categories'];
+		$posts_number        = $this->shortcode_atts['posts_number'];
+		$show_title          = $this->shortcode_atts['show_title'];
+		$show_date           = $this->shortcode_atts['show_date'];
+		$background_layout   = $this->shortcode_atts['background_layout'];
+		$auto                = $this->shortcode_atts['auto'];
+		$auto_speed          = $this->shortcode_atts['auto_speed'];
+		$zoom_icon_color     = $this->shortcode_atts['zoom_icon_color'];
+		$hover_overlay_color = $this->shortcode_atts['hover_overlay_color'];
+		$hover_icon          = $this->shortcode_atts['hover_icon'];
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		if ( '' !== $zoom_icon_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_overlay:before',
+				'declaration' => sprintf(
+					'color: %1$s !important;',
+					esc_html( $zoom_icon_color )
+				),
+			) );
+		}
+
+		if ( '' !== $hover_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_overlay',
+				'declaration' => sprintf(
+					'background-color: %1$s;
+					border-color: %1$s;',
+					esc_html( $hover_overlay_color )
+				),
+			) );
+		}
 
 		$args = array();
 		if ( is_numeric( $posts_number ) && $posts_number > 0 ) {
@@ -12053,8 +15585,19 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module {
 							<a href="<?php the_permalink(); ?>">
 								<img src="<?php echo esc_attr( $thumb_src ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>"/>
 								<div class="meta">
-									<span class="et_overlay"></span>
+								<?php
+									$data_icon = '' !== $hover_icon
+										? sprintf(
+											' data-icon="%1$s"',
+											esc_attr( et_pb_process_font_icon( $hover_icon ) )
+										)
+										: '';
 
+									printf( '<span class="et_overlay%1$s"%2$s></span>',
+										( '' !== $hover_icon ? ' et_pb_inline_icon' : '' ),
+										$data_icon
+									);
+								?>
 									<?php if ( 'on' === $show_title ) : ?>
 										<h3><?php the_title(); ?></h3>
 									<?php endif; ?>
@@ -12165,6 +15708,18 @@ class ET_Builder_Module_Fullwidth_Map extends ET_Builder_Module {
 				),
 				'description' => __( 'Here you can choose whether the zoom level will be controlled by mouse wheel or not.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -12174,13 +15729,15 @@ class ET_Builder_Module_Fullwidth_Map extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 		return $fields;
@@ -12232,6 +15789,8 @@ class ET_Builder_Module_Code extends ET_Builder_Module {
 			'module_id',
 			'module_class',
 			'max_width',
+			'max_width_tablet',
+			'max_width_phone',
 		);
 	}
 
@@ -12243,6 +15802,32 @@ class ET_Builder_Module_Code extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Here you can create the content that will be used within the module.', 'et_builder' ),
 			),
+			'max_width' => array(
+				'label'           => __( 'Max Width', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'max_width_tablet' => array(
+				'type' => 'skip',
+			),
+			'max_width_phone' => array(
+				'type' => 'skip',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -12252,20 +15837,15 @@ class ET_Builder_Module_Code extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
-			'max_width' => array(
-				'label'           => __( 'Max Width', 'et_builder' ),
-				'type'            => 'text',
-				'option_category' => 'layout',
-				'tab_slug'        => 'advanced',
-				'validate_unit'   => true,
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 
@@ -12273,22 +15853,24 @@ class ET_Builder_Module_Code extends ET_Builder_Module {
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
-		$module_id    = $this->shortcode_atts['module_id'];
-		$module_class = $this->shortcode_atts['module_class'];
+		$module_id        = $this->shortcode_atts['module_id'];
+		$module_class     = $this->shortcode_atts['module_class'];
 		$max_width        = $this->shortcode_atts['max_width'];
+		$max_width_tablet = $this->shortcode_atts['max_width_tablet'];
+		$max_width_phone  = $this->shortcode_atts['max_width_phone'];
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
 		$this->shortcode_content = et_builder_replace_code_content_entities( $this->shortcode_content );
 
-		if ( '' !== $max_width ) {
-			ET_Builder_Element::set_style( $function_name, array(
-				'selector'    => '%%order_class%%',
-				'declaration' => sprintf(
-					'max-width: %1$s;',
-					esc_html( et_builder_process_range_value( $max_width ) )
-				),
-			) );
+		if ( '' !== $max_width_tablet || '' !== $max_width_phone || '' !== $max_width ) {
+			$max_width_values = array(
+				'desktop' => $max_width,
+				'tablet'  => $max_width_tablet,
+				'phone'   => $max_width_phone,
+			);
+
+			et_pb_generate_responsive_css( $max_width_values, '%%order_class%%', 'max-width', $function_name );
 		}
 
 		$output = sprintf(
@@ -12329,6 +15911,18 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 				'option_category' => 'basic_option',
 				'description'     => __( 'Here you can create the content that will be used within the module.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -12338,13 +15932,15 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 
@@ -12354,6 +15950,8 @@ class ET_Builder_Module_Fullwidth_Code extends ET_Builder_Module {
 	function shortcode_callback( $atts, $content = null, $function_name ) {
 		$module_id    = $this->shortcode_atts['module_id'];
 		$module_class = $this->shortcode_atts['module_class'];
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
 		$this->shortcode_content = et_builder_replace_code_content_entities( $this->shortcode_content );
 
@@ -12391,12 +15989,17 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 			'admin_label',
 			'module_id',
 			'module_class',
+			'use_overlay',
+			'overlay_icon_color',
+			'hover_overlay_color',
+			'hover_icon',
 		);
 
 		$this->fields_defaults = array(
 			'show_in_lightbox' => array( 'off' ),
 			'url_new_window'   => array( 'off' ),
 			'animation'        => array( 'left' ),
+			'use_overlay'      => array( 'off' ),
 		);
 
 		$this->advanced_options = array(
@@ -12444,6 +16047,7 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 				'affects'           => array(
 					'#et_pb_url',
 					'#et_pb_url_new_window',
+					'#et_pb_use_overlay',
 				),
 				'description'       => __( 'Here you can choose whether or not the image should open in Lightbox. Note: if you select to open the image in Lightbox, url options below will be ignored.', 'et_builder' ),
 			),
@@ -12452,6 +16056,9 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 				'type'            => 'text',
 				'option_category' => 'basic_option',
 				'depends_show_if' => 'off',
+				'affects'         => array(
+					'#et_pb_use_overlay',
+				),
 				'description'     => __( 'If you would like your image to be a link, input your destination URL here. No link will be created if this field is left blank.', 'et_builder' ),
 			),
 			'url_new_window' => array(
@@ -12464,6 +16071,46 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 				),
 				'depends_show_if'   => 'off',
 				'description'       => __( 'Here you can choose whether or not your link opens in a new window', 'et_builder' ),
+			),
+			'use_overlay' => array(
+				'label'             => __( 'Image Overlay', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'layout',
+				'options'           => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_overlay_icon_color',
+					'#et_pb_hover_overlay_color',
+					'#et_pb_hover_icon',
+				),
+				'depends_default'   => true,
+				'description'       => __( 'If enabled, an overlay color and icon will be displayed when a visitors hovers over the image', 'et_builder' ),
+			),
+			'overlay_icon_color' => array(
+				'label'             => __( 'Overlay Icon Color', 'et_builder' ),
+				'type'              => 'color',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Here you can define a custom color for the overlay icon', 'et_builder' ),
+			),
+			'hover_overlay_color' => array(
+				'label'             => __( 'Hover Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Here you can define a custom color for the overlay', 'et_builder' ),
+			),
+			'hover_icon' => array(
+				'label'               => __( 'Hover Icon Picker', 'et_builder' ),
+				'type'                => 'text',
+				'option_category'     => 'configuration',
+				'class'               => array( 'et-pb-font-icon' ),
+				'renderer'            => 'et_pb_get_font_icon_list',
+				'renderer_with_field' => true,
+				'depends_show_if'     => 'on',
+				'description'       => __( 'Here you can define a custom icon for the overlay', 'et_builder' ),
 			),
 			'animation' => array(
 				'label'             => __( 'Animation', 'et_builder' ),
@@ -12479,6 +16126,18 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 				),
 				'description'       => __( 'This controls the direction of the lazy-loading animation.', 'et_builder' ),
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -12488,13 +16147,15 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 
@@ -12502,23 +16163,67 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 	}
 
 	function shortcode_callback( $atts, $content = null, $function_name ) {
-		$module_id        = $this->shortcode_atts['module_id'];
-		$module_class     = $this->shortcode_atts['module_class'];
-		$src              = $this->shortcode_atts['src'];
-		$alt              = $this->shortcode_atts['alt'];
-		$title_text       = $this->shortcode_atts['title_text'];
-		$animation        = $this->shortcode_atts['animation'];
-		$url              = $this->shortcode_atts['url'];
-		$url_new_window   = $this->shortcode_atts['url_new_window'];
-		$show_in_lightbox = $this->shortcode_atts['show_in_lightbox'];
+		$module_id           = $this->shortcode_atts['module_id'];
+		$module_class        = $this->shortcode_atts['module_class'];
+		$src                 = $this->shortcode_atts['src'];
+		$alt                 = $this->shortcode_atts['alt'];
+		$title_text          = $this->shortcode_atts['title_text'];
+		$animation           = $this->shortcode_atts['animation'];
+		$url                 = $this->shortcode_atts['url'];
+		$url_new_window      = $this->shortcode_atts['url_new_window'];
+		$show_in_lightbox    = $this->shortcode_atts['show_in_lightbox'];
+		$overlay_icon_color  = $this->shortcode_atts['overlay_icon_color'];
+		$hover_overlay_color = $this->shortcode_atts['hover_overlay_color'];
+		$hover_icon          = $this->shortcode_atts['hover_icon'];
+		$use_overlay         = $this->shortcode_atts['use_overlay'];
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 
+		// overlay can be applied only if image has link or if lightbox enabled
+		$is_overlay_applied = 'on' === $use_overlay && ( 'on' === $show_in_lightbox || ( 'off' === $show_in_lightbox && '' !== $url ) ) ? 'on' : 'off';
+
+		if ( 'on' === $is_overlay_applied ) {
+			if ( '' !== $overlay_icon_color ) {
+				ET_Builder_Element::set_style( $function_name, array(
+					'selector'    => '%%order_class%% .et_overlay:before',
+					'declaration' => sprintf(
+						'color: %1$s !important;',
+						esc_html( $overlay_icon_color )
+					),
+				) );
+			}
+
+			if ( '' !== $hover_overlay_color ) {
+				ET_Builder_Element::set_style( $function_name, array(
+					'selector'    => '%%order_class%% .et_overlay',
+					'declaration' => sprintf(
+						'background-color: %1$s;',
+						esc_html( $hover_overlay_color )
+					),
+				) );
+			}
+
+			$data_icon = '' !== $hover_icon
+				? sprintf(
+					' data-icon="%1$s"',
+					esc_attr( et_pb_process_font_icon( $hover_icon ) )
+				)
+				: '';
+
+			$overlay_output = sprintf(
+				'<span class="et_overlay%1$s"%2$s></span>',
+				( '' !== $hover_icon ? ' et_pb_inline_icon' : '' ),
+				$data_icon
+			);
+		}
+
 		$output = sprintf(
-			'<img src="%1$s" alt="%2$s"%3$s />',
+			'<img src="%1$s" alt="%2$s"%3$s />
+			%4$s',
 			esc_attr( $src ),
 			esc_attr( $alt ),
-			( '' !== $title_text ? sprintf( ' title="%1$s"', esc_attr( $title_text ) ) : '' )
+			( '' !== $title_text ? sprintf( ' title="%1$s"', esc_attr( $title_text ) ) : '' ),
+			'on' === $is_overlay_applied ? $overlay_output : ''
 		);
 
 		if ( 'on' === $show_in_lightbox ) {
@@ -12536,13 +16241,14 @@ class ET_Builder_Module_Fullwidth_Image extends ET_Builder_Module {
 		}
 
 		$output = sprintf(
-			'<div%4$s class="et_pb_module et-waypoint et_pb_fullwidth_image%2$s%3$s">
+			'<div%4$s class="et_pb_module et-waypoint et_pb_fullwidth_image%2$s%3$s%5$s">
 				%1$s
 			</div>',
 			$output,
 			esc_attr( " et_pb_animation_{$animation}" ),
 			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' ),
-			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' )
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			'on' === $is_overlay_applied ? ' et_pb_has_overlay' : ''
 		);
 
 		return $output;
@@ -12810,6 +16516,18 @@ class ET_Builder_Module_Fullwidth_Post_Title extends ET_Builder_Module {
 				'custom_color'      => true,
 				'tab_slug' => 'advanced',
 			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
 			'admin_label' => array(
 				'label'       => __( 'Admin Label', 'et_builder' ),
 				'type'        => 'text',
@@ -12819,13 +16537,15 @@ class ET_Builder_Module_Fullwidth_Post_Title extends ET_Builder_Module {
 				'label'           => __( 'CSS ID', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 			'module_class' => array(
 				'label'           => __( 'CSS Class', 'et_builder' ),
 				'type'            => 'text',
 				'option_category' => 'configuration',
-				'description'     => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
 			),
 		);
 
@@ -12969,3 +16689,906 @@ class ET_Builder_Module_Fullwidth_Post_Title extends ET_Builder_Module {
 	}
 }
 new ET_Builder_Module_Fullwidth_Post_Title;
+
+class ET_Builder_Module_Fullwidth_Post_Slider extends ET_Builder_Module {
+	function init() {
+		$this->name = __( 'Fullwidth Post Slider', 'et_builder' );
+		$this->slug = 'et_pb_fullwidth_post_slider';
+		$this->fullwidth  = true;
+
+		// need to use global settings from the fullwidth slider module
+		$this->global_settings_slug = 'et_pb_fullwidth_slider';
+
+		$this->whitelisted_fields = array(
+			'show_arrows',
+			'show_pagination',
+			'auto',
+			'auto_speed',
+			'auto_ignore_hover',
+			'parallax',
+			'parallax_method',
+			'remove_inner_shadow',
+			'background_position',
+			'background_size',
+			'admin_label',
+			'module_id',
+			'module_class',
+			'top_padding',
+			'bottom_padding',
+			'hide_content_on_mobile',
+			'hide_cta_on_mobile',
+			'show_image_video_mobile',
+			'include_categories',
+			'posts_number',
+			'show_more_button',
+			'more_text',
+			'content_source',
+			'background_color',
+			'show_image',
+			'image_placement',
+			'background_image',
+			'background_layout',
+			'use_bg_overlay',
+			'use_text_overlay',
+			'bg_overlay_color',
+			'text_overlay_color',
+			'orderby',
+			'show_meta',
+			'use_manual_excerpt',
+			'excerpt_length',
+			'text_border_radius',
+			'arrows_custom_color',
+			'dot_nav_custom_color',
+			'top_padding_tablet',
+			'top_padding_phone',
+			'bottom_padding_tablet',
+			'bottom_padding_phone',
+		);
+
+		$this->fields_defaults = array(
+			'show_arrows'             => array( 'on' ),
+			'show_pagination'         => array( 'on' ),
+			'auto'                    => array( 'off' ),
+			'auto_speed'              => array( '7000' ),
+			'auto_ignore_hover'       => array( 'off' ),
+			'parallax'                => array( 'off' ),
+			'parallax_method'         => array( 'off' ),
+			'remove_inner_shadow'     => array( 'off' ),
+			'background_position'     => array( 'default' ),
+			'background_size'         => array( 'default' ),
+			'hide_content_on_mobile'  => array( 'off' ),
+			'hide_cta_on_mobile'      => array( 'off' ),
+			'show_image_video_mobile' => array( 'off' ),
+			'more_text'               => array( 'Read More' ),
+			'background_color'        => array( '' ),
+			'image_placement'         => array( 'background' ),
+			'background_layout'       => array( 'dark' ),
+			'orderby'                 => array( 'date_desc' ),
+			'excerpt_length'          => array( '270' ),
+			'use_bg_overlay'          => array( 'on' ),
+		);
+
+		$this->main_css_element = '%%order_class%%.et_pb_slider';
+		$this->advanced_options = array(
+			'fonts' => array(
+				'header' => array(
+					'label'    => __( 'Header', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} .et_pb_slide_description .et_pb_slide_title",
+					),
+				),
+				'body'   => array(
+					'label'    => __( 'Body', 'et_builder' ),
+					'css'      => array(
+						'line_height' => "{$this->main_css_element}",
+						'main' => "{$this->main_css_element} .et_pb_slide_content",
+						'important' => 'all',
+					),
+				),
+				'meta'   => array(
+					'label'    => __( 'Meta', 'et_builder' ),
+					'css'      => array(
+						'main' => "{$this->main_css_element} .et_pb_slide_content .post-meta, {$this->main_css_element} .et_pb_slide_content .post-meta a",
+						'important' => 'all',
+					),
+					'line_height' => array(
+						'default' => '1em',
+					),
+					'font_size' => array(
+						'default' => '16px',
+					),
+					'letter_spacing' => array(
+						'default' => '0',
+					),
+				),
+			),
+			'button' => array(
+				'button' => array(
+					'label' => __( 'Button', 'et_builder' ),
+				),
+			),
+		);
+		$this->custom_css_options = array(
+			'slide_description' => array(
+				'label'    => __( 'Slide Description', 'et_builder' ),
+				'selector' => '.et_pb_slide_description',
+			),
+			'slide_title' => array(
+				'label'    => __( 'Slide Title', 'et_builder' ),
+				'selector' => '.et_pb_slide_description .et_pb_slide_title',
+			),
+			'slide_button' => array(
+				'label'    => __( 'Slide Button', 'et_builder' ),
+				'selector' => 'a.et_pb_more_button',
+			),
+			'slide_controllers' => array(
+				'label'    => __( 'Slide Controllers', 'et_builder' ),
+				'selector' => '.et-pb-controllers',
+			),
+			'slide_active_controller' => array(
+				'label'    => __( 'Slide Active Controller', 'et_builder' ),
+				'selector' => '.et-pb-controllers .et-pb-active-control',
+			),
+			'slide_image' => array(
+				'label'    => __( 'Slide Image', 'et_builder' ),
+				'selector' => '.et_pb_slide_image',
+			),
+			'slide_arrows' => array(
+				'label'    => __( 'Slide Arrows', 'et_builder' ),
+				'selector' => '.et-pb-slider-arrows a',
+			),
+		);
+	}
+
+	function get_fields() {
+		$fields = array(
+			'posts_number' => array(
+				'label'             => __( 'Posts Number', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'description'       => __( 'Choose how many posts you would like to display in the slider.', 'et_builder' ),
+			),
+			'include_categories' => array(
+				'label'            => __( 'Include Categories', 'et_builder' ),
+				'renderer'         => 'et_builder_include_categories_option',
+				'option_category'  => 'basic_option',
+				'renderer_options' => array(
+					'use_terms' => false,
+				),
+				'description'      => __( 'Choose which categories you would like to include in the slider.', 'et_builder' ),
+			),
+			'orderby' => array(
+				'label'             => __( 'Order By', 'et_builder' ),
+				'type'              => 'select',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'date_desc'  => __( 'Date: new to old', 'et_builder' ),
+					'date_asc'   => __( 'Date: old to new', 'et_builder' ),
+					'title_asc'  => __( 'Title: a-z', 'et_builder' ),
+					'title_desc' => __( 'Title: z-a', 'et_builder' ),
+					'rand'       => __( 'Random', 'et_builder' ),
+				),
+				'description'       => __( 'Here you can adjust the order in which posts are displayed.', 'et_builder' ),
+			),
+			'show_arrows'         => array(
+				'label'           => __( 'Show Arrows', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'description'     => __( 'This setting will turn on and off the navigation arrows.', 'et_builder' ),
+			),
+			'show_pagination' => array(
+				'label'             => __( 'Show Controls', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+				'description'       => __( 'This setting will turn on and off the circle buttons at the bottom of the slider.', 'et_builder' ),
+			),
+			'show_more_button' => array(
+				'label'             => __( 'Show Read More Button', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_more_text',
+				),
+				'description'       => __( 'This setting will turn on and off the read more button.', 'et_builder' ),
+			),
+			'more_text' => array(
+				'label'             => __( 'Button Text', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Define the text which will be displayed on "Read More" button. Leave blank for default ( Read More )', 'et_builder' ),
+			),
+			'content_source' => array(
+				'label'             => __( 'Content Display', 'et_builder' ),
+				'type'              => 'select',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'off' => __( 'Show Excerpt', 'et_builder' ),
+					'on'  => __( 'Show Content', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_use_manual_excerpt',
+					'#et_pb_excerpt_length',
+				),
+				'description'       => __( 'Showing the full content will not truncate your posts in the slider. Showing the excerpt will only display excerpt text.', 'et_builder' ),
+			),
+			'use_manual_excerpt' => array(
+				'label'             => __( 'Use Post Excerpt if Defined', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'Yes', 'et_builder' ),
+					'off' => __( 'No', 'et_builder' ),
+				),
+				'depends_show_if'   => 'off',
+				'description'       => __( 'Disable this option if you want to ignore manually defined excerpts and always generate it automatically.', 'et_builder' ),
+			),
+			'excerpt_length' => array(
+				'label'             => __( 'Automatic Excerpt Length', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'depends_show_if'   => 'off',
+				'description'       => __( 'Define the length of automatically generated excerpts. Leave blank for default ( 270 ) ', 'et_builder' ),
+			),
+			'show_meta' => array(
+				'label'           => __( 'Show Post Meta', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'description'     => __( 'This setting will turn on and off the meta section.', 'et_builder' ),
+			),
+			'background_color' => array(
+				'label'        => __( 'Background Color', 'et_builder' ),
+				'type'         => 'color-alpha',
+				'custom_color' => true,
+				'description'  => __( 'Use the color picker to choose a background color for this module.', 'et_builder' ),
+			),
+			'background_image' => array(
+				'label'              => __( 'Background Image', 'et_builder' ),
+				'type'               => 'upload',
+				'option_category'    => 'basic_option',
+				'upload_button_text' => __( 'Upload an image', 'et_builder' ),
+				'choose_text'        => __( 'Choose a Background', 'et_builder' ),
+				'update_text'        => __( 'Set As Background', 'et_builder' ),
+				'description'        => __( 'Upload your desired image, or type in the URL to the image you would like to use as the background for the slider.', 'et_builder' ),
+			),
+			'background_layout' => array(
+				'label'           => __( 'Text Color', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'color_option',
+				'options'         => array(
+					'dark'  => __( 'Light', 'et_builder' ),
+					'light' => __( 'Dark', 'et_builder' ),
+				),
+				'description'     => __( 'Here you can choose whether your text is light or dark. If you have a slide with a dark background, then choose light text. If you have a light background, then use dark text.' , 'et_builder' ),
+			),
+			'show_image' => array(
+				'label'             => __( 'Show Featured Image', 'et_builder' ),
+				'type'              => 'yes_no_button',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_image_placement',
+				),
+				'description'       => __( 'This setting will turn on and off the featured image in the slider.', 'et_builder' ),
+			),
+			'image_placement' => array(
+				'label'             => __( 'Image Placement', 'et_builder' ),
+				'type'              => 'select',
+				'option_category'   => 'configuration',
+				'options'           => array(
+					'background' => __( 'Background', 'et_builder' ),
+					'left'       => __( 'Left', 'et_builder' ),
+					'right'      => __( 'Right', 'et_builder' ),
+					'top'        => __( 'Top', 'et_builder' ),
+					'bottom'     => __( 'Bottom', 'et_builder' ),
+				),
+				'depends_show_if'   => 'on',
+				'affects' => array(
+					'#et_pb_parallax',
+				),
+				'description'       => __( 'Select how you would like to display the featured image in slides', 'et_builder' ),
+			),
+			'parallax' => array(
+				'label'           => __( 'Use Parallax effect', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_parallax_method',
+					'#et_pb_background_position',
+					'#et_pb_background_size',
+				),
+				'depends_show_if'    => 'background',
+				'description'        => __( 'Enabling this option will give your background images a fixed position as you scroll.', 'et_builder' ),
+			),
+			'parallax_method' => array(
+				'label'           => __( 'Parallax method', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'CSS', 'et_builder' ),
+					'on'  => __( 'True Parallax', 'et_builder' ),
+				),
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Define the method, used for the parallax effect.', 'et_builder' ),
+			),
+			'use_bg_overlay'      => array(
+				'label'           => __( 'Use Background Overlay', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'on'  => __( 'yes', 'et_builder' ),
+					'off' => __( 'no', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_bg_overlay_color',
+				),
+				'description'     => __( 'When enabled, a custom overlay color will be added above your background image and behind your slider content.', 'et_builder' ),
+			),
+			'bg_overlay_color' => array(
+				'label'             => __( 'Background Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Use the color picker to choose a color for the background overlay.', 'et_builder' ),
+			),
+			'use_text_overlay'      => array(
+				'label'           => __( 'Use Text Overlay', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'no', 'et_builder' ),
+					'on'  => __( 'yes', 'et_builder' ),
+				),
+				'affects'           => array(
+					'#et_pb_text_overlay_color',
+				),
+				'description'     => __( 'When enabled, a background color is added behind the slider text to make it more readable atop background images.', 'et_builder' ),
+			),
+			'text_overlay_color' => array(
+				'label'             => __( 'Text Overlay Color', 'et_builder' ),
+				'type'              => 'color-alpha',
+				'custom_color'      => true,
+				'depends_show_if'   => 'on',
+				'description'       => __( 'Use the color picker to choose a color for the text overlay.', 'et_builder' ),
+			),
+			'remove_inner_shadow' => array(
+				'label'           => __( 'Remove Inner Shadow', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+			),
+			'background_position' => array(
+				'label'           => __( 'Background Image Position', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'layout',
+				'options' => array(
+					'default'       => __( 'Default', 'et_builder' ),
+					'top_left'      => __( 'Top Left', 'et_builder' ),
+					'top_center'    => __( 'Top Center', 'et_builder' ),
+					'top_right'     => __( 'Top Right', 'et_builder' ),
+					'center_right'  => __( 'Center Right', 'et_builder' ),
+					'center_left'   => __( 'Center Left', 'et_builder' ),
+					'bottom_left'   => __( 'Bottom Left', 'et_builder' ),
+					'bottom_center' => __( 'Bottom Center', 'et_builder' ),
+					'bottom_right'  => __( 'Bottom Right', 'et_builder' ),
+				),
+				'depends_show_if'   => 'off',
+			),
+			'background_size' => array(
+				'label'           => __( 'Background Image Size', 'et_builder' ),
+				'type'            => 'select',
+				'option_category' => 'layout',
+				'options'         => array(
+					'default' => __( 'Default', 'et_builder' ),
+					'contain' => __( 'Fit', 'et_builder' ),
+					'initial' => __( 'Actual Size', 'et_builder' ),
+				),
+				'depends_show_if'   => 'off',
+			),
+			'auto' => array(
+				'label'           => __( 'Automatic Animation', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'options'         => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'affects' => array(
+					'#et_pb_auto_speed, #et_pb_auto_ignore_hover',
+				),
+				'description'        => __( 'If you would like the slider to slide automatically, without the visitor having to click the next button, enable this option and then adjust the rotation speed below if desired.', 'et_builder' ),
+			),
+			'auto_speed' => array(
+				'label'             => __( 'Automatic Animation Speed (in ms)', 'et_builder' ),
+				'type'              => 'text',
+				'option_category'   => 'configuration',
+				'depends_default'   => true,
+				'description'       => __( "Here you can designate how fast the slider fades between each slide, if 'Automatic Animation' option is enabled above. The higher the number the longer the pause between each rotation.", 'et_builder' ),
+			),
+			'auto_ignore_hover' => array(
+				'label'           => __( 'Continue Automatic Slide on Hover', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'configuration',
+				'depends_default' => true,
+				'options'         => array(
+					'off' => __( 'Off', 'et_builder' ),
+					'on'  => __( 'On', 'et_builder' ),
+				),
+				'description' => __( 'Turning this on will allow automatic sliding to continue on mouse hover.', 'et_builder' ),
+			),
+			'top_padding' => array(
+				'label'           => __( 'Top Padding', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'bottom_padding' => array(
+				'label'           => __( 'Bottom Padding', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'layout',
+				'tab_slug'        => 'advanced',
+				'mobile_options'  => true,
+				'validate_unit'   => true,
+			),
+			'hide_content_on_mobile' => array(
+				'label'           => __( 'Hide Content On Mobile', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'tab_slug'          => 'advanced',
+			),
+			'hide_cta_on_mobile' => array(
+				'label'           => __( 'Hide CTA On Mobile', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'tab_slug'          => 'advanced',
+			),
+			'show_image_video_mobile' => array(
+				'label'           => __( 'Show Image On Mobile', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'off' => __( 'No', 'et_builder' ),
+					'on'  => __( 'Yes', 'et_builder' ),
+				),
+				'tab_slug'        => 'advanced',
+			),
+			'text_border_radius' => array(
+				'label'           => __( 'Text Overlay Border Radius', 'et_builder' ),
+				'type'            => 'range',
+				'option_category' => 'layout',
+				'default'         => '3',
+				'range_settings'  => array(
+					'min'  => '0',
+					'max'  => '100',
+					'step' => '1',
+				),
+				'tab_slug'        => 'advanced',
+			),
+			'arrows_custom_color' => array(
+				'label'        => __( 'Arrows Custom Color', 'et_builder' ),
+				'type'         => 'color',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'dot_nav_custom_color' => array(
+				'label'        => __( 'Dot Nav Custom Color', 'et_builder' ),
+				'type'         => 'color',
+				'custom_color' => true,
+				'tab_slug'     => 'advanced',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'top_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'top_padding_phone' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'bottom_padding_phone' => array(
+				'type' => 'skip',
+			),
+		);
+		return $fields;
+	}
+
+	function shortcode_callback( $atts, $content = null, $function_name ) {
+		$module_id               = $this->shortcode_atts['module_id'];
+		$module_class            = $this->shortcode_atts['module_class'];
+		$show_arrows             = $this->shortcode_atts['show_arrows'];
+		$show_pagination         = $this->shortcode_atts['show_pagination'];
+		$parallax                = $this->shortcode_atts['parallax'];
+		$parallax_method         = $this->shortcode_atts['parallax_method'];
+		$auto                    = $this->shortcode_atts['auto'];
+		$auto_speed              = $this->shortcode_atts['auto_speed'];
+		$auto_ignore_hover       = $this->shortcode_atts['auto_ignore_hover'];
+		$top_padding             = $this->shortcode_atts['top_padding'];
+		$body_font_size 		 = $this->shortcode_atts['body_font_size'];
+		$bottom_padding          = $this->shortcode_atts['bottom_padding'];
+		$remove_inner_shadow     = $this->shortcode_atts['remove_inner_shadow'];
+		$hide_content_on_mobile  = $this->shortcode_atts['hide_content_on_mobile'];
+		$hide_cta_on_mobile      = $this->shortcode_atts['hide_cta_on_mobile'];
+		$show_image_video_mobile = $this->shortcode_atts['show_image_video_mobile'];
+		$background_position     = $this->shortcode_atts['background_position'];
+		$background_size         = $this->shortcode_atts['background_size'];
+		$posts_number            = $this->shortcode_atts['posts_number'];
+		$include_categories      = $this->shortcode_atts['include_categories'];
+		$show_more_button        = $this->shortcode_atts['show_more_button'];
+		$more_text               = $this->shortcode_atts['more_text'];
+		$content_source          = $this->shortcode_atts['content_source'];
+		$background_color        = $this->shortcode_atts['background_color'];
+		$show_image              = $this->shortcode_atts['show_image'];
+		$image_placement         = $this->shortcode_atts['image_placement'];
+		$background_image        = $this->shortcode_atts['background_image'];
+		$background_layout       = $this->shortcode_atts['background_layout'];
+		$use_bg_overlay          = $this->shortcode_atts['use_bg_overlay'];
+		$bg_overlay_color        = $this->shortcode_atts['bg_overlay_color'];
+		$use_text_overlay        = $this->shortcode_atts['use_text_overlay'];
+		$text_overlay_color      = $this->shortcode_atts['text_overlay_color'];
+		$orderby                 = $this->shortcode_atts['orderby'];
+		$show_meta               = $this->shortcode_atts['show_meta'];
+		$button_custom           = $this->shortcode_atts['custom_button'];
+		$custom_icon             = $this->shortcode_atts['button_icon'];
+		$use_manual_excerpt      = $this->shortcode_atts['use_manual_excerpt'];
+		$excerpt_length          = $this->shortcode_atts['excerpt_length'];
+		$text_border_radius      = $this->shortcode_atts['text_border_radius'];
+		$dot_nav_custom_color    = $this->shortcode_atts['dot_nav_custom_color'];
+		$arrows_custom_color     = $this->shortcode_atts['arrows_custom_color'];
+		$top_padding_tablet      = $this->shortcode_atts['top_padding_tablet'];
+		$top_padding_phone       = $this->shortcode_atts['top_padding_phone'];
+		$bottom_padding_tablet   = $this->shortcode_atts['bottom_padding_tablet'];
+		$bottom_padding_phone    = $this->shortcode_atts['bottom_padding_phone'];
+
+		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
+
+		$hide_on_mobile_class = self::HIDE_ON_MOBILE;
+
+		if ( '' !== $top_padding || '' !== $top_padding_tablet || '' !== $top_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $top_padding,
+				'tablet'  => $top_padding_tablet,
+				'phone'   => $top_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description', 'padding-top', $function_name );
+		}
+
+		if ( '' !== $bottom_padding || '' !== $bottom_padding_tablet || '' !== $bottom_padding_phone ) {
+			$padding_values = array(
+				'desktop' => $bottom_padding,
+				'tablet'  => $bottom_padding_tablet,
+				'phone'   => $bottom_padding_phone,
+			);
+
+			et_pb_generate_responsive_css( $padding_values, '%%order_class%% .et_pb_slide_description', 'padding-bottom', $function_name );
+		}
+
+		if ( '' !== $bottom_padding || '' !== $top_padding ) {
+			ET_Builder_Module::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide_description',
+				'declaration' => 'padding-right: 0; padding-left: 0;',
+			) );
+		}
+
+		if ( 'default' !== $background_position && 'off' === $parallax ) {
+			$processed_position = str_replace( '_', ' ', $background_position );
+
+			ET_Builder_Module::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide',
+				'declaration' => sprintf(
+					'background-position: %1$s;',
+					esc_html( $processed_position )
+				),
+			) );
+		}
+
+		if ( 'default' !== $background_size && 'off' === $parallax ) {
+			ET_Builder_Module::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide',
+				'declaration' => sprintf(
+					'-moz-background-size: %1$s;
+					-webkit-background-size: %1$s;
+					background-size: %1$s;',
+					esc_html( $background_size )
+				),
+			) );
+		}
+
+		if ( '' !== $background_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_post_slider',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $background_color )
+				),
+			) );
+		}
+
+		if ( '' !== $background_image ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%, %%order_class%%.et_pb_bg_layout_dark, %%order_class%%.et_pb_bg_layout_light',
+				'declaration' => sprintf(
+					'background-image: url(%1$s);',
+					esc_html( $background_image )
+				),
+			) );
+		}
+
+		if ( 'on' === $use_bg_overlay && '' !== $bg_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide .et_pb_slide_overlay_container',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $bg_overlay_color )
+				),
+			) );
+		}
+
+		if ( 'on' === $use_text_overlay && '' !== $text_overlay_color ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%% .et_pb_slide .et_pb_slide_title, %%order_class%% .et_pb_slide .et_pb_slide_content',
+				'declaration' => sprintf(
+					'background-color: %1$s;',
+					esc_html( $text_overlay_color )
+				),
+			) );
+		}
+
+		if ( '' !== $text_border_radius ) {
+			$border_radius_value = et_builder_process_range_value( $text_border_radius );
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slider_with_text_overlay h2.et_pb_slide_title',
+				'declaration' => sprintf(
+					'-webkit-border-top-left-radius: %1$s;
+					-webkit-border-top-right-radius: %1$s;
+					-moz-border-radius-topleft: %1$s;
+					-moz-border-radius-topright: %1$s;
+					border-top-left-radius: %1$s;
+					border-top-right-radius: %1$s;',
+					esc_html( $border_radius_value )
+				),
+			) );
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%.et_pb_slider_with_text_overlay .et_pb_slide_content',
+				'declaration' => sprintf(
+					'-webkit-border-bottom-right-radius: %1$s;
+					-webkit-border-bottom-left-radius: %1$s;
+					-moz-border-radius-bottomright: %1$s;
+					-moz-border-radius-bottomleft: %1$s;
+					border-bottom-right-radius: %1$s;
+					border-bottom-left-radius: %1$s;',
+					esc_html( $border_radius_value )
+				),
+			) );
+		}
+
+		$fullwidth = 'et_pb_fullwidth_post_slider' === $function_name ? 'on' : 'off';
+
+		$class  = '';
+		$class .= 'off' === $fullwidth ? ' et_pb_slider_fullwidth_off' : '';
+		$class .= 'off' === $show_arrows ? ' et_pb_slider_no_arrows' : '';
+		$class .= 'off' === $show_pagination ? ' et_pb_slider_no_pagination' : '';
+		$class .= 'on' === $parallax ? ' et_pb_slider_parallax' : '';
+		$class .= 'on' === $auto ? ' et_slider_auto et_slider_speed_' . esc_attr( $auto_speed ) : '';
+		$class .= 'on' === $auto_ignore_hover ? ' et_slider_auto_ignore_hover' : '';
+		$class .= 'on' === $remove_inner_shadow ? ' et_pb_slider_no_shadow' : '';
+		$class .= 'on' === $show_image_video_mobile ? ' et_pb_slider_show_image' : '';
+		$class .= ' et_pb_post_slider_image_' . $image_placement;
+		$class .= 'on' === $use_bg_overlay ? ' et_pb_slider_with_overlay' : '';
+		$class .= 'on' === $use_text_overlay ? ' et_pb_slider_with_text_overlay' : '';
+
+		$data_dot_nav_custom_color = '' !== $dot_nav_custom_color
+			? sprintf( ' data-dots_color="%1$s"', esc_attr( $dot_nav_custom_color ) )
+			: '';
+
+		$data_arrows_custom_color = '' !== $arrows_custom_color
+			? sprintf( ' data-arrows_color="%1$s"', esc_attr( $arrows_custom_color ) )
+			: '';
+
+		$args = array( 'posts_per_page' => (int) $posts_number );
+
+		if ( '' !== $include_categories ) {
+			$args['cat'] = $include_categories;
+		}
+
+		if ( 'date_desc' !== $orderby ) {
+			switch( $orderby ) {
+				case 'date_asc' :
+					$args['orderby'] = 'date';
+					$args['order'] = 'ASC';
+					break;
+				case 'title_asc' :
+					$args['orderby'] = 'title';
+					$args['order'] = 'ASC';
+					break;
+				case 'title_desc' :
+					$args['orderby'] = 'title';
+					$args['order'] = 'DESC';
+					break;
+				case 'rand' :
+					$args['orderby'] = 'rand';
+					break;
+			}
+		}
+
+		ob_start();
+
+		query_posts( $args );
+
+		if ( have_posts() ) {
+			while ( have_posts() ) {
+				the_post();
+
+				$slide_class = 'off' !== $show_image && in_array( $image_placement, array( 'left', 'right' ) ) && has_post_thumbnail() ? ' et_pb_slide_with_image' : '';
+				$slide_class .= " et_pb_bg_layout_{$background_layout}";
+			?>
+			<div class="et_pb_slide et_pb_media_alignment_center<?php echo $slide_class; ?>" <?php if ( 'on' !== $parallax && 'off' !== $show_image && 'background' === $image_placement ) { printf( 'style="background-image:url(%1$s)"', esc_attr( wp_get_attachment_url( get_post_thumbnail_id() ) ) );  } ?><?php echo $data_dot_nav_custom_color; echo $data_arrows_custom_color; ?>>
+				<?php if ( 'on' === $parallax && 'off' !== $show_image && 'background' === $image_placement ) { ?>
+					<div class="et_parallax_bg<?php if ( 'off' === $parallax_method ) { echo ' et_pb_parallax_css'; } ?>" style="background-image: url(<?php echo wp_get_attachment_url( get_post_thumbnail_id() ); ?>);"></div>
+				<?php } ?>
+				<?php if ( 'on' === $use_bg_overlay ) { ?>
+					<div class="et_pb_slide_overlay_container"></div>
+				<?php } ?>
+				<div class="et_pb_container clearfix">
+					<?php if ( 'off' !== $show_image && has_post_thumbnail() && ! in_array( $image_placement, array( 'background', 'bottom' ) ) ) { ?>
+						<div class="et_pb_slide_image">
+							<?php the_post_thumbnail(); ?>
+						</div>
+					<?php } ?>
+					<div class="et_pb_slide_description">
+						<h2 class="et_pb_slide_title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+						<div class="et_pb_slide_content <?php if ( 'on' === $hide_content_on_mobile ) { echo $hide_on_mobile_class; } ?>">
+							<?php
+							if ( 'off' !== $show_meta ) {
+								printf(
+									'<p class="post-meta">%1$s | %2$s | %3$s | %4$s</p>',
+									sprintf( __( 'by %s', 'et_builder' ), '<span class="author vcard">' .  et_pb_get_the_author_posts_link() . '</span>' ),
+									sprintf( __( '%s', 'et_builder' ), '<span class="published">' . get_the_date() . '</span>' ),
+									get_the_category_list(', '),
+									sprintf( _nx( '1 Comment', '%s Comments', get_comments_number(), 'number of comments', 'et_builder' ), number_format_i18n( get_comments_number() ) )
+								);
+							}
+							?>
+							<?php
+								$post_content = get_the_content();
+								// do not display the content if it contains Blog, Post Slider, Fullwidth Post Slider, or Portfolio modules to avoid infinite loops
+								if ( ! has_shortcode( $post_content, 'et_pb_blog' ) && ! has_shortcode( $post_content, 'et_pb_portfolio' ) && ! has_shortcode( $post_content, 'et_pb_post_slider' ) && ! has_shortcode( $post_content, 'et_pb_fullwidth_post_slider' ) ) {
+									if ( 'on' === $content_source ) {
+										global $more;
+
+										// page builder doesn't support more tag, so display the_content() in case of post made with page builder
+										if ( et_pb_is_pagebuilder_used( get_the_ID() ) ) {
+											$more = 1;
+											the_content();
+										} else {
+											$more = null;
+											the_content( '' );
+										}
+									} else {
+										if ( has_excerpt() && 'off' !== $use_manual_excerpt ) {
+											the_excerpt();
+										} else {
+											truncate_post( intval( $excerpt_length ) );
+										}
+									}
+								} else if ( has_excerpt() ) {
+									the_excerpt();
+								}
+							?>
+						</div>
+						<?php if ( 'off' !== $show_more_button && '' !== $more_text ) {
+								printf(
+									'<a href="%1$s" class="et_pb_more_button et_pb_button%4$s%5$s"%3$s>%2$s</a>',
+									get_permalink(),
+									$more_text,
+									'' !== $custom_icon && 'on' === $button_custom ? sprintf(
+										' data-icon="%1$s"',
+										esc_attr( et_pb_process_font_icon( $custom_icon ) )
+									) : '',
+									'' !== $custom_icon && 'on' === $button_custom ? ' et_pb_custom_button_icon' : '',
+									'on' === $hide_cta_on_mobile ? esc_attr( " {$hide_on_mobile_class}" ) : ''
+								);
+							}
+						?>
+					</div> <!-- .et_pb_slide_description -->
+					<?php if ( 'off' !== $show_image && has_post_thumbnail() && 'bottom' === $image_placement ) { ?>
+						<div class="et_pb_slide_image">
+							<?php the_post_thumbnail(); ?>
+						</div>
+					<?php } ?>
+				</div> <!-- .et_pb_container -->
+			</div> <!-- .et_pb_slide -->
+		<?php
+			} // end while
+			wp_reset_query();
+		} // end if
+
+		$content = ob_get_contents();
+
+		ob_end_clean();
+
+		$output = sprintf(
+			'<div%3$s class="et_pb_module et_pb_slider et_pb_post_slider%1$s%4$s">
+				<div class="et_pb_slides">
+					%2$s
+				</div> <!-- .et_pb_slides -->
+			</div> <!-- .et_pb_slider -->
+			',
+			$class,
+			$content,
+			( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+			( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' )
+		);
+
+		return $output;
+	}
+}
+
+new ET_Builder_Module_Fullwidth_Post_Slider;

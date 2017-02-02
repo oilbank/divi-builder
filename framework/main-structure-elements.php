@@ -18,6 +18,8 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 			'parallax',
 			'parallax_method',
 			'custom_padding',
+			'custom_padding_tablet',
+			'custom_padding_phone',
 			'padding_mobile',
 			'module_id',
 			'module_class',
@@ -50,7 +52,28 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 			'padding_right_3',
 			'padding_bottom_3',
 			'padding_left_3',
+			'padding_1_tablet',
+			'padding_2_tablet',
+			'padding_3_tablet',
+			'padding_1_phone',
+			'padding_2_phone',
+			'padding_3_phone',
 			'admin_label',
+			'module_id_1',
+			'module_id_2',
+			'module_id_3',
+			'module_class_1',
+			'module_class_2',
+			'module_class_3',
+			'custom_css_before_1',
+			'custom_css_before_2',
+			'custom_css_before_3',
+			'custom_css_main_1',
+			'custom_css_main_2',
+			'custom_css_main_3',
+			'custom_css_after_1',
+			'custom_css_after_2',
+			'custom_css_after_3',
 		);
 
 		$this->fields_defaults = array(
@@ -71,24 +94,8 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 			'gutter_width'           => array( '3', 'only_default_setting' ),
 			'fullwidth'              => array( 'off' ),
 			'specialty'              => array( 'off' ),
-			'background_color_1'     => array( '' ),
-			'background_color_2'     => array( '' ),
-			'background_color_3'     => array( '' ),
-			'bg_img_1'               => array( '' ),
-			'bg_img_2'               => array( '' ),
-			'bg_img_3'               => array( '' ),
-			'padding_top_1'          => array( '' ),
-			'padding_right_1'        => array( '' ),
-			'padding_bottom_1'       => array( '' ),
-			'padding_left_1'         => array( '' ),
-			'padding_top_2'          => array( '' ),
-			'padding_right_2'        => array( '' ),
-			'padding_bottom_2'       => array( '' ),
-			'padding_left_2'         => array( '' ),
-			'padding_top_3'          => array( '' ),
-			'padding_right_3'        => array( '' ),
-			'padding_bottom_3'       => array( '' ),
-			'padding_left_3'         => array( '' ),
+			'custom_padding_tablet'  => array( '' ),
+			'custom_padding_phone'   => array( '' ),
 		);
 	}
 
@@ -202,8 +209,15 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 			'custom_padding' => array(
 				'label'           => __( 'Custom Padding', 'et_builder' ),
 				'type'            => 'custom_padding',
+				'mobile_options'  => true,
 				'option_category' => 'layout',
 				'description'     => __( 'Adjust padding to specific values, or leave blank to use the default padding.', 'et_builder' ),
+			),
+			'custom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'custom_padding_phone' => array(
+				'type' => 'skip',
 			),
 			'padding_mobile' => array(
 				'label'             => __( 'Keep Custom Padding on Mobile', 'et_builder' ),
@@ -214,23 +228,6 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 					'on'  => __( 'Yes', 'et_builder' ),
 				),
 				'description'       => __( 'Allow custom padding to be retained on mobile screens', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'             => __( 'CSS ID', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'             => __( 'CSS Class', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
-			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the section in the builder for easy identification when collapsed.', 'et_builder' ),
 			),
 			'make_fullwidth' => array(
 				'label'             => __( 'Make This Section Fullwidth', 'et_builder' ),
@@ -400,6 +397,111 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 			'padding_left_3' => array(
 				'type' => 'skip',
 			),
+			'padding_1_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_2_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_3_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_1_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_2_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_3_phone' => array(
+				'type' => 'skip',
+			),
+			'module_id_1' => array(
+				'type' => 'skip',
+			),
+			'module_id_2' => array(
+				'type' => 'skip',
+			),
+			'module_id_3' => array(
+				'type' => 'skip',
+			),
+			'module_class_1' => array(
+				'type' => 'skip',
+			),
+			'module_class_2' => array(
+				'type' => 'skip',
+			),
+			'module_class_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_3' => array(
+				'type' => 'skip',
+			),
+			'columns_css' => array(
+				'type'            => 'column_settings_css',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'priority'        => '20',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the section in the builder for easy identification when collapsed.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'columns_css_fields' => array(
+				'type'            => 'column_settings_css_fields',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+			),
 		);
 
 		return $fields;
@@ -422,6 +524,8 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 		$specialty               = $this->shortcode_atts['specialty'];
 		$transparent_background  = $this->shortcode_atts['transparent_background'];
 		$custom_padding          = $this->shortcode_atts['custom_padding'];
+		$custom_padding_tablet   = $this->shortcode_atts['custom_padding_tablet'];
+		$custom_padding_phone    = $this->shortcode_atts['custom_padding_phone'];
 		$padding_mobile          = $this->shortcode_atts['padding_mobile'];
 		$background_color_1      = $this->shortcode_atts['background_color_1'];
 		$background_color_2      = $this->shortcode_atts['background_color_2'];
@@ -441,6 +545,12 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 		$padding_right_3         = $this->shortcode_atts['padding_right_3'];
 		$padding_bottom_3        = $this->shortcode_atts['padding_bottom_3'];
 		$padding_left_3          = $this->shortcode_atts['padding_left_3'];
+		$padding_1_tablet        = $this->shortcode_atts['padding_1_tablet'];
+		$padding_2_tablet        = $this->shortcode_atts['padding_2_tablet'];
+		$padding_3_tablet        = $this->shortcode_atts['padding_3_tablet'];
+		$padding_1_phone         = $this->shortcode_atts['padding_1_phone'];
+		$padding_2_phone         = $this->shortcode_atts['padding_2_phone'];
+		$padding_3_phone         = $this->shortcode_atts['padding_3_phone'];
 		$gutter_width            = $this->shortcode_atts['gutter_width'];
 		$use_custom_width        = $this->shortcode_atts['use_custom_width'];
 		$custom_width_px         = $this->shortcode_atts['custom_width_px'];
@@ -450,6 +560,21 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 		$make_fullwidth          = $this->shortcode_atts['make_fullwidth'];
 		$global_module           = $this->shortcode_atts['global_module'];
 		$use_custom_gutter       = $this->shortcode_atts['use_custom_gutter'];
+		$module_id_1             = $this->shortcode_atts['module_id_1'];
+		$module_id_2             = $this->shortcode_atts['module_id_2'];
+		$module_id_3             = $this->shortcode_atts['module_id_3'];
+		$module_class_1          = $this->shortcode_atts['module_class_1'];
+		$module_class_2          = $this->shortcode_atts['module_class_2'];
+		$module_class_3          = $this->shortcode_atts['module_class_3'];
+		$custom_css_before_1     = $this->shortcode_atts['custom_css_before_1'];
+		$custom_css_before_2     = $this->shortcode_atts['custom_css_before_2'];
+		$custom_css_before_3     = $this->shortcode_atts['custom_css_before_3'];
+		$custom_css_main_1       = $this->shortcode_atts['custom_css_main_1'];
+		$custom_css_main_2       = $this->shortcode_atts['custom_css_main_2'];
+		$custom_css_main_3       = $this->shortcode_atts['custom_css_main_3'];
+		$custom_css_after_1      = $this->shortcode_atts['custom_css_after_1'];
+		$custom_css_after_2      = $this->shortcode_atts['custom_css_after_2'];
+		$custom_css_after_3      = $this->shortcode_atts['custom_css_after_3'];
 
 		if ( '' !== $global_module ) {
 			$global_content = et_pb_load_global_module( $global_module );
@@ -462,9 +587,13 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
 		$gutter_class = '';
 
-		if ( 'on' === $specialty ) {
-			global $et_pb_column_backgrounds, $et_pb_column_paddings, $et_pb_columns_counter;
+		$padding_mobile_values = array(
+			'tablet' => explode( '|', $custom_padding_tablet ),
+			'phone'  => explode( '|', $custom_padding_phone ),
+		);
 
+		if ( 'on' === $specialty ) {
+			global $et_pb_column_backgrounds, $et_pb_column_paddings, $et_pb_columns_counter, $et_pb_column_css, $et_pb_column_paddings_mobile;
 			$module_class .= 'on' === $make_equal ? ' et_pb_equal_columns' : '';
 
 			if ( 'on' === $use_custom_gutter ) {
@@ -500,6 +629,21 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 				),
 			);
 
+			$et_pb_column_paddings_mobile = array(
+				array(
+					'tablet' => explode( '|', $padding_1_tablet ),
+					'phone'  => explode( '|', $padding_1_phone ),
+				),
+				array(
+					'tablet' => explode( '|', $padding_2_tablet ),
+					'phone'  => explode( '|', $padding_2_phone ),
+				),
+				array(
+					'tablet' => explode( '|', $padding_3_tablet ),
+					'phone'  => explode( '|', $padding_3_phone ),
+				),
+			);
+
 			if ( 'on' === $make_fullwidth && 'off' === $use_custom_width ) {
 				$module_class .= ' et_pb_specialty_fullwidth';
 			}
@@ -513,6 +657,14 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 					),
 				) );
 			}
+
+			$et_pb_column_css = array(
+				'css_class'         => array( $module_class_1, $module_class_2, $module_class_3 ),
+				'css_id'            => array( $module_id_1, $module_id_2, $module_id_3 ),
+				'custom_css_before' => array( $custom_css_before_1, $custom_css_before_2, $custom_css_before_3 ),
+				'custom_css_main'   => array( $custom_css_main_1, $custom_css_main_2, $custom_css_main_3 ),
+				'custom_css_after'  => array( $custom_css_after_1, $custom_css_after_2, $custom_css_after_3 ),
+			);
 		}
 
 		$background_video = '';
@@ -604,6 +756,27 @@ class ET_Builder_Section extends ET_Builder_Structure_Element {
 			}
 		}
 
+		if ( ! empty( $padding_mobile_values['tablet'] ) || ! empty( $padding_values['phone'] ) ) {
+			$padding_mobile_values_processed = array();
+
+			foreach( array( 'tablet', 'phone' ) as $device ) {
+				if ( empty( $padding_mobile_values[$device] ) ) {
+					continue;
+				}
+
+				$padding_mobile_values_processed[ $device ] = array(
+					'padding-top'    => isset( $padding_mobile_values[$device][0] ) ? $padding_mobile_values[$device][0] : '',
+					'padding-right'  => isset( $padding_mobile_values[$device][1] ) ? $padding_mobile_values[$device][1] : '',
+					'padding-bottom' => isset( $padding_mobile_values[$device][2] ) ? $padding_mobile_values[$device][2] : '',
+					'padding-left'   => isset( $padding_mobile_values[$device][3] ) ? $padding_mobile_values[$device][3] : '',
+				);
+			}
+
+			if ( ! empty( $padding_mobile_values_processed ) ) {
+				et_pb_generate_responsive_css( $padding_mobile_values_processed, '%%order_class%%', '', $function_name );
+			}
+		}
+
 		if ( '' !== $background_video_mp4 || '' !== $background_video_webm || ( '' !== $background_color && 'off' === $transparent_background ) || '' !== $background_image ) {
 			$module_class .= ' et_pb_with_background';
 		}
@@ -653,6 +826,15 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 		$this->name = __( 'Row', 'et_builder' );
 		$this->slug = 'et_pb_row';
 
+		$this->advanced_options = array(
+			'custom_margin_padding' => array(
+				'use_padding'       => false,
+				'custom_margin'     => array(
+					'priority' => 1,
+				),
+			),
+		);
+
 		$this->whitelisted_fields = array(
 			'make_fullwidth',
 			'use_custom_width',
@@ -662,7 +844,8 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'use_custom_gutter',
 			'gutter_width',
 			'custom_padding',
-			'custom_margin',
+			'custom_padding_tablet',
+			'custom_padding_phone',
 			'padding_mobile',
 			'column_padding_mobile',
 			'module_id',
@@ -702,6 +885,14 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'padding_right_4',
 			'padding_bottom_4',
 			'padding_left_4',
+			'padding_1_tablet',
+			'padding_2_tablet',
+			'padding_3_tablet',
+			'padding_4_tablet',
+			'padding_1_phone',
+			'padding_2_phone',
+			'padding_3_phone',
+			'padding_4_phone',
 			'admin_label',
 			'parallax_1',
 			'parallax_method_1',
@@ -711,6 +902,26 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'parallax_method_3',
 			'parallax_4',
 			'parallax_method_4',
+			'module_id_1',
+			'module_id_2',
+			'module_id_3',
+			'module_id_4',
+			'module_class_1',
+			'module_class_2',
+			'module_class_3',
+			'module_class_4',
+			'custom_css_before_1',
+			'custom_css_before_2',
+			'custom_css_before_3',
+			'custom_css_before_4',
+			'custom_css_main_1',
+			'custom_css_main_2',
+			'custom_css_main_3',
+			'custom_css_main_4',
+			'custom_css_after_1',
+			'custom_css_after_2',
+			'custom_css_after_3',
+			'custom_css_after_4',
 		);
 
 		$this->fields_defaults = array(
@@ -728,30 +939,6 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'parallax'              => array( 'off' ),
 			'parallax_method'       => array( 'on' ),
 			'make_equal'            => array( 'off' ),
-			'background_color_1'    => array( '' ),
-			'background_color_2'    => array( '' ),
-			'background_color_3'    => array( '' ),
-			'background_color_4'    => array( '' ),
-			'bg_img_1'              => array( '' ),
-			'bg_img_2'              => array( '' ),
-			'bg_img_3'              => array( '' ),
-			'bg_img_4'              => array( '' ),
-			'padding_top_1'         => array( '' ),
-			'padding_right_1'       => array( '' ),
-			'padding_bottom_1'      => array( '' ),
-			'padding_left_1'        => array( '' ),
-			'padding_top_2'         => array( '' ),
-			'padding_right_2'       => array( '' ),
-			'padding_bottom_2'      => array( '' ),
-			'padding_left_2'        => array( '' ),
-			'padding_top_3'         => array( '' ),
-			'padding_right_3'       => array( '' ),
-			'padding_bottom_3'      => array( '' ),
-			'padding_left_3'        => array( '' ),
-			'padding_top_4'         => array( '' ),
-			'padding_right_4'       => array( '' ),
-			'padding_bottom_4'      => array( '' ),
-			'padding_left_4'        => array( '' ),
 			'parallax_1'            => array( 'off' ),
 			'parallax_method_1'     => array( 'on' ),
 			'parallax_2'            => array( 'off' ),
@@ -760,6 +947,8 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'parallax_method_3'     => array( 'on' ),
 			'parallax_4'            => array( 'off' ),
 			'parallax_method_4'     => array( 'on' ),
+			'custom_padding_tablet' => array( '' ),
+			'custom_padding_phone'  => array( '' ),
 		);
 	}
 
@@ -860,8 +1049,15 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'custom_padding' => array(
 				'label'           => __( 'Custom Padding', 'et_builder' ),
 				'type'            => 'custom_padding',
+				'mobile_options'  => true,
 				'option_category' => 'layout',
 				'description'     => __( 'Adjust padding to specific values, or leave blank to use the default padding.', 'et_builder' ),
+			),
+			'custom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'custom_padding_phone' => array(
+				'type' => 'skip',
 			),
 			'padding_mobile' => array(
 				'label'             => __( 'Keep Custom Padding on Mobile', 'et_builder' ),
@@ -872,18 +1068,6 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 					'on'  => __( 'Yes', 'et_builder' ),
 				),
 				'description'       => __( 'Allow custom padding to be retained on mobile screens', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'             => __( 'CSS ID', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'             => __( 'CSS Class', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
 			),
 			'custom_margin' => array(
 				'label'           => __( 'Custom Margin', 'et_builder' ),
@@ -987,7 +1171,6 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 				'option_category' => 'configuration',
 				'tab_slug'        => 'advanced',
 			),
-
 			'column_padding_mobile' => array(
 				'label'             => __( 'Keep Column Padding on Mobile', 'et_builder' ),
 				'type'              => 'yes_no_button',
@@ -997,11 +1180,6 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 					'on'  => __( 'Yes', 'et_builder' ),
 					'off' => __( 'No', 'et_builder' ),
 				),
-			),
-			'admin_label' => array(
-				'label'       => __( 'Admin Label', 'et_builder' ),
-				'type'        => 'text',
-				'description' => __( 'This will change the label of the row in the builder for easy identification when collapsed.', 'et_builder' ),
 			),
 			'background_color_1' => array(
 				'type' => 'skip',
@@ -1099,6 +1277,132 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			'parallax_method_4' => array(
 				'type' => 'skip',
 			),
+			'padding_1_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_2_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_3_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_4_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_1_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_2_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_3_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_4_phone' => array(
+				'type' => 'skip',
+			),
+			'module_id_1' => array(
+				'type' => 'skip',
+			),
+			'module_id_2' => array(
+				'type' => 'skip',
+			),
+			'module_id_3' => array(
+				'type' => 'skip',
+			),
+			'module_id_4' => array(
+				'type' => 'skip',
+			),
+			'module_class_1' => array(
+				'type' => 'skip',
+			),
+			'module_class_2' => array(
+				'type' => 'skip',
+			),
+			'module_class_3' => array(
+				'type' => 'skip',
+			),
+			'module_class_4' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_4' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_4' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_4' => array(
+				'type' => 'skip',
+			),
+			'columns_css' => array(
+				'type'            => 'column_settings_css',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'priority'        => '20',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'admin_label' => array(
+				'label'       => __( 'Admin Label', 'et_builder' ),
+				'type'        => 'text',
+				'description' => __( 'This will change the label of the row in the builder for easy identification when collapsed.', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'columns_css_fields' => array(
+				'type'            => 'column_settings_css_fields',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+			),
 		);
 
 		return $fields;
@@ -1108,7 +1412,8 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 		$module_id               = $this->shortcode_atts['module_id'];
 		$module_class            = $this->shortcode_atts['module_class'];
 		$custom_padding          = $this->shortcode_atts['custom_padding'];
-		$custom_margin           = $this->shortcode_atts['custom_margin'];
+		$custom_padding_tablet   = $this->shortcode_atts['custom_padding_tablet'];
+		$custom_padding_phone    = $this->shortcode_atts['custom_padding_phone'];
 		$padding_mobile          = $this->shortcode_atts['padding_mobile'];
 		$column_padding_mobile   = $this->shortcode_atts['column_padding_mobile'];
 		$make_fullwidth          = $this->shortcode_atts['make_fullwidth'];
@@ -1146,6 +1451,14 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 		$padding_right_4         = $this->shortcode_atts['padding_right_4'];
 		$padding_bottom_4        = $this->shortcode_atts['padding_bottom_4'];
 		$padding_left_4          = $this->shortcode_atts['padding_left_4'];
+		$padding_1_tablet        = $this->shortcode_atts['padding_1_tablet'];
+		$padding_2_tablet        = $this->shortcode_atts['padding_2_tablet'];
+		$padding_3_tablet        = $this->shortcode_atts['padding_3_tablet'];
+		$padding_4_tablet        = $this->shortcode_atts['padding_4_tablet'];
+		$padding_1_phone         = $this->shortcode_atts['padding_1_phone'];
+		$padding_2_phone         = $this->shortcode_atts['padding_2_phone'];
+		$padding_3_phone         = $this->shortcode_atts['padding_3_phone'];
+		$padding_4_phone         = $this->shortcode_atts['padding_4_phone'];
 		$gutter_width            = $this->shortcode_atts['gutter_width'];
 		$use_custom_width        = $this->shortcode_atts['use_custom_width'];
 		$custom_width_px         = $this->shortcode_atts['custom_width_px'];
@@ -1161,8 +1474,28 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 		$parallax_method_3       = $this->shortcode_atts['parallax_method_3'];
 		$parallax_4              = $this->shortcode_atts['parallax_4'];
 		$parallax_method_4       = $this->shortcode_atts['parallax_method_4'];
+		$module_id_1             = $this->shortcode_atts['module_id_1'];
+		$module_id_2             = $this->shortcode_atts['module_id_2'];
+		$module_id_3             = $this->shortcode_atts['module_id_3'];
+		$module_id_4             = $this->shortcode_atts['module_id_4'];
+		$module_class_1          = $this->shortcode_atts['module_class_1'];
+		$module_class_2          = $this->shortcode_atts['module_class_2'];
+		$module_class_3          = $this->shortcode_atts['module_class_3'];
+		$module_class_4          = $this->shortcode_atts['module_class_4'];
+		$custom_css_before_1     = $this->shortcode_atts['custom_css_before_1'];
+		$custom_css_before_2     = $this->shortcode_atts['custom_css_before_2'];
+		$custom_css_before_3     = $this->shortcode_atts['custom_css_before_3'];
+		$custom_css_before_4     = $this->shortcode_atts['custom_css_before_4'];
+		$custom_css_main_1       = $this->shortcode_atts['custom_css_main_1'];
+		$custom_css_main_2       = $this->shortcode_atts['custom_css_main_2'];
+		$custom_css_main_3       = $this->shortcode_atts['custom_css_main_3'];
+		$custom_css_main_4       = $this->shortcode_atts['custom_css_main_4'];
+		$custom_css_after_1      = $this->shortcode_atts['custom_css_after_1'];
+		$custom_css_after_2      = $this->shortcode_atts['custom_css_after_2'];
+		$custom_css_after_3      = $this->shortcode_atts['custom_css_after_3'];
+		$custom_css_after_4      = $this->shortcode_atts['custom_css_after_4'];
 
-		global $et_pb_column_backgrounds, $et_pb_column_paddings, $et_pb_columns_counter, $keep_column_padding_mobile, $et_pb_column_parallax;
+		global $et_pb_column_backgrounds, $et_pb_column_paddings, $et_pb_columns_counter, $keep_column_padding_mobile, $et_pb_column_parallax, $et_pb_column_css, $et_pb_column_paddings_mobile;
 
 		$keep_column_padding_mobile = $column_padding_mobile;
 
@@ -1173,6 +1506,11 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 				return do_shortcode( $global_content );
 			}
 		}
+
+		$padding_mobile_values = array(
+			'tablet' => explode( '|', $custom_padding_tablet ),
+			'phone'  => explode( '|', $custom_padding_phone ),
+		);
 
 		$et_pb_columns_counter = 0;
 		$et_pb_column_backgrounds = array(
@@ -1208,6 +1546,25 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			),
 		);
 
+		$et_pb_column_paddings_mobile = array(
+			array(
+				'tablet' => explode( '|', $padding_1_tablet ),
+				'phone'  => explode( '|', $padding_1_phone ),
+			),
+			array(
+				'tablet' => explode( '|', $padding_2_tablet ),
+				'phone'  => explode( '|', $padding_2_phone ),
+			),
+			array(
+				'tablet' => explode( '|', $padding_3_tablet ),
+				'phone'  => explode( '|', $padding_3_phone ),
+			),
+			array(
+				'tablet' => explode( '|', $padding_4_tablet ),
+				'phone'  => explode( '|', $padding_4_phone ),
+			),
+		);
+
 		$et_pb_column_parallax = array(
 			array( $parallax_1, $parallax_method_1 ),
 			array( $parallax_2, $parallax_method_2 ),
@@ -1215,14 +1572,19 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			array( $parallax_4, $parallax_method_4 ),
 		);
 
+		$et_pb_column_css = array(
+			'css_class'         => array( $module_class_1, $module_class_2, $module_class_3, $module_class_4 ),
+			'css_id'            => array( $module_id_1, $module_id_2, $module_id_3, $module_id_4 ),
+			'custom_css_before' => array( $custom_css_before_1, $custom_css_before_2, $custom_css_before_3, $custom_css_before_4 ),
+			'custom_css_main'   => array( $custom_css_main_1, $custom_css_main_2, $custom_css_main_3, $custom_css_main_4 ),
+			'custom_css_after'  => array( $custom_css_after_1, $custom_css_after_2, $custom_css_after_3, $custom_css_after_4 ),
+		);
+
 		$background_video = '';
 
 		$module_class .= ' et_pb_row';
 
 		$module_class = ET_Builder_Element::add_module_order_class( $module_class, $function_name );
-
-		$inner_content = do_shortcode( et_pb_fix_shortcodes( $content ) );
-		$module_class .= '' == trim( $inner_content ) ? ' et_pb_row_empty' : '';
 
 		$module_class .= 'on' === $make_equal ? ' et_pb_equal_columns' : '';
 
@@ -1233,7 +1595,6 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 
 
 		$padding_values = explode( '|', $custom_padding );
-		$margin_values = explode( '|', $custom_margin );
 
 		if ( ! empty( $padding_values ) ) {
 			// old version of Rows support only top and bottom padding, so we need to handle it along with the full padding in the recent version
@@ -1271,27 +1632,24 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			}
 		}
 
-		if ( ! empty( $margin_values ) ) {
-			$margin_settings = array(
-				'top' => isset( $margin_values[0] ) ? $margin_values[0] : '',
-				'right' => isset( $margin_values[1] ) ? $margin_values[1] : '',
-				'bottom' => isset( $margin_values[2] ) ? $margin_values[2] : '',
-				'left' => isset( $margin_values[3] ) ? $margin_values[3] : '',
-			);
+		if ( ! empty( $padding_mobile_values['tablet'] ) || ! empty( $padding_values['phone'] ) ) {
+			$padding_mobile_values_processed = array();
 
-			foreach( $margin_settings as $margin_side => $value ) {
-				if ( '' !== $value ) {
-					$element_style = array(
-						'selector'    => '%%order_class%%',
-						'declaration' => sprintf(
-							'margin-%1$s: %2$s;',
-							esc_html( $margin_side ),
-							esc_html( $value )
-						),
-					);
-
-					ET_Builder_Element::set_style( $function_name, $element_style );
+			foreach( array( 'tablet', 'phone' ) as $device ) {
+				if ( empty( $padding_mobile_values[$device] ) ) {
+					continue;
 				}
+
+				$padding_mobile_values_processed[ $device ] = array(
+					'padding-top'    => isset( $padding_mobile_values[$device][0] ) ? $padding_mobile_values[$device][0] : '',
+					'padding-right'  => isset( $padding_mobile_values[$device][1] ) ? $padding_mobile_values[$device][1] : '',
+					'padding-bottom' => isset( $padding_mobile_values[$device][2] ) ? $padding_mobile_values[$device][2] : '',
+					'padding-left'   => isset( $padding_mobile_values[$device][3] ) ? $padding_mobile_values[$device][3] : '',
+				);
+			}
+
+			if ( ! empty( $padding_mobile_values_processed ) ) {
+				et_pb_generate_responsive_css( $padding_mobile_values_processed, '%%order_class%%', '', $function_name );
 			}
 		}
 
@@ -1352,6 +1710,9 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			) );
 		}
 
+		$inner_content = do_shortcode( et_pb_fix_shortcodes( $content ) );
+		$module_class .= '' == trim( $inner_content ) ? ' et_pb_row_empty' : '';
+
 		$output = sprintf(
 			'<div%4$s class="%2$s%6$s%7$s">
 				%8$s
@@ -1385,9 +1746,22 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 		$this->name = __( 'Row', 'et_builder' );
 		$this->slug = 'et_pb_row_inner';
 
+		$this->advanced_options = array(
+			'custom_margin_padding' => array(
+				'use_padding'       => false,
+				'css'               => array(
+					'important' => 'all',
+				),
+				'custom_margin'     => array(
+					'priority' => 1,
+				),
+			),
+		);
+
 		$this->whitelisted_fields = array(
 			'custom_padding',
-			'custom_margin',
+			'custom_padding_tablet',
+			'custom_padding_phone',
 			'padding_mobile',
 			'column_padding_mobile',
 			'use_custom_gutter',
@@ -1414,12 +1788,33 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 			'padding_right_3',
 			'padding_bottom_3',
 			'padding_left_3',
+			'padding_1_tablet',
+			'padding_2_tablet',
+			'padding_3_tablet',
+			'padding_1_phone',
+			'padding_2_phone',
+			'padding_3_phone',
 			'parallax_1',
 			'parallax_method_1',
 			'parallax_2',
 			'parallax_method_2',
 			'parallax_3',
 			'parallax_method_3',
+			'module_id_1',
+			'module_id_2',
+			'module_id_3',
+			'module_class_1',
+			'module_class_2',
+			'module_class_3',
+			'custom_css_before_1',
+			'custom_css_before_2',
+			'custom_css_before_3',
+			'custom_css_main_1',
+			'custom_css_main_2',
+			'custom_css_main_3',
+			'custom_css_after_1',
+			'custom_css_after_2',
+			'custom_css_after_3',
 		);
 
 		$this->fields_defaults = array(
@@ -1452,6 +1847,8 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 			'parallax_method_2'     => array( 'on' ),
 			'parallax_3'            => array( 'off' ),
 			'parallax_method_3'     => array( 'on' ),
+			'custom_padding_tablet' => array( '' ),
+			'custom_padding_phone'  => array( '' ),
 		);
 	}
 
@@ -1460,14 +1857,15 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 			'custom_padding' => array(
 				'label'           => __( 'Custom Padding', 'et_builder' ),
 				'type'            => 'custom_padding',
+				'mobile_options'  => true,
 				'option_category' => 'layout',
 				'description'     => __( 'Adjust padding to specific values, or leave blank to use the default padding.', 'et_builder' ),
 			),
-			'custom_margin' => array(
-				'label'           => __( 'Custom Margin', 'et_builder' ),
-				'type'            => 'custom_margin',
-				'option_category' => 'layout',
-				'tab_slug'        => 'advanced',
+			'custom_padding_tablet' => array(
+				'type' => 'skip',
+			),
+			'custom_padding_phone' => array(
+				'type' => 'skip',
 			),
 			'padding_mobile' => array(
 				'label'             => __( 'Keep Custom Padding on Mobile', 'et_builder' ),
@@ -1503,18 +1901,6 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 				),
 				'depends_show_if' => 'on',
 				'description'     => __( 'Adjust the spacing between each column in this row.', 'et_builder' ),
-			),
-			'module_id' => array(
-				'label'             => __( 'CSS ID', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.', 'et_builder' ),
-			),
-			'module_class' => array(
-				'label'             => __( 'CSS Class', 'et_builder' ),
-				'type'              => 'text',
-				'option_category'   => 'configuration',
-				'description'       => __( 'Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.', 'et_builder' ),
 			),
 			'make_equal' => array(
 				'label'             => __( 'Equalize Column Heights', 'et_builder' ),
@@ -1612,6 +1998,106 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 			'parallax_method_3' => array(
 				'type' => 'skip',
 			),
+			'padding_1_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_2_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_3_tablet' => array(
+				'type' => 'skip',
+			),
+			'padding_1_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_2_phone' => array(
+				'type' => 'skip',
+			),
+			'padding_3_phone' => array(
+				'type' => 'skip',
+			),
+			'module_id_1' => array(
+				'type' => 'skip',
+			),
+			'module_id_2' => array(
+				'type' => 'skip',
+			),
+			'module_id_3' => array(
+				'type' => 'skip',
+			),
+			'module_class_1' => array(
+				'type' => 'skip',
+			),
+			'module_class_2' => array(
+				'type' => 'skip',
+			),
+			'module_class_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_before_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_main_3' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_1' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_2' => array(
+				'type' => 'skip',
+			),
+			'custom_css_after_3' => array(
+				'type' => 'skip',
+			),
+			'columns_css' => array(
+				'type'            => 'column_settings_css',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'priority'        => '20',
+			),
+			'disabled_on' => array(
+				'label'           => __( 'Disable on', 'et_builder' ),
+				'type'            => 'multiple_checkboxes',
+				'options'         => array(
+					'phone'   => __( 'Phone', 'et_builder' ),
+					'tablet'  => __( 'Tablet', 'et_builder' ),
+					'desktop' => __( 'Desktop', 'et_builder' ),
+				),
+				'additional_att'  => 'disable_on',
+				'option_category' => 'configuration',
+				'description'     => __( 'This will disable the module on selected devices', 'et_builder' ),
+			),
+			'module_id' => array(
+				'label'           => __( 'CSS ID', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'module_class' => array(
+				'label'           => __( 'CSS Class', 'et_builder' ),
+				'type'            => 'text',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+				'option_class'    => 'et_pb_custom_css_regular',
+			),
+			'columns_css_fields' => array(
+				'type'            => 'column_settings_css_fields',
+				'option_category' => 'configuration',
+				'tab_slug'        => 'custom_css',
+			),
 		);
 
 		return $fields;
@@ -1638,10 +2124,17 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 		$padding_right_3         = $this->shortcode_atts['padding_right_3'];
 		$padding_bottom_3        = $this->shortcode_atts['padding_bottom_3'];
 		$padding_left_3          = $this->shortcode_atts['padding_left_3'];
+		$padding_1_tablet        = $this->shortcode_atts['padding_1_tablet'];
+		$padding_2_tablet        = $this->shortcode_atts['padding_2_tablet'];
+		$padding_3_tablet        = $this->shortcode_atts['padding_3_tablet'];
+		$padding_1_phone         = $this->shortcode_atts['padding_1_phone'];
+		$padding_2_phone         = $this->shortcode_atts['padding_2_phone'];
+		$padding_3_phone         = $this->shortcode_atts['padding_3_phone'];
 		$gutter_width            = $this->shortcode_atts['gutter_width'];
 		$make_equal              = $this->shortcode_atts['make_equal'];
 		$custom_padding          = $this->shortcode_atts['custom_padding'];
-		$custom_margin           = $this->shortcode_atts['custom_margin'];
+		$custom_padding_tablet   = $this->shortcode_atts['custom_padding_tablet'];
+		$custom_padding_phone    = $this->shortcode_atts['custom_padding_phone'];
 		$padding_mobile          = $this->shortcode_atts['padding_mobile'];
 		$column_padding_mobile   = $this->shortcode_atts['column_padding_mobile'];
 		$global_module           = $this->shortcode_atts['global_module'];
@@ -1652,8 +2145,23 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 		$parallax_method_2       = $this->shortcode_atts['parallax_method_2'];
 		$parallax_3              = $this->shortcode_atts['parallax_3'];
 		$parallax_method_3       = $this->shortcode_atts['parallax_method_3'];
+		$module_id_1             = $this->shortcode_atts['module_id_1'];
+		$module_id_2             = $this->shortcode_atts['module_id_2'];
+		$module_id_3             = $this->shortcode_atts['module_id_3'];
+		$module_class_1          = $this->shortcode_atts['module_class_1'];
+		$module_class_2          = $this->shortcode_atts['module_class_2'];
+		$module_class_3          = $this->shortcode_atts['module_class_3'];
+		$custom_css_before_1     = $this->shortcode_atts['custom_css_before_1'];
+		$custom_css_before_2     = $this->shortcode_atts['custom_css_before_2'];
+		$custom_css_before_3     = $this->shortcode_atts['custom_css_before_3'];
+		$custom_css_main_1       = $this->shortcode_atts['custom_css_main_1'];
+		$custom_css_main_2       = $this->shortcode_atts['custom_css_main_2'];
+		$custom_css_main_3       = $this->shortcode_atts['custom_css_main_3'];
+		$custom_css_after_1      = $this->shortcode_atts['custom_css_after_1'];
+		$custom_css_after_2      = $this->shortcode_atts['custom_css_after_2'];
+		$custom_css_after_3      = $this->shortcode_atts['custom_css_after_3'];
 
-		global $et_pb_column_inner_backgrounds, $et_pb_column_inner_paddings, $et_pb_columns_inner_counter, $keep_column_padding_mobile, $et_pb_column_parallax;
+		global $et_pb_column_inner_backgrounds, $et_pb_column_inner_paddings, $et_pb_columns_inner_counter, $keep_column_padding_mobile, $et_pb_column_parallax, $et_pb_column_inner_css, $et_pb_column_inner_paddings_mobile;
 
 		$keep_column_padding_mobile = $column_padding_mobile;
 
@@ -1664,6 +2172,11 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 				return do_shortcode( $global_content );
 			}
 		}
+
+		$padding_mobile_values = array(
+			'tablet' => explode( '|', $custom_padding_tablet ),
+			'phone'  => explode( '|', $custom_padding_phone ),
+		);
 
 		$et_pb_columns_inner_counter = 0;
 		$et_pb_column_inner_backgrounds = array(
@@ -1698,8 +2211,22 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 			array( $parallax_3, $parallax_method_3 ),
 		);
 
+		$et_pb_column_inner_paddings_mobile = array(
+			array(
+				'tablet' => explode( '|', $padding_1_tablet ),
+				'phone'  => explode( '|', $padding_1_phone ),
+			),
+			array(
+				'tablet' => explode( '|', $padding_2_tablet ),
+				'phone'  => explode( '|', $padding_2_phone ),
+			),
+			array(
+				'tablet' => explode( '|', $padding_3_tablet ),
+				'phone'  => explode( '|', $padding_3_phone ),
+			),
+		);
+
 		$padding_values = explode( '|', $custom_padding );
-		$margin_values = explode( '|', $custom_margin );
 
 		if ( ! empty( $padding_values ) ) {
 			// old version of Rows support only top and bottom padding, so we need to handle it along with the full padding in the recent version
@@ -1719,42 +2246,52 @@ class ET_Builder_Row_Inner extends ET_Builder_Structure_Element {
 
 			foreach( $padding_settings as $padding_side => $value ) {
 				if ( '' !== $value ) {
-					ET_Builder_Element::set_style( $function_name, array(
+					$element_style = array(
 						'selector'    => '.et_pb_column %%order_class%%',
 						'declaration' => sprintf(
-							'padding-%1$s:%2$s%3$s;',
+							'padding-%1$s: %2$s;',
 							esc_html( $padding_side ),
-							esc_html( $value ),
-							'on' === $padding_mobile ? '!important' : ''
-						),
-					) );
-				}
-			}
-		}
-
-		if ( ! empty( $margin_values ) ) {
-			$margin_settings = array(
-				'top' => isset( $margin_values[0] ) ? $margin_values[0] : '',
-				'right' => isset( $margin_values[1] ) ? $margin_values[1] : '',
-				'bottom' => isset( $margin_values[2] ) ? $margin_values[2] : '',
-				'left' => isset( $margin_values[3] ) ? $margin_values[3] : '',
-			);
-
-			foreach( $margin_settings as $margin_side => $value ) {
-				if ( '' !== $value ) {
-					$element_style = array(
-						'selector'    => '%%order_class%%',
-						'declaration' => sprintf(
-							'margin-%1$s: %2$s;',
-							esc_html( $margin_side ),
 							esc_html( $value )
 						),
 					);
+
+					if ( 'on' !== $padding_mobile ) {
+						$element_style['media_query'] = ET_Builder_Element::get_media_query( 'min_width_981' );
+					}
 
 					ET_Builder_Element::set_style( $function_name, $element_style );
 				}
 			}
 		}
+
+		if ( ! empty( $padding_mobile_values['tablet'] ) || ! empty( $padding_values['phone'] ) ) {
+			$padding_mobile_values_processed = array();
+
+			foreach( array( 'tablet', 'phone' ) as $device ) {
+				if ( empty( $padding_mobile_values[$device] ) ) {
+					continue;
+				}
+
+				$padding_mobile_values_processed[ $device ] = array(
+					'padding-top'    => isset( $padding_mobile_values[$device][0] ) ? $padding_mobile_values[$device][0] : '',
+					'padding-right'  => isset( $padding_mobile_values[$device][1] ) ? $padding_mobile_values[$device][1] : '',
+					'padding-bottom' => isset( $padding_mobile_values[$device][2] ) ? $padding_mobile_values[$device][2] : '',
+					'padding-left'   => isset( $padding_mobile_values[$device][3] ) ? $padding_mobile_values[$device][3] : '',
+				);
+			}
+
+			if ( ! empty( $padding_mobile_values_processed ) ) {
+				et_pb_generate_responsive_css( $padding_mobile_values_processed, '.et_pb_column %%order_class%%', '', $function_name );
+			}
+		}
+
+		$et_pb_column_inner_css = array(
+			'css_class'         => array( $module_class_1, $module_class_2, $module_class_3 ),
+			'css_id'            => array( $module_id_1, $module_id_2, $module_id_3 ),
+			'custom_css_before' => array( $custom_css_before_1, $custom_css_before_2, $custom_css_before_3 ),
+			'custom_css_main'   => array( $custom_css_main_1, $custom_css_main_2, $custom_css_main_3 ),
+			'custom_css_after'  => array( $custom_css_after_1, $custom_css_after_2, $custom_css_after_3 ),
+		);
 
 		$module_class .= ' et_pb_row_inner';
 
@@ -1825,25 +2362,35 @@ class ET_Builder_Column extends ET_Builder_Structure_Element {
 		$specialty_columns           = $this->shortcode_atts['specialty_columns'];
 		$saved_specialty_column_type = $this->shortcode_atts['saved_specialty_column_type'];
 
-		global $et_specialty_column_type, $et_pb_column_backgrounds, $et_pb_column_paddings, $et_pb_column_inner_backgrounds, $et_pb_column_inner_paddings, $et_pb_columns_counter, $et_pb_columns_inner_counter, $keep_column_padding_mobile, $et_pb_column_parallax;
+		global $et_specialty_column_type, $et_pb_column_backgrounds, $et_pb_column_paddings, $et_pb_column_inner_backgrounds, $et_pb_column_inner_paddings, $et_pb_columns_counter, $et_pb_columns_inner_counter, $keep_column_padding_mobile, $et_pb_column_parallax, $et_pb_column_css, $et_pb_column_inner_css, $et_pb_column_paddings_mobile;
 
 		if ( 'et_pb_column_inner' !== $function_name ) {
 			$et_specialty_column_type = $type;
 			$array_index = $et_pb_columns_counter;
 			$backgrounds_array = $et_pb_column_backgrounds;
 			$paddings_array = $et_pb_column_paddings;
+			$paddings_mobile_array = $et_pb_column_paddings_mobile;
+			$column_css_array = $et_pb_column_css;
 			$et_pb_columns_counter++;
 		} else {
 			$array_index = $et_pb_columns_inner_counter;
 			$backgrounds_array = $et_pb_column_inner_backgrounds;
 			$paddings_array = $et_pb_column_inner_paddings;
+			$column_css_array = $et_pb_column_inner_css;
 			$et_pb_columns_inner_counter++;
+			$paddings_mobile_array = isset( $et_pb_column_inner_paddings_mobile );
 		}
 
 		$background_color = isset( $backgrounds_array[$array_index][0] ) ? $backgrounds_array[$array_index][0] : '';
 		$background_img = isset( $backgrounds_array[$array_index][1] ) ? $backgrounds_array[$array_index][1] : '';
 		$padding_values = isset( $paddings_array[$array_index] ) ? $paddings_array[$array_index] : array();
+		$padding_mobile_values = isset( $paddings_mobile_array[$array_index] ) ? $paddings_mobile_array[$array_index] : array();
 		$parallax_method = isset( $et_pb_column_parallax[$array_index][0] ) && 'on' === $et_pb_column_parallax[$array_index][0] ? $et_pb_column_parallax[$array_index][1] : '';
+		$custom_css_class = isset( $column_css_array['css_class'][$array_index] ) ? ' ' . $column_css_array['css_class'][$array_index] : '';
+		$custom_css_id = isset( $column_css_array['css_id'][$array_index] ) ? $column_css_array['css_id'][$array_index] : '';
+		$custom_css_before = isset( $column_css_array['custom_css_before'][$array_index] ) ? $column_css_array['custom_css_before'][$array_index] : '';
+		$custom_css_main = isset( $column_css_array['custom_css_main'][$array_index] ) ? $column_css_array['custom_css_main'][$array_index] : '';
+		$custom_css_after = isset( $column_css_array['custom_css_after'][$array_index] ) ? $column_css_array['custom_css_after'][$array_index] : '';
 
 		if ( '' !== $background_color && 'rgba(0,0,0,0)' !== $background_color ) {
 			ET_Builder_Element::set_style( $function_name, array(
@@ -1886,6 +2433,48 @@ class ET_Builder_Column extends ET_Builder_Structure_Element {
 			}
 		}
 
+		if ( ! empty( $padding_mobile_values['tablet'] ) || ! empty( $padding_values['phone'] ) ) {
+			$padding_mobile_values_processed = array();
+
+			foreach( array( 'tablet', 'phone' ) as $device ) {
+				if ( empty( $padding_mobile_values[$device] ) ) {
+					continue;
+				}
+
+				$padding_mobile_values_processed[ $device ] = array(
+					'padding-top'    => isset( $padding_mobile_values[$device][0] ) ? $padding_mobile_values[$device][0] : '',
+					'padding-right'  => isset( $padding_mobile_values[$device][1] ) ? $padding_mobile_values[$device][1] : '',
+					'padding-bottom' => isset( $padding_mobile_values[$device][2] ) ? $padding_mobile_values[$device][2] : '',
+					'padding-left'   => isset( $padding_mobile_values[$device][3] ) ? $padding_mobile_values[$device][3] : '',
+				);
+			}
+
+			if ( ! empty( $padding_mobile_values_processed ) ) {
+				et_pb_generate_responsive_css( $padding_mobile_values_processed, '.et_pb_row > .et_pb_column%%order_class%%', '', $function_name );
+			}
+		}
+
+		if ( '' !== $custom_css_before ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%:before',
+				'declaration' => trim( $custom_css_before ),
+			) );
+		}
+
+		if ( '' !== $custom_css_main ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%',
+				'declaration' => trim( $custom_css_main ),
+			) );
+		}
+
+		if ( '' !== $custom_css_after ) {
+			ET_Builder_Element::set_style( $function_name, array(
+				'selector'    => '%%order_class%%:after',
+				'declaration' => trim( $custom_css_after ),
+			) );
+		}
+
 		if ( 'et_pb_column_inner' === $function_name ) {
 			$et_specialty_column_type = '' !== $saved_specialty_column_type ? $saved_specialty_column_type : $et_specialty_column_type;
 
@@ -1915,17 +2504,17 @@ class ET_Builder_Column extends ET_Builder_Structure_Element {
 
 		$inner_class = 'et_pb_column_inner' === $function_name ? ' et_pb_column_inner' : '';
 
-		$class = 'et_pb_column_' . $type . $inner_class;
+		$class = 'et_pb_column_' . $type . $inner_class . $custom_css_class;
+
+		$class = ET_Builder_Element::add_module_order_class( $class, $function_name );
 
 		$inner_content = do_shortcode( et_pb_fix_shortcodes( $content ) );
 		$class .= '' == trim( $inner_content ) ? ' et_pb_column_empty' : '';
 
-		$class = ET_Builder_Element::add_module_order_class( $class, $function_name );
-
 		$class .= 'et_pb_column_inner' !== $function_name && '' !== $specialty_columns ? ' et_pb_specialty_column' : '';
 
 		$output = sprintf(
-			'<div class="et_pb_column %1$s%3$s">
+			'<div class="et_pb_column %1$s%3$s"%5$s>
 				%4$s
 				%2$s
 			</div> <!-- .et_pb_column -->',
@@ -1939,7 +2528,8 @@ class ET_Builder_Column extends ET_Builder_Structure_Element {
 					( 'off' === $parallax_method ? ' et_pb_parallax_css' : '' )
 				)
 				: ''
-			)
+			),
+			'' !== $custom_css_id ? sprintf( ' id="%1$s"', esc_attr( $custom_css_id ) ) : ''
 		);
 
 		return $output;

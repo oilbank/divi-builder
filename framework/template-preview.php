@@ -66,8 +66,35 @@ if ( ! current_user_can( 'edit_posts' ) ) {
 								// Auth user
 								printf( '<p class="et-pb-preview-message">%1$s</p>', esc_html__( 'Authentication failed. You have no permission to preview this item.', 'et_builder' ) );
 							} else {
-								$content = apply_filters( 'the_content', wp_unslash( $_POST['shortcode'] ) );
-								$content = str_replace( ']]>', ']]&gt;', $content );
+								// process content for builder plugin
+								if ( et_is_builder_plugin_active() ) {
+									$content = do_shortcode( wp_unslash( $_POST['shortcode'] ) );
+									$content = str_replace( ']]>', ']]&gt;', $content );
+
+									$outer_class   = apply_filters( 'et_builder_outer_content_class', array( 'et_builder_outer_content' ) );
+									$outer_classes = implode( ' ', $outer_class );
+
+									$outer_id      = apply_filters( "et_builder_outer_content_id", "et_builder_outer_content" );
+
+									$inner_class   = apply_filters( 'et_builder_inner_content_class', array( 'et_builder_inner_content' ) );
+									$inner_classes = implode( ' ', $inner_class );
+
+									$content = sprintf(
+										'<div class="%2$s" id="%4$s">
+											<div class="%3$s">
+												%1$s
+											</div>
+										</div>',
+										$content,
+										esc_attr( $outer_classes ),
+										esc_attr( $inner_classes ),
+										esc_attr( $outer_id )
+									);
+								} else {
+									$content = apply_filters( 'the_content', wp_unslash( $_POST['shortcode'] ) );
+									$content = str_replace( ']]>', ']]&gt;', $content );
+								}
+
 								echo $content;
 							}
 						} else {

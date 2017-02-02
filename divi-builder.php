@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 1.1.3
+ * Version: 1.2.2
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
