@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ET_BUILDER_PRODUCT_VERSION' ) ) {
 	// Note, when this is updated, you must also update corresponding version in builder.js: `window.et_builder_version`
-	define( 'ET_BUILDER_PRODUCT_VERSION', '2.7.1' );
+	define( 'ET_BUILDER_PRODUCT_VERSION', '2.7.3' );
 }
 
 if ( ! defined( 'ET_BUILDER_VERSION' ) ) {
@@ -1352,11 +1352,23 @@ function et_pb_get_layout_type( $post_id ) {
 }
 endif;
 
-if ( ! function_exists( 'et_pb_add_builder_page_js_css' ) ) :
-function et_pb_add_builder_page_js_css(){
-	global $typenow, $post, $wp_version;
+if ( ! function_exists( 'et_pb_is_wp_old_version' ) ) :
+function et_pb_is_wp_old_version() {
+	global $wp_version;
 
 	$wp_major_version = substr( $wp_version, 0, 3 );
+
+	if ( version_compare( $wp_major_version, '4.5', '<' ) ) {
+		return true;
+	}
+
+	return false;
+}
+endif;
+
+if ( ! function_exists( 'et_pb_add_builder_page_js_css' ) ) :
+function et_pb_add_builder_page_js_css(){
+	global $typenow, $post;
 
 	if ( et_is_yoast_seo_plugin_active() ) {
 		// Get list of shortcodes that causes issue if being triggered in admin
@@ -1446,7 +1458,7 @@ function et_pb_add_builder_page_js_css(){
 	wp_register_script( 'jquery-tablesorter', ET_BUILDER_URI . '/scripts/ext/jquery.tablesorter.min.js', array( 'jquery' ), ET_BUILDER_VERSION, true );
 
 	// load 1.10.4 versions of jQuery-ui scripts if WP version is less than 4.5, load 1.11.4 version otherwise
-	if ( version_compare( $wp_major_version, '4.5', '<' ) ) {
+	if ( et_pb_is_wp_old_version() ) {
 		wp_enqueue_script( 'et_pb_admin_date_js', ET_BUILDER_URI . '/scripts/ext/jquery-ui-1.10.4.custom.min.js', array( 'jquery' ), ET_BUILDER_VERSION, true );
 	} else {
 		wp_enqueue_script( 'et_pb_admin_date_js', ET_BUILDER_URI . '/scripts/ext/jquery-ui-1.11.4.custom.min.js', array( 'jquery' ), ET_BUILDER_VERSION, true );

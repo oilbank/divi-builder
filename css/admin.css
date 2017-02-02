@@ -25,12 +25,12 @@
 .et_dashboard_form li.et_dashboard_action_button { margin-top: 60px; }
 #et_dashboard_logo:before { font-family: 'etbuilder'; speak: none; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; content: '\3c'; display: block; position: absolute; left: 40px; top: 5px; font-size: 32px; }
 div#et_dashboard_navigation { width: 100%; height: 58px; z-index: 99; position: relative; background-color: #7E3BD0; }
-ul.et_dashboard_newsletter_nav { display: none; }
+ul.current_section { display: none; }
 #et_dashboard_navigation li { float: left; }
 div#et_dashboard_content { margin-left: 0; background-color: #fff; }
 div#et_dashboard_header { background-color: #6C2EB9; border-radius: 4px 4px 0 0;}
 div#wpcontent { background-color: #F1F1F1; }
-#et_dashboard_navigation li a:hover, a.et_dashboard_icon_newsletter { background-color: #8F42EC !important; }
+#et_dashboard_navigation li a:hover, .et_active_menu > a { background-color: #8F42EC !important; }
 #et_dashboard_navigation li a, #et_dashboard_navigation li a:hover { padding: 20px 40px !important; }
 
 #et_dashboard_navigation li a { font-size: 18px !important; text-transform: none; font-weight: 500 !important; line-height: 18px; }
@@ -75,6 +75,8 @@ div#et_dashboard_wrapper_outer * { -webkit-font-smoothing: subpixel-antialiased;
 .et_dashboard_form textarea { width: 75% !important; height:inherit; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; }
 
 a.et_dashboard_icon.et_dashboard_get_lists:before { content: '\e02a'; }
+
+.current_tab_et_dashboard_tab_content_updates_main .et_dashboard_row h2 { display: block; }
 
 /*!
 Animate.css - http://daneden.me/animate

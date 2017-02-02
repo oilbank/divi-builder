@@ -12,6 +12,12 @@ $all_sections = array(
 			'main'   => esc_html__( 'Main', 'bloom' ),
 		),
 	),
+	'updates'  => array(
+		'title'    => esc_html__( 'Updates', 'et_builder_plugin' ),
+		'contents' => array(
+			'main'   => esc_html__( 'Main', 'bloom' ),
+		),
+	),
 );
 
 /**
@@ -105,9 +111,65 @@ $dashboard_options_all = array(
 		),
 	),
 
+	'updates' => array(
+		'section_start' => array(
+			'type'     => 'section_start',
+			'title'    => esc_html__( 'Enable Updates', 'et_builder' ),
+			'subtitle' => sprintf( esc_html__( 'Keeping your plugins updated is important. To %1$s for the Divi Builder, you must first authenticate your Elegant Themes account by inputting your account Username and API Key below. Your username is the same username you use when logging into your Elegant Themes account, and your API Key can be found by logging into your account and navigating to the Account > API Key page.', 'et_builder' ),
+				sprintf( '<a href="%1$s" target="_blank">%2$s</a>',
+					esc_attr( 'http://www.elegantthemes.com/plugins/divi-builder/documentation/update/' ),
+					esc_html__( 'enable updates', 'et_builder' )
+				)
+			),
+			'no_escape' => true,
+		),
+
+		'option_1' => array(
+			'type'                 => 'input_field',
+			'subtype'              => 'text',
+			'placeholder'          => '',
+			'title'                => esc_html__( 'Username:', 'et_builder_plugin' ),
+			'name'                 => 'updates_username',
+			'class'                => 'updates_option updates_option_username',
+			'validation_type'      => 'simple_text',
+			'hide_contents'        => true,
+			'hint_text'            => esc_html__( 'Please enter your ElegantThemes.com username', 'et_builder_plugin' ),
+		),
+
+		'option_2' => array(
+			'type'                 => 'input_field',
+			'subtype'              => 'text',
+			'placeholder'          => '',
+			'title'                => esc_html__( 'API Key:', 'et_builder_plugin' ),
+			'name'                 => 'updates_api_key',
+			'class'                => 'updates_option updates_option_api_key',
+			'validation_type'      => 'simple_text',
+			'hide_contents'        => true,
+			'hint_text'            => sprintf( esc_html__( 'Enter your %1$s here.', 'Monarch' ),
+				sprintf( '<a href="%1$s" target="_blank">%2$s</a>',
+					esc_attr( 'https://www.elegantthemes.com/members-area/api-key.php' ),
+					esc_html__( 'Elegant Themes API Key', 'Monarch' )
+				)
+			),
+		),
+
+		'update_button' => array(
+			'type'            => 'button',
+			'title'           => esc_html__( 'Save', 'et_builder_plugin' ),
+			'link'            => '#',
+			'authorize'       => false,
+			'class'           => 'et_dashboard_updates_save',
+		),
+	),
+
 	'newsletter_title' => array(
 		'type'  => 'main_title',
 		'title' => esc_html__( 'Newsletter Settings', 'et_builder_plugin' ),
+	),
+
+	'updates_title' => array(
+		'type'  => 'main_title',
+		'title' => esc_html__( 'Authenticate Your Subscription', 'et_builder_plugin' ),
 	),
 
 	'end_of_section' => array(
@@ -140,6 +202,14 @@ $assigned_options = array(
 			$dashboard_options_all[ 'aweber' ][ 'aweber_key' ],
 			$dashboard_options_all[ 'aweber' ][ 'aweber_button' ],
 			$dashboard_options_all[ 'aweber' ][ 'regenerate_lists' ],
+			$dashboard_options_all[ 'end_of_section' ],
+	),
+	'updates_main_options' => array(
+		$dashboard_options_all[ 'updates_title' ],
+		$dashboard_options_all[ 'updates' ][ 'section_start' ],
+			$dashboard_options_all[ 'updates' ][ 'option_1' ],
+			$dashboard_options_all[ 'updates' ][ 'option_2' ],
+			$dashboard_options_all[ 'updates' ][ 'update_button' ],
 			$dashboard_options_all[ 'end_of_section' ],
 	),
 );

@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 1.3.1
+ * Version: 1.3.3
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
@@ -15,13 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ET_BUILDER_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'ET_BUILDER_PLUGIN_URI', plugins_url('', __FILE__) );
+define( 'ET_BUILDER_PLUGIN_VERSION', '1.3.3' );
 
 if ( ! class_exists( 'ET_Dashboard_v2' ) ) {
 	require_once( ET_BUILDER_PLUGIN_DIR . 'dashboard/dashboard.php' );
 }
 
 class ET_Builder_Plugin extends ET_Dashboard_v2 {
-	var $plugin_version = '1.3.1';
+	var $plugin_version = ET_BUILDER_PLUGIN_VERSION;
 	var $_options_pagename = 'et_builder_options';
 	var $menu_page;
 	private static $_this;
@@ -54,6 +55,8 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 
 		add_action( 'wp_ajax_et_builder_refresh_lists', array( $this, 'refresh_lists' ) );
 
+		add_action( 'wp_ajax_et_builder_save_updates_settings', array( $this, 'save_updates_settings' ) );
+
 		add_filter( 'et_pb_builder_authorization_verdict', array( $this, 'is_aweber_authorized' ) );
 
 		add_filter( 'body_class', array( $this, 'add_body_class' ) );
@@ -63,6 +66,14 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 		add_filter( 'the_content', array( $this, 'add_builder_content_wrapper' ) );
 
 		add_filter( 'et_builder_inner_content_class', array( $this, 'add_builder_inner_content_class' ) );
+
+		add_filter( 'et_pb_builder_options_array', array( $this, 'get_builder_options' ) );
+	}
+
+	static function add_updates() {
+		require_once( ET_BUILDER_PLUGIN_DIR . 'core/updates_init.php' );
+
+		et_core_enable_automatic_updates( ET_BUILDER_PLUGIN_URI, ET_BUILDER_PLUGIN_VERSION );
 	}
 
 	function add_builder_content_wrapper( $content ) {
@@ -150,7 +161,16 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 	 * @return array
 	 */
 	function get_builder_options() {
-		return get_option( 'et_pb_builder_options' ) ? get_option( 'et_pb_builder_options' ) : array();
+		$auto_updates_settings = get_option( 'et_automatic_updates_options' ) ? get_option( 'et_automatic_updates_options' ) : array();
+		$builder_options = get_option( 'et_pb_builder_options' ) ? get_option( 'et_pb_builder_options' ) : array();
+		$processed_updates_settings = array();
+
+		// prepare array of Auto Updates settings
+		$processed_updates_settings['updates_main_updates_username'] = isset( $auto_updates_settings['username'] ) ? $auto_updates_settings['username'] : '';
+		$processed_updates_settings['updates_main_updates_api_key'] = isset( $auto_updates_settings['api_key'] ) ? $auto_updates_settings['api_key'] : '';
+
+		$complete_options_set = array_merge( $builder_options, $processed_updates_settings );
+		return $complete_options_set;
 	}
 
 	function options_page() {
@@ -176,7 +196,7 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 	function et_plugin_setup_builder() {
 		define( 'ET_BUILDER_PLUGIN_ACTIVE', true );
 
-		define( 'ET_BUILDER_VERSION', '1.3.1' );
+		define( 'ET_BUILDER_VERSION', ET_BUILDER_PLUGIN_VERSION );
 
 		define( 'ET_BUILDER_DIR', ET_BUILDER_PLUGIN_DIR . 'framework/' );
 		define( 'ET_BUILDER_URI', trailingslashit( plugins_url( '', __FILE__ ) ) . 'framework' );
@@ -354,9 +374,35 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 			return true;
 		}
 	}
+
+	function save_updates_settings() {
+		if ( ! wp_verify_nonce( $_POST['et_builder_nonce'] , 'et_builder_nonce' ) ) {
+			die( -1 );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( -1 );
+		}
+
+		$username = ! empty( $_POST['et_builder_updates_username'] ) ? sanitize_text_field( $_POST['et_builder_updates_username'] ) : '';
+		$api_key = ! empty( $_POST['et_builder_updates_api_key'] ) ? sanitize_text_field( $_POST['et_builder_updates_api_key'] ) : '';
+
+		update_option( 'et_automatic_updates_options', array(
+			'username' => $username,
+			'api_key' => $api_key,
+		) );
+
+		die();
+	}
 }
 
 function et_divi_builder_init_plugin() {
 	new ET_Builder_Plugin();
 }
 add_action( 'init', 'et_divi_builder_init_plugin' );
+
+function et_divi_builder_add_updates() {
+	// Plugins Updates system should be loaded before a theme core loads
+	ET_Builder_Plugin::add_updates();
+}
+add_action( 'plugins_loaded', 'et_divi_builder_add_updates' );

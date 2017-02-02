@@ -76,6 +76,34 @@
 			return false;
 		});
 
+		$( '.et_dashboard_updates_save' ).click( function() {
+			var $this_button = $( this ),
+				$this_container = $this_button.closest( 'ul' ),
+				$this_spinner = $this_container.find( 'span.spinner' ),
+				username = $this_container.find( '.updates_option_username' ).val(),
+				api_key = $this_container.find( '.updates_option_api_key' ).val();
+
+			$.ajax({
+				type: 'POST',
+				url: builder_settings.ajaxurl,
+				data: {
+					action : 'et_builder_save_updates_settings',
+					et_builder_nonce : builder_settings.et_builder_nonce,
+					et_builder_updates_username : username,
+					et_builder_updates_api_key : api_key
+				},
+				beforeSend: function( data ) {
+					$this_spinner.addClass( 'et_dashboard_spinner_visible' );
+				},
+
+				success: function( data ) {
+					$this_spinner.removeClass( 'et_dashboard_spinner_visible' );
+				}
+			});
+
+			return false;
+		});
+
 		$( '#et_pb_save_plugin' ).click( function() {
 			var $loading_animation = $( '#et_pb_loading_animation' ),
 				$success_animation = $( '#et_pb_success_animation' ),

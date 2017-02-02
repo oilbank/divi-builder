@@ -26,7 +26,7 @@ define( 'ET_DASHBOARD_DIR_V2', trailingslashit( dirname(__FILE__) ) );
 define( 'ET_DASHBOARD_PLUGIN_URI_V2', plugins_url( '', __FILE__ ) );
 
 class ET_Dashboard_v2 {
-	var $class_version = '1.1.2';
+	var $class_version = '1.1.3';
 	var $protocol;
 	var $plugin_name;
 
@@ -67,7 +67,10 @@ class ET_Dashboard_v2 {
 	}
 
 	function get_options_array() {
-		return get_option( 'et_' . $this->plugin_name . '_options' ) ? get_option( 'et_' . $this->plugin_name . '_options' ) : array();
+		$options_array = get_option( 'et_' . $this->plugin_name . '_options' ) ? get_option( 'et_' . $this->plugin_name . '_options' ) : array();
+		$final_options_array = apply_filters( 'et_' . $this->plugin_name . '_options_array', $options_array );
+
+		return $final_options_array;
 	}
 
 	public static function load_fonts_class() {
@@ -1091,7 +1094,7 @@ class ET_Dashboard_v2 {
 											? '<li class="et_dashboard_auto_height">'
 											: '', //#5
 										isset( $option[ 'subtitle' ] )
-											? sprintf('<p class="et_dashboard_section_subtitle">%1$s</p>', esc_html( $option[ 'subtitle' ] ) )
+											? sprintf('<p class="et_dashboard_section_subtitle">%1$s</p>', isset( $option[ 'no_escape' ] ) && true === $option[ 'no_escape' ] ? $option[ 'subtitle' ] : esc_html( $option[ 'subtitle' ] ) )
 											: '',
 										isset( $option[ 'class' ] ) ? ' ' . esc_attr( $option[ 'class' ] ) : '',
 										isset( $option[ 'display_if' ] ) ? ' data-triggers_count="0"': '' //#8

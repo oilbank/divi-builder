@@ -26,8 +26,13 @@
 		}
 
 		if ( 'side' == $section ) {
-			$( 'a#' + $tab_id ).parent().parent().toggleClass( 'current_section' );
+			var $parent_menu = $( 'a#' + $tab_id ).parent().parent(),
+				$this_main_menu = $parent_menu.closest( 'li' );
+
+			$parent_menu.toggleClass( 'current_section' );
 			$( '.et_dashboard_save_changes' ).css( { 'display' : 'block' } );
+			$( '#et_dashboard_navigation > ul > li' ).removeClass( 'et_active_menu' );
+			$this_main_menu.addClass( 'et_active_menu' );
 		}
 
 		$( '#et_dashboard_content' ).removeAttr( 'class' );
