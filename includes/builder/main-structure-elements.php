@@ -1650,7 +1650,7 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 			}
 
 			if ( ! empty( $padding_mobile_values_processed ) ) {
-				et_pb_generate_responsive_css( $padding_mobile_values_processed, '%%order_class%%', '', $function_name );
+				et_pb_generate_responsive_css( $padding_mobile_values_processed, '%%order_class%%', '', $function_name, ' !important; ' );
 			}
 		}
 

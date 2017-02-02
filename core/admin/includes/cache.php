@@ -7,6 +7,7 @@
  * @package Core\Cache
  */
 
+if ( ! function_exists( 'et_core_cache_add' ) ) :
 /**
  * Adds data to the cache if it doesn't already exist.
  *
@@ -20,7 +21,9 @@
 function et_core_cache_add( $key, $data, $group = '' ) {
 	return ET_Core_Cache::add( $key, $data, $group );
 }
+endif;
 
+if ( ! function_exists( 'et_core_cache_set' ) ) :
 /**
  * Sets the data contents into the cache.
  *
@@ -38,7 +41,9 @@ function et_core_cache_add( $key, $data, $group = '' ) {
 function et_core_cache_set( $key, $data, $group = '' ) {
 	return ET_Core_Cache::set( $key, $data, $group );
 }
+endif;
 
+if ( ! function_exists( 'et_core_cache_get' ) ) :
 /**
  * Retrieves the cache contents, if it exists.
  *
@@ -55,7 +60,9 @@ function et_core_cache_set( $key, $data, $group = '' ) {
 function et_core_cache_get( $key, $group = '' ) {
 	return ET_Core_Cache::get( $key, $group );
 }
+endif;
 
+if ( ! function_exists( 'et_core_cache_get_group' ) ) :
 /**
  * Retrieves the cache contents for entire group, if it exists.
  *
@@ -70,7 +77,9 @@ function et_core_cache_get( $key, $group = '' ) {
 function et_core_cache_get_group( $group ) {
 	return ET_Core_Cache::get_group( $group );
 }
+endif;
 
+if ( ! function_exists( 'et_core_cache_has' ) ) :
 /**
  * Check the cache contents, if given key and (optional) group exists.
  *
@@ -83,7 +92,9 @@ function et_core_cache_get_group( $group ) {
 function et_core_cache_has( $key, $group = '' ) {
 	return ET_Core_Cache::has( $key, $group );
 }
+endif;
 
+if ( ! function_exists( 'et_core_cache_delete' ) ) :
 /**
  * Removes the contents of the cache key in the group.
  *
@@ -98,7 +109,9 @@ function et_core_cache_has( $key, $group = '' ) {
 function et_core_cache_delete( $key, $group = '' ) {
 	return ET_Core_Cache::delete( $key, $group );
 }
+endif;
 
+if ( ! function_exists( 'et_core_cache_flush' ) ) :
 /**
  * Clears the object cache of all data.
  *
@@ -108,3 +121,4 @@ function et_core_cache_delete( $key, $group = '' ) {
 function et_core_cache_flush() {
 	return ET_Core_Cache::flush();
 }
+endif;

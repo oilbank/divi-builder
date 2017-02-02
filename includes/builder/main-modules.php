@@ -551,6 +551,7 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 					'#et_pb_hover_overlay_color',
 					'#et_pb_auto',
 					'#et_pb_posts_number',
+					'#et_pb_show_title_and_caption',
 				),
 			),
 			'posts_number' => array(
@@ -564,11 +565,12 @@ class ET_Builder_Module_Gallery extends ET_Builder_Module {
 				'label'              => esc_html__( 'Show Title and Caption', 'et_builder' ),
 				'type'               => 'yes_no_button',
 				'option_category'    => 'configuration',
-				'options'           => array(
+				'options'            => array(
 					'on'  => esc_html__( 'Yes', 'et_builder' ),
 					'off' => esc_html__( 'No', 'et_builder' ),
 				),
 				'description'        => esc_html__( 'Here you can choose whether to show the images title and caption, if the image has them.', 'et_builder' ),
+				'depends_show_if'    => 'off',
 			),
 			'show_pagination' => array(
 				'label'             => esc_html__( 'Show Pagination', 'et_builder' ),
@@ -5379,7 +5381,7 @@ class ET_Builder_Module_Pricing_Tables_Item extends ET_Builder_Module {
 				),
 			) );
 		}
- 
+
 		if ( '' !== $button_url && '' !== $button_text ) {
 			$button_text = sprintf( '<a class="et_pb_pricing_table_button et_pb_button%4$s" href="%1$s"%3$s>%2$s</a>',
 				esc_url( $button_url ),
@@ -6534,7 +6536,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module {
 			case 'feedburner':
 				$form = sprintf( '
 					<div class="et_pb_newsletter_form et_pb_feedburner_form">
-						<form action="http://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(\'http://feedburner.google.com/fb/a/mailverify?uri=%4$s\', \'popupwindow\', \'scrollbars=yes,width=550,height=520\'); return true">
+						<form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(\'https://feedburner.google.com/fb/a/mailverify?uri=%4$s\', \'popupwindow\', \'scrollbars=yes,width=550,height=520\'); return true">
 						<p>
 							<label class="et_pb_contact_form_label" for="email" style="display: none;">%2$s</label>
 							<input id="email" class="input" type="text" value="%3$s" name="email">
@@ -12753,7 +12755,7 @@ class ET_Builder_Module_Post_Title extends ET_Builder_Module {
 				$post_title = get_the_title();
 			}
 
-			$output .= sprintf( '<h1>%s</h1>',
+			$output .= sprintf( '<h1 class="entry-title">%s</h1>',
 				$post_title
 			);
 		}
@@ -15605,10 +15607,10 @@ class ET_Builder_Module_Fullwidth_Portfolio extends ET_Builder_Module {
 				<?php
 					$thumb = '';
 
-					$width = 320;
+					$width = 510;
 					$width = (int) apply_filters( 'et_pb_portfolio_image_width', $width );
 
-					$height = 241;
+					$height = 382;
 					$height = (int) apply_filters( 'et_pb_portfolio_image_height', $height );
 
 					list($thumb_src, $thumb_width, $thumb_height) = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), array( $width, $height ) );
@@ -16631,7 +16633,7 @@ class ET_Builder_Module_Fullwidth_Post_Title extends ET_Builder_Module {
 				$post_title = get_the_title();
 			}
 
-			$output .= sprintf( '<h1>%s</h1>',
+			$output .= sprintf( '<h1 class="entry-title">%s</h1>',
 				$post_title
 			);
 		}

@@ -5,6 +5,7 @@
  * @package Core\Portability
  */
 
+if ( ! function_exists( 'et_core_portability_register' ) ) :
 /**
  * Register portability.
  *
@@ -56,7 +57,9 @@ function et_core_portability_register( $context, $args ) {
 		et_core_portability_load( $context );
 	}
 }
+endif;
 
+if ( ! function_exists( 'et_core_portability_load' ) ) :
 /**
  * Load Portability class.
  *
@@ -69,7 +72,9 @@ function et_core_portability_load( $context ) {
 	require_once( ET_CORE_PATH . 'admin/includes/class-portability.php' );
 	return new ET_Core_Portability( $context );
 }
+endif;
 
+if ( ! function_exists( 'et_core_portability_link' ) ) :
 /**
  * HTML link to trigger the portability modal.
  *
@@ -109,7 +114,9 @@ function et_core_portability_link( $context, $attributes = array() ) {
 		esc_html( $attributes['title'] )
 	);
 }
+endif;
 
+if ( ! function_exists( 'et_core_portability_ajax_import' ) ) :
 /**
  * Ajax portability Import.
  *
@@ -126,8 +133,10 @@ function et_core_portability_ajax_import() {
 		$portability->import();
 	}
 }
+endif;
 add_action( 'wp_ajax_et_core_portability_import', 'et_core_portability_ajax_import' );
 
+if ( ! function_exists( 'et_core_portability_ajax_export' ) ) :
 /**
  * Ajax portability Export.
  *
@@ -144,8 +153,10 @@ function et_core_portability_ajax_export() {
 		$portability->export();
 	}
 }
+endif;
 add_action( 'wp_ajax_et_core_portability_export', 'et_core_portability_ajax_export' );
 
+if ( ! function_exists( 'et_core_portability_ajax_cancel' ) ) :
 /**
  * Cancel portability action.
  *
@@ -162,8 +173,10 @@ function et_core_portability_ajax_cancel() {
 		$portability->delete_temp_files( true );
 	}
 }
+endif;
 add_action( 'wp_ajax_et_core_portability_cancel', 'et_core_portability_ajax_cancel' );
 
+if ( ! function_exists( 'et_core_portability_export' ) ) :
 /**
  * Portability export.
  *
@@ -180,4 +193,5 @@ function et_core_portability_export() {
 		$portability->download_export();
 	}
 }
+endif;
 add_action( 'admin_init', 'et_core_portability_export', 20 );

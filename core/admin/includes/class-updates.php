@@ -175,7 +175,7 @@ final class ET_Core_Updates {
 			'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url( '/' ),
 		);
 
-		$request = wp_remote_post( 'http://www.elegantthemes.com/api/api_downloads.php', $options );
+		$request = wp_remote_post( 'https://www.elegantthemes.com/api/api_downloads.php', $options );
 
 		if ( ! is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) == 200 ){
 			$response = wp_remote_retrieve_body( $request );
@@ -219,7 +219,7 @@ final class ET_Core_Updates {
 
 		$last_update = new stdClass();
 
-		$plugins_request = wp_remote_post( 'http://www.elegantthemes.com/api/api.php', $options );
+		$plugins_request = wp_remote_post( 'https://www.elegantthemes.com/api/api.php', $options );
 
 		if ( ! is_wp_error( $plugins_request ) && wp_remote_retrieve_response_code( $plugins_request ) == 200 ){
 			$plugins_response = unserialize( wp_remote_retrieve_body( $plugins_request ) );
@@ -286,20 +286,9 @@ final class ET_Core_Updates {
 	function check_themes_updates( $update_transient ){
 		global $wp_version;
 
-		$timeout = 60;
-
 		$et_update_themes = get_site_transient( 'et_update_themes' );
 
 		if ( ! isset( $update_transient->checked ) ) {
-			return $update_transient;
-		}
-
-		/**
-		 * $update_transient->checked is always set for themes,
-		 * so don't make second request, if the last one was completed
-		 * less than 1 minute ago
-		 */
-		if ( isset( $et_update_themes->last_checked ) && $timeout >= ( time() - $et_update_themes->last_checked ) ) {
 			return $update_transient;
 		}
 
@@ -324,7 +313,7 @@ final class ET_Core_Updates {
 
 		$last_update = new stdClass();
 
-		$theme_request = wp_remote_post( 'http://www.elegantthemes.com/api/api.php', $options );
+		$theme_request = wp_remote_post( 'https://www.elegantthemes.com/api/api.php', $options );
 
 		if ( ! is_wp_error( $theme_request ) && wp_remote_retrieve_response_code( $theme_request ) == 200 ){
 			$theme_response = unserialize( wp_remote_retrieve_body( $theme_request ) );

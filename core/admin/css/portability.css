@@ -103,7 +103,7 @@
 }
 
 [data-et-core-modal*="data-et-core-portability"]:before {
-	font-family: 'et-core';
+	font-family: 'ETmodules';
 	font-size: 16px;
 	content: '\e900';
 	-webkit-font-smoothing: antialiased;

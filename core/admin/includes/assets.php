@@ -5,6 +5,7 @@
  * @package Core\Assets
  */
 
+if ( ! function_exists( 'et_core_register_admin_assets' ) ) :
 /**
  * Register Core admin assets.
  *
@@ -22,4 +23,5 @@ function et_core_register_admin_assets() {
 		),
 	) );
 }
+endif;
 add_action( 'admin_enqueue_scripts', 'et_core_register_admin_assets' );

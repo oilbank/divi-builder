@@ -3075,7 +3075,7 @@ msgstr "Schakel paginering in- of uit voor deze feed."
 #: main-modules.php:13930 main-modules.php:14555 main-modules.php:15454
 #: main-modules.php:16521 main-modules.php:17006
 msgid "Text Color"
-msgstr "Tekstkleur"
+msgstr "Tekstkleur Test"
 
 #: main-modules.php:588 main-modules.php:1080 main-modules.php:1271
 #: main-modules.php:1415 main-modules.php:1774 main-modules.php:3000
@@ -3371,10 +3371,7 @@ msgstr ""
 #: main-modules.php:12631 main-modules.php:12944 main-modules.php:14565
 #: main-modules.php:16510
 msgid "Text Orientation"
-msgstr ""
-"Hier kunt u de kleur van uw tekst kiezen. Als u met een donkere achtergrond "
-"werkt, moet uw tekst licht zijn ingesteld. Als u werkt met een lichte "
-"achtergrond, moet uw tekst donker zijn."
+msgstr "Tekst uitlijning"
 
 #: main-modules.php:1425 main-modules.php:12952 main-modules.php:13944
 #: main-modules.php:14569
@@ -6225,7 +6222,7 @@ msgstr ""
 
 #: main-modules.php:12639 main-modules.php:16518
 msgid "Here you can choose the orientation for the Title/Meta text"
-msgstr "Hier kunt u de oriëtatie voor de titeltekst kiezen"
+msgstr "Hier kunt u de uitlijning voor de titel/metatekst kiezen"
 
 #: main-modules.php:12649 main-modules.php:16528
 msgid "Here you can choose the color for the Title/Meta text"
@@ -6721,19 +6718,19 @@ msgstr "Actieve link-kleur"
 
 #: main-modules.php:14598
 msgid "Dropdown Menu Background Color"
-msgstr "Achtergrondkleur van het te selecteren menu"
+msgstr "Achtergrondkleur van het uitklapmenu"
 
 #: main-modules.php:14604
 msgid "Dropdown Menu Line Color"
-msgstr "Lijnkleur van het te selecteren menu"
+msgstr "Lijnkleur van het uitklapmenu"
 
 #: main-modules.php:14610
 msgid "Dropdown Menu Text Color"
-msgstr "Tekstkleur van het te selecteren menu"
+msgstr "Tekstkleur van het uitklapmenu"
 
 #: main-modules.php:14616
 msgid "Dropdown Menu Animation"
-msgstr "Animatie van het te selecteren menu"
+msgstr "Animatie van het uitklapmenu"
 
 #: main-modules.php:14620
 msgid "Fade"

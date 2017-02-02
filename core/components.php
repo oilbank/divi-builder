@@ -8,6 +8,7 @@
  * @package Core
  */
 
+if ( ! function_exists( 'et_core_load_component' ) ) :
 /**
  * Load Core components.
  *
@@ -78,3 +79,4 @@ function et_core_load_component( $components ) {
 		do_action( 'et_core_loaded_component_' . $component );
 	}
 }
+endif;

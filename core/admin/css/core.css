@@ -29,12 +29,23 @@
   2.0 - Fonts
 ------------------------------------------------------------------------------*/
 @font-face {
-	font-family: 'et-core';
-	src:url('../fonts/core.eot');
-	src:url('../fonts/core.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/core.woff') format('woff'),
-		url('../fonts/core.ttf') format('truetype'),
-		url('../fonts/core.svg#et-core') format('svg');
+	font-family: 'ETmodules';
+	src:url('../fonts/modules.eot');
+	src:url('../fonts/modules.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/modules.woff') format('woff'),
+		url('../fonts/modules.ttf') format('truetype'),
+		url('../fonts/modules.svg#et-modules') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'etbuilder';
+	src:url('../fonts/builder.eot');
+	src:url('../fonts/builder.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/builder.woff') format('woff'),
+		url('../fonts/builder.ttf') format('truetype'),
+		url('../fonts/builder.svg#et-builder') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -282,7 +293,7 @@ body button.et-core-button {
 }
 
 .et-core-modal-close:before {
-	font-family: 'et-core';
+	font-family: 'ETmodules';
 	font-weight: 800;
 	content: '\4d';
 	speak: none;
@@ -458,7 +469,7 @@ body button.et-core-button {
 
 .et-core-loader-success:before,
 .et-core-loader-fail:before{
-	font-family: 'et-core';
+	font-family: 'ETmodules';
 	font-weight: bold;
 	-webkit-font-smoothing: antialiased;
 	font-size: 30px;

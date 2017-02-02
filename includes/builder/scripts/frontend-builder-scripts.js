@@ -1195,7 +1195,7 @@
 
 				$et_post_gallery.each(function() {
 					$(this).magnificPopup( {
-						delegate: 'a',
+						delegate: '.et_pb_gallery_image a',
 						type: 'image',
 						removalDelay: 500,
 						gallery: {
