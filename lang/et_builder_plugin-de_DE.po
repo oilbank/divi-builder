@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Divi 1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/divi-builder\n"
-"POT-Creation-Date: 2015-10-19 12:44:22+00:00\n"
+"POT-Creation-Date: 2016-03-30 15:45:26+00:00\n"
 "PO-Revision-Date: 2015-10-19 16:38+0300\n"
 "Last-Translator: \n"
 "Language-Team: Elegant Themes\n"
@@ -21,14 +21,25 @@ msgstr ""
 "X-Poedit-SearchPath-1: ..\n"
 "X-Poedit-SearchPathExcluded-0: ../includes/builder\n"
 "X-Poedit-SearchPathExcluded-1: ../node_modules\n"
+"X-Poedit-SearchPathExcluded-2: ../core\n"
 
 #: dashboard/dashboard.php:37
 msgid "Save Changes"
 msgstr "Änderungen speichern"
 
-#: dashboard/dashboard.php:1243 divi-builder.php:242
+#: dashboard/dashboard.php:1268 divi-builder.php:241
 msgid "Re-Authorize"
 msgstr "Re Autorisierung"
+
+#: dashboard/dashboard.php:1376
+msgid ""
+"You can either export your %1$s Settings or import settings from another "
+"install of %1$s below."
+msgstr ""
+
+#: dashboard/dashboard.php:1377
+msgid "Export %1$s Settings"
+msgstr ""
 
 #: dashboard/includes/options.php:10 dashboard/includes/options.php:110
 msgid "Newsletter Settings"
@@ -74,76 +85,76 @@ msgstr "Autorisieren AWeber"
 msgid "Regenerate AWeber Lists"
 msgstr "Regenerieren AWeber Listen"
 
-#: divi-builder.php:164
+#: divi-builder.php:159
 msgid "You don't have sufficient permissions to access this page"
 msgstr ""
 "Sie verfügen nicht über ausreichende Berechtigungen, um diese Seite zu "
 "besuchen"
 
-#: divi-builder.php:174
+#: divi-builder.php:169
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
-#: divi-builder.php:175
+#: divi-builder.php:170
 msgid "Divi Builder Options"
 msgstr "Divi Builder-Optionen"
 
-#: divi-builder.php:208
+#: divi-builder.php:207
 msgid "Plugin Options"
 msgstr "Plugin-Optionen"
 
-#: divi-builder.php:241
+#: divi-builder.php:240
 msgid "Authorize"
 msgstr "Autorisieren"
 
-#: divi-builder.php:243
+#: divi-builder.php:242
 msgid "AWeber successfully authorized"
 msgstr "AWeber erfolgreich autorisiert"
 
-#: divi-builder.php:253
+#: divi-builder.php:258
 msgid "please paste valid authorization code"
 msgstr "Fügen gültigen Autorisierungscode"
 
-#: divi-builder.php:257
+#: divi-builder.php:262
 msgid "Authorization failed: "
 msgstr "Autorisation fehlgeschlagen: "
 
-#: divi-builder.php:277
+#: divi-builder.php:289
 msgid "Error: Please make sure %1$s"
 msgstr "Fehler: Bitte stellen Sie sicher %1$s"
 
-#: divi-builder.php:277
+#: divi-builder.php:289
 msgid "MailChimp API key is correct"
 msgstr "MailChimp API-Schlüssel korrekt ist"
 
-#: divi-builder.php:277
+#: divi-builder.php:289
 msgid "AWeber is authorized"
 msgstr "AWeber ist berechtigt"
 
-#: divi-builder.php:279
+#: divi-builder.php:291
 msgid "Lists have been successfully regenerated"
 msgstr "Listen wurden erfolgreich regeneriert"
 
-#: divi-builder.php:299
+#: divi-builder.php:311
 msgid ""
 "Authorization code is invalid. Try regenerating it and paste in the new code."
 msgstr ""
 "Autorisierungscode ist ungültig. Versuchen Sie, einen neuen Code zu "
 "generieren und einzufügen."
 
-#: divi-builder.php:323
+#: divi-builder.php:335
 msgid "AWeberAPIException."
 msgstr "AWeber API Ausnahme."
 
-#: divi-builder.php:324
+#: divi-builder.php:336
 msgid "Type"
 msgstr "Typ"
 
-#: divi-builder.php:325
+#: divi-builder.php:337
 msgid "Message"
 msgstr "Nachricht"
 
-#: divi-builder.php:326
+#: divi-builder.php:338
 msgid "Documentation"
 msgstr "Dokumentation"
 

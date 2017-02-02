@@ -8,6 +8,8 @@
 				$spinner = $this_button.closest( 'li' ).find( 'span.spinner' );
 
 			authorize_aweber( $key_field, $spinner );
+
+			return false;
 		});
 
 		function authorize_aweber( $key_field, $spinner ) {
@@ -70,6 +72,8 @@
 					window.et_dashboard_generate_warning( data, '#', '', '', '', '' );
 				}
 			});
+
+			return false;
 		});
 
 		$( '#et_pb_save_plugin' ).click( function() {

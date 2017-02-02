@@ -218,7 +218,7 @@ endif;
 if ( ! function_exists( 'et_wp_trim_words' ) ) :
 function et_wp_trim_words( $text, $num_words = 55, $more = null ) {
 	if ( null === $more )
-		$more = __( '&hellip;' );
+		$more = esc_html__( '&hellip;' );
 	$original_text = $text;
 	$text = wp_strip_all_tags( $text );
 
@@ -237,4 +237,84 @@ function et_wp_trim_words( $text, $num_words = 55, $more = null ) {
 
 	return apply_filters( 'wp_trim_words', $text, $num_words, $more, $original_text );
 }
+endif;
+
+if ( ! function_exists( 'et_get_safe_localization' ) ) :
+	function et_get_safe_localization( $string ) {
+		return wp_kses( $string, et_get_allowed_localization_html_elements() );
+	}
+endif;
+
+if ( ! function_exists( 'et_get_allowed_localization_html_elements' ) ) :
+	function et_get_allowed_localization_html_elements() {
+		$whitelisted_attributes = array(
+			'id'    => array(),
+			'class' => array(),
+			'style' => array(),
+		);
+
+		$elements = array(
+			'a'      => array(
+				'href'  => array(),
+				'title' => array(),
+				'target' => array(),
+			),
+			'b'      => array(),
+			'em'     => array(),
+			'p'      => array(),
+			'span'   => array(),
+			'div'    => array(),
+			'strong' => array(),
+		);
+
+		foreach ( $elements as $tag => $attributes ) {
+			$elements[ $tag ] = array_merge( $attributes, $whitelisted_attributes );
+		}
+
+		return $elements;
+	}
+endif;
+
+if ( ! function_exists( 'et_sanitize_alpha_color' ) ) :
+	/**
+	 * Sanitize RGBA color
+	 * @param string
+	 * @return string|bool
+	 */
+	function et_sanitize_alpha_color( $color ) {
+		// Trim unneeded whitespace
+		$color = str_replace( ' ', '', $color );
+
+		// If this is hex color, validate and return it
+		if ( 1 === preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
+			return $color;
+		}
+
+		// If this is rgb, validate and return it
+		elseif ( 'rgb(' === substr( $color, 0, 4 ) ) {
+			sscanf( $color, 'rgb(%d,%d,%d)', $red, $green, $blue );
+
+			if ( ( $red >= 0 && $red <= 255 ) &&
+				 ( $green >= 0 && $green <= 255 ) &&
+				 ( $blue >= 0 && $blue <= 255 )
+				) {
+				return "rgb({$red},{$green},{$blue})";
+			}
+		}
+
+		// If this is rgba, validate and return it
+		elseif ( 'rgba(' === substr( $color, 0, 5 ) ) {
+			sscanf( $color, 'rgba(%d,%d,%d,%f)', $red, $green, $blue, $alpha );
+
+			if ( ( $red >= 0 && $red <= 255 ) &&
+				 ( $green >= 0 && $green <= 255 ) &&
+				 ( $blue >= 0 && $blue <= 255 ) &&
+				   $alpha >= 0 && $alpha <= 1
+				) {
+				return "rgba({$red},{$green},{$blue},{$alpha})";
+			}
+		}
+
+		return false;
+	}
 endif;

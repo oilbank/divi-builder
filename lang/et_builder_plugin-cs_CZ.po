@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Divi 2.4.6.2 CZ\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/divi-builder\n"
-"POT-Creation-Date: 2015-10-19 12:44:22+00:00\n"
+"POT-Creation-Date: 2016-03-30 15:45:26+00:00\n"
 "PO-Revision-Date: 2015-10-19 16:40+0300\n"
 "Last-Translator: Robin Podešva <robin.podesva@email.cz>\n"
 "Language-Team: Elegant Themes & Robin Podešva <robin.podesva@email.cz>\n"
@@ -21,14 +21,25 @@ msgstr ""
 "X-Poedit-SearchPath-1: ..\n"
 "X-Poedit-SearchPathExcluded-0: ../includes/builder\n"
 "X-Poedit-SearchPathExcluded-1: ../node_modules\n"
+"X-Poedit-SearchPathExcluded-2: ../core\n"
 
 #: dashboard/dashboard.php:37
 msgid "Save Changes"
 msgstr "Uložit změny"
 
-#: dashboard/dashboard.php:1243 divi-builder.php:242
+#: dashboard/dashboard.php:1268 divi-builder.php:241
 msgid "Re-Authorize"
 msgstr "Re autorizaci"
+
+#: dashboard/dashboard.php:1376
+msgid ""
+"You can either export your %1$s Settings or import settings from another "
+"install of %1$s below."
+msgstr ""
+
+#: dashboard/dashboard.php:1377
+msgid "Export %1$s Settings"
+msgstr ""
 
 #: dashboard/includes/options.php:10 dashboard/includes/options.php:110
 msgid "Newsletter Settings"
@@ -70,73 +81,73 @@ msgstr "Autorizace AWeber"
 msgid "Regenerate AWeber Lists"
 msgstr "Regeneruje AWeber Seznamy"
 
-#: divi-builder.php:164
+#: divi-builder.php:159
 msgid "You don't have sufficient permissions to access this page"
 msgstr "Nemáte dostatečná oprávnění k přístupu na tuto stránku"
 
-#: divi-builder.php:174
+#: divi-builder.php:169
 msgid "Save Settings"
 msgstr "uložit nastavení"
 
-#: divi-builder.php:175
+#: divi-builder.php:170
 msgid "Divi Builder Options"
 msgstr "Divi Možnosti Builder"
 
-#: divi-builder.php:208
+#: divi-builder.php:207
 msgid "Plugin Options"
 msgstr "plugin Volby"
 
-#: divi-builder.php:241
+#: divi-builder.php:240
 msgid "Authorize"
 msgstr "povolit"
 
-#: divi-builder.php:243
+#: divi-builder.php:242
 msgid "AWeber successfully authorized"
 msgstr "AWeber úspěšně autorizována"
 
-#: divi-builder.php:253
+#: divi-builder.php:258
 msgid "please paste valid authorization code"
 msgstr "vložte prosím platný autorizační kód"
 
-#: divi-builder.php:257
+#: divi-builder.php:262
 msgid "Authorization failed: "
 msgstr "Autorizace se nezdařila: "
 
-#: divi-builder.php:277
+#: divi-builder.php:289
 msgid "Error: Please make sure %1$s"
 msgstr "Chyba: Prosím, ujistěte se, že %1$s"
 
-#: divi-builder.php:277
+#: divi-builder.php:289
 msgid "MailChimp API key is correct"
 msgstr "MailChimp API klíč je správný"
 
-#: divi-builder.php:277
+#: divi-builder.php:289
 msgid "AWeber is authorized"
 msgstr "Aweber je oprávněn"
 
-#: divi-builder.php:279
+#: divi-builder.php:291
 msgid "Lists have been successfully regenerated"
 msgstr "Seznamy byly úspěšně regenerovat"
 
-#: divi-builder.php:299
+#: divi-builder.php:311
 msgid ""
 "Authorization code is invalid. Try regenerating it and paste in the new code."
 msgstr ""
 "Autorizační kód je neplatný. Zkuste ho vygenerovat znovu a zadejte kód nový."
 
-#: divi-builder.php:323
+#: divi-builder.php:335
 msgid "AWeberAPIException."
 msgstr "AWeber API Výjimka."
 
-#: divi-builder.php:324
+#: divi-builder.php:336
 msgid "Type"
 msgstr "Typ"
 
-#: divi-builder.php:325
+#: divi-builder.php:337
 msgid "Message"
 msgstr "Zpráva"
 
-#: divi-builder.php:326
+#: divi-builder.php:338
 msgid "Documentation"
 msgstr "Dokumentace"
 
