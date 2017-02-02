@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 1.3.8
+ * Version: 1.3.10
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ET_BUILDER_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'ET_BUILDER_PLUGIN_URI', plugins_url('', __FILE__) );
-define( 'ET_BUILDER_PLUGIN_VERSION', '1.3.8' );
+define( 'ET_BUILDER_PLUGIN_VERSION', '1.3.10' );
 
 if ( ! class_exists( 'ET_Dashboard_v2' ) ) {
 	require_once( ET_BUILDER_PLUGIN_DIR . 'dashboard/dashboard.php' );
@@ -257,6 +257,8 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 		if ( "toplevel_page_et_divi_options" !== $hook ) {
 			return;
 		}
+
+		et_core_load_main_fonts();
 
 		wp_enqueue_style( 'et-builder-css', ET_BUILDER_PLUGIN_URI . '/css/admin.css', array(), $this->plugin_version );
 		wp_enqueue_script( 'et-builder-js', ET_BUILDER_PLUGIN_URI . '/js/admin.js', array( 'jquery' ), $this->plugin_version, true );

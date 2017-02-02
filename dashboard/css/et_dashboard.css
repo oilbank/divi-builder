@@ -13,7 +13,9 @@ button { border: none;}
 /*------------------[TYPOGRAPHY]------------------*/
 /*------------------------------------------------*/
 
-body, p, button { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: 400; color: #939AAA; line-height: 1.7em; }
+#et_dashboard_wrapper_outer, .et_pb_save_settings_button_wrapper { font-family: 'Open Sans', sans-serif; }
+
+#et_dashboard_wrapper_outer, p, button { font-size: 14px; font-weight: 400; color: #939AAA; line-height: 1.7em; }
 
 h1, h2, h3, h4, h5, h6, button, .et_dashboard_action_button a, .modal_title { line-height: 1.1em; padding-bottom: .5em; color: #373942; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 h1 { font-size: 26px; }
