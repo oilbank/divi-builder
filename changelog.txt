@@ -1,3 +1,22 @@
+version 2.0.1 ( updated 3-20-17 )
+- Fixed a bug that caused an unwanted save warning message to appear when leaving a recently-saved page that contained certain combinations of global rows and sections. 
+- Fixed a bug in IE11 and below that made it impossible to open module settings in the Divi Builder for some modules.
+- Fixed an issue where global modules that contained sub items (such as tabs and sliders) did not sync correctly when updated if multiple instances of the same module existed on a single page in the Visual Builder.
+- Fixed an issue with row width units type that caused an incorrect sync of setting values between the Visual Builder and Backend Builder due to different default values in each version of the builder.
+- Added rel attribute settings to the button module to allow for nofollow and other relationships to be set for links.
+- Fixed a waypoints error that occurred in certain situations with background videos in the Visual Builder.
+- Fixed a bug that sometimes caused locked modules to turn green instead of red.
+- Custom CSS and Google Maps API Key will now be reset correctly when resetting theme options.
+- Fixed a bug where formatting for tabs was mistakenly reset in the Visual Builder in some situations.
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/assets/css/style.css
+	* includes/builder/scripts/builder.js
+	* includes/builder/main-structure-elements.php
+	* includes/builder/main-modules.php
+	* includes/builder/scripts/frontend-builder-scripts.js
+	* core/functions.php
+	* epanel/core_functions.php
+
 version 2.0 ( updated 3-15-2017 )
 - Updated the Divi Builder to the latest version, including the all new Visual Builder.
 - Fixed various issues with settings not rendering correctly.

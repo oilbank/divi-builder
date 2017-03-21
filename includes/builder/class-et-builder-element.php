@@ -704,6 +704,31 @@ class ET_Builder_Element {
 			$attrs = new stdClass();
 		}
 
+		$module_type = $this->type;
+
+		// Ensuring that module which uses another module's template (i.e. accordion item uses toggle's
+		// component) has correct $this->type value. This is covered on front-end, but it causes inheriting
+		// module uses its template's value on _shortcode_passthru_callback()
+		if ( $this->slug !== $function_name && isset( $_POST ) && isset( $_POST['et_post_type'] ) ) {
+			$et_post_type = $_POST['et_post_type'];
+			$parent_modules = self::get_parent_modules( $et_post_type);
+			$function_module = false;
+
+			if ( isset( $parent_modules[ $function_name ] ) ) {
+				$function_module = $parent_modules[ $function_name ];
+			} else {
+				$child_modules = self::get_child_modules( $et_post_type );
+
+				if ( isset( $child_modules[ $function_name] ) ) {
+					$function_module = $child_modules[ $function_name ];
+				}
+			}
+
+			if ( $function_module && isset( $function_module->type ) ) {
+				$module_type = $function_module->type;
+			}
+		}
+
 		// Build object.
 		$object = array(
 			'_i'                => $_i,
@@ -718,7 +743,7 @@ class ET_Builder_Element {
 			'component_path'    => $component_path,
 			'attrs'             => $attrs,
 			'content'           => $prepared_content,
-			'is_module_child'   => 'child' === $this->type,
+			'is_module_child'   => 'child' === $module_type,
 			'prepared_styles'   => ! $this->fb_support ? ET_Builder_Element::get_style() : '',
 		);
 

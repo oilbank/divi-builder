@@ -2,7 +2,7 @@ var ET_PageBuilder = ET_PageBuilder || {};
 
 window.wp = window.wp || {};
 
-window.et_builder_version = '3.0.37';
+window.et_builder_version = '3.0.38';
 
 ( function($) {
 	var et_error_modal_shown = window.et_error_modal_shown,
@@ -5856,7 +5856,8 @@ window.et_builder_version = '3.0.37';
 					module_attributes.childviews = this.getChildViews( module_attributes.cid );
 				}
 
-				module_attributes.created = 'manually';
+				delete module_attributes.className;
+				delete module_attributes.et_pb_locked;
 
 				// Set clipboard content
 				clipboard_content = JSON.stringify( module_attributes );
@@ -6154,7 +6155,6 @@ window.et_builder_version = '3.0.37';
 					case "copy" :
 							if ( this.hasOptionSupport( [ "section", "row_inner", "row", "module" ] ) &&
 								 this.et_pb_has_storage_support &&
-								 this.options.model.attributes.et_pb_locked !== "on" &&
 								 _.isUndefined( this.model.attributes.et_pb_skip_module ) &&
 								 is_ab_allowed_copy &&
 								 ! is_ab_goal &&
@@ -6166,8 +6166,7 @@ window.et_builder_version = '3.0.37';
 							if ( this.hasOptionSupport( [ "section", "row_inner", "row", "module" ] ) &&
 								 this.et_pb_has_storage_support &&
 								 this.has_compatible_clipboard_content &&
-								 is_ab_allowed_paste &&
-								 this.options.model.attributes.et_pb_locked !== "on" ) {
+								 is_ab_allowed_paste ) {
 								has_option = true;
 							}
 						break;
@@ -11935,7 +11934,8 @@ window.et_builder_version = '3.0.37';
 				range_string    = range_processed.toString().replace( range_digit, '' ),
 				result;
 
-			if ( Number.isNaN( range_digit ) ) {
+			// no need to use Number.isNaN there. parseFloat guarantees that we have a number or `NaN` value at this point.
+			if ( isNaN( range_digit ) ) {
 				range_digit = '';
 			}
 
@@ -13168,9 +13168,9 @@ window.et_builder_version = '3.0.37';
 						var processed_shortcode = data.shortcode.replace( /template_type="\S+"/, 'global_module="' + post_id + '"' );
 
 						// remove all the unwanted spaces and line-breaks to make sure shortcode comparison performed correctly.
-						processed_shortcode = processed_shortcode.replace( /\]\s+?\n+\s+?\n+?/g, '] ' );
-						processed_shortcode = processed_shortcode.replace( /\s+?\n+\s+?\n+?\[/g, ' [' );
-						processed_shortcode = processed_shortcode.replace( /]\s+\[/g, '] [' );
+						processed_shortcode = processed_shortcode.replace( /]\s?\n\s?\n\s?/g, '] ' ).replace( /\s?\n\s?\n\s?\[/g, ' [' );
+						processed_shortcode = processed_shortcode.replace( /]\s+/g, ']' ).replace( /\s+\[/g, '[' );
+						processed_content = processed_content.replace( /]\s+/g, ']' ).replace( /\s+\[/g, '[' );
 
 						if ( processed_shortcode !== processed_content ) {
 							// call createLayoutFromContent only if current_shortcode is different than received shortcode
@@ -13184,9 +13184,11 @@ window.et_builder_version = '3.0.37';
 					if ( et_pb_globals_requested === et_pb_globals_loaded ) {
 						current_content = et_pb_get_content( 'content', true );
 						new_content = ET_PageBuilder_App.generateCompleteShortcode();
-						new_content = new_content.replace( /\]\s+?\n+\s+?\n+?/g, '] ' );
-						new_content = new_content.replace( /\s+?\n+\s+?\n+?\[/g, ' [' );
-						new_content = new_content.replace( /]\s+\[/g, '] [' );
+
+						// remove all the unwanted spaces and line-breaks to make sure content comparison performed correctly.
+						new_content = new_content.replace( /]\s?\n\s?\n\s?/g, '] ' ).replace( /\s?\n\s?\n\s?\[/g, ' [' );
+						new_content = new_content.replace( /]\s+/g, ']' ).replace( /\s+\[/g, '[' );
+						current_content = current_content.replace( /]\s+/g, ']' ).replace( /\s+\[/g, '[' );
 
 						// compare existing content with the updated content. reinitialize the layout only if they are not equal.
 						if ( current_content.replace( / global_parent="\S+"/g, '' ) !== new_content.replace( / global_parent="\S+"/g, '' ) ) {

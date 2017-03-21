@@ -1040,7 +1040,8 @@
   display: none !important;
 }
 .et_divi_builder #et_builder_outer_content .et_fb_locked_module .et-fb-component-settings .et-fb-button--success,
-.et_divi_builder #et_builder_outer_content .et_fb_locked_module .et-fb-outline {
+.et_divi_builder #et_builder_outer_content .et_fb_locked_module .et-fb-outline,
+.et_divi_builder #et_builder_outer_content .et_fb_locked_module ~ .et-fb-component-settings .et-fb-button--success {
   background: #eb3d00 !important;
 }
 .et_divi_builder #et_builder_outer_content .et_fb_locked_module > div .et-fb-outline {

@@ -1102,7 +1102,7 @@ class ET_Builder_Row extends ET_Builder_Structure_Element {
 		$this->fields_defaults = array(
 			'make_fullwidth'        => array( 'off' ),
 			'use_custom_width'      => array( 'off' ),
-			'width_unit'            => array( 'off' ),
+			'width_unit'            => array( 'on' ),
 			'custom_width_px'       => array( '1080px', 'only_default_setting' ),
 			'custom_width_percent'  => array( '80%', 'only_default_setting' ),
 			'use_custom_gutter'     => array( 'off' ),
