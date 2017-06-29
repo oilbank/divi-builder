@@ -130,7 +130,6 @@
   padding: 8px 21px;
   position: fixed;
   pointer-events: none;
-  -webkit-transition: opacity 0.3s ease-out;
   transition: opacity 0.3s ease-out;
   top: -999em;
   visibility: hidden;
@@ -814,7 +813,6 @@
   margin: 10px auto;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-add-wrap .et-fb-button {
-  -webkit-transition: padding 0.15s ease-in-out, margin 0.15s ease-in-out;
   transition: padding 0.15s ease-in-out, margin 0.15s ease-in-out;
   padding: 6px;
 }
@@ -1048,7 +1046,6 @@
   right: 0;
   margin-top: -6px;
   color: #2b87da;
-  -webkit-transition: opacity 0.3s ease-in-out;
   transition: opacity 0.3s ease-in-out;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-outline--is-dragged .et-fb-padding-indicator-value {
@@ -1151,7 +1148,6 @@
 .et_divi_builder #et_builder_outer_content .et-fb-row-button-wrap--add .et-fb-button,
 .et_divi_builder #et_builder_outer_content .et-fb-section-button-wrap--add .et-fb-button {
   box-shadow: 5px 5px 15px rgba(43, 135, 218, 0.15);
-  -webkit-transition: padding 0.25s ease-in-out, margin 0.25s ease-in-out;
   transition: padding 0.25s ease-in-out, margin 0.25s ease-in-out;
   padding: 6px;
 }
@@ -1527,7 +1523,6 @@
   max-width: none !important;
 }
 .et_divi_builder #et_builder_outer_content #main-footer {
-  -webkit-transition: background-color 0.4s, color 0.4s, opacity 0.4s ease-in-out, -webkit-transform 0.4s;
   transition: background-color 0.4s, color 0.4s, opacity 0.4s ease-in-out, -webkit-transform 0.4s;
   transition: background-color 0.4s, color 0.4s, transform 0.4s, opacity 0.4s ease-in-out;
   transition: background-color 0.4s, color 0.4s, transform 0.4s, opacity 0.4s ease-in-out, -webkit-transform 0.4s;
@@ -3521,7 +3516,6 @@
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  -webkit-transition: background .3s ease;
   transition: background 0.3s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-icon--page-settings-main-buttons > .et-fb-icon__child,
@@ -3537,7 +3531,6 @@
 .et_divi_builder #et_builder_outer_content .et-fb-icon--page-settings-main-buttons > .et-fb-icon__child:after,
 .et_divi_builder #et_builder_outer_content .et-fb-icon--page-settings-main-buttons > .et-fb-icon__child:before {
   content: "";
-  -webkit-transition: right .1s ease,left .1s ease;
   transition: right 0.1s ease, left 0.1s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-icon--page-settings-main-buttons > .et-fb-icon__child:before {
@@ -3552,7 +3545,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et-fb-icon--page-settings-main-buttons > .et-fb-icon__child--active {
   background: transparent;
-  -webkit-transition: background .2s ease;
   transition: background 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-icon--page-settings-main-buttons > .et-fb-icon__child--active,
@@ -3565,7 +3557,6 @@
   width: 20px;
   -webkit-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
-  -webkit-transition: width 0.1s ease 0.1s, -webkit-transform 0.1s cubic-bezier(0.28, 0.55, 0.385, 1.65) 0.2s;
   transition: width 0.1s ease 0.1s, -webkit-transform 0.1s cubic-bezier(0.28, 0.55, 0.385, 1.65) 0.2s;
   transition: width 0.1s ease 0.1s, transform 0.1s cubic-bezier(0.28, 0.55, 0.385, 1.65) 0.2s;
   transition: width 0.1s ease 0.1s, transform 0.1s cubic-bezier(0.28, 0.55, 0.385, 1.65) 0.2s, -webkit-transform 0.1s cubic-bezier(0.28, 0.55, 0.385, 1.65) 0.2s;
@@ -3689,7 +3680,6 @@
   background: rgba(108, 46, 185, 0.1);
   width: 60px;
   height: 100%;
-  -webkit-transition: opacity .2s ease;
   transition: opacity 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-modal .et-fb-button--resize {
@@ -3713,7 +3703,6 @@
   font-size: .8125rem;
   font-weight: 600;
   color: #4c5866!important;
-  -webkit-transition: height 0.5s ease-in-out, top 0.5s ease-in-out, left 0.5s ease-in-out;
   transition: height 0.5s ease-in-out, top 0.5s ease-in-out, left 0.5s ease-in-out;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-heading {
@@ -3814,7 +3803,6 @@
   padding: 13px 15px;
   display: block;
   box-shadow: none;
-  -webkit-transition: background 0.5s ease-in-out;
   transition: background 0.5s ease-in-out;
   line-height: 1;
 }
@@ -3976,7 +3964,6 @@
   font-size: 16px;
   line-height: 1em;
   opacity: .9;
-  -webkit-transition: opacity .6s;
   transition: opacity .6s;
   font-family: etbuilder;
   content: "o";
@@ -4027,7 +4014,6 @@
   font-size: 16px;
   line-height: 1em;
   opacity: .9;
-  -webkit-transition: opacity .6s;
   transition: opacity .6s;
   font-family: ETmodules;
   content: "\E61F";
@@ -4183,7 +4169,6 @@
   margin: 0;
   padding: 12px;
   box-sizing: border-box;
-  -webkit-transition: background .2s ease;
   transition: background .2s ease;
   color: #4c5866;
   font-family: Open Sans;
@@ -4482,7 +4467,6 @@
   flex-direction: row;
   background: #7e3bd0;
   padding: 0;
-  -webkit-transition: opacity .2s ease;
   transition: opacity 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-modal__filter-active .et-fb-tabs__list {
@@ -4496,7 +4480,6 @@
 .et_divi_builder #et_builder_outer_content .et-fb-tabs__list__global .et-fb-tabs__item {
   background: #f1f5f9;
   color: #8e969e;
-  -webkit-transition: background 0.2s ease, -webkit-transform 0.2s ease;
   transition: background 0.2s ease, -webkit-transform 0.2s ease;
   transition: transform .2s ease,background .2s ease;
   transition: transform 0.2s ease, background 0.2s ease, -webkit-transform 0.2s ease;
@@ -4521,7 +4504,6 @@
   display: block;
   max-height: 40px;
   padding: 13px 23px;
-  -webkit-transition: background 0.2s ease, opacity 0.15s ease, -webkit-transform 0.2s ease;
   transition: background 0.2s ease, opacity 0.15s ease, -webkit-transform 0.2s ease;
   transition: background .2s ease,transform .2s ease,opacity .15s ease;
   transition: background 0.2s ease, transform 0.2s ease, opacity 0.15s ease, -webkit-transform 0.2s ease;
@@ -4546,7 +4528,6 @@
   box-sizing: border-box;
   overflow-y: auto;
   position: relative;
-  -webkit-transition: padding .2s ease;
   transition: padding 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-modal__module-settings .et-fb-tabs__panel {
@@ -4598,7 +4579,6 @@
   top: 90px;
   margin-top: -90px;
   z-index: 99;
-  -webkit-transition: top .2s ease;
   transition: top 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-options-filter input.et-fb-settings-option-input::-webkit-input-placeholder {
@@ -4634,7 +4614,6 @@
 .et_divi_builder #et_builder_outer_content .et-fb-modal__filter-active .et-fb-options-filter input.et-fb-settings-option-input {
   background: transparent;
   color: #fff;
-  -webkit-transition: none;
   transition: none;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-modal__filter-active .et-fb-options-filter input.et-fb-settings-option-input:focus {
@@ -4673,7 +4652,6 @@
   border-radius: 3px;
   padding: 7px 10px;
   box-sizing: border-box;
-  -webkit-transition: background .2s ease;
   transition: background .2s ease;
   color: #4c5866;
   font-family: Open Sans;
@@ -4735,7 +4713,6 @@
   border-radius: 50%;
   margin-left: 7px;
   padding: 1px 0 0;
-  -webkit-transition: fill 0.2s ease, background-color 0.2s ease;
   transition: fill 0.2s ease, background-color 0.2s ease;
   line-height: 1;
   text-align: center;
@@ -4770,6 +4747,8 @@
 .et_divi_builder #et_builder_outer_content .et-fb-form__toggle.et-fb-form__toggle-opened:first-of-type h3,
 .et_divi_builder #et_builder_outer_content .et-fb-form__toggle:first-of-type h3 {
   padding-top: 0;
+  line-height: normal;
+  letter-spacing: normal;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-form__toggle.et-fb-form__toggle-opened:first-of-type .et-fb-form__toggle-title .et-fb-icon,
 .et_divi_builder #et_builder_outer_content .et-fb-form__toggle:first-of-type .et-fb-form__toggle-title .et-fb-icon {
@@ -4805,7 +4784,6 @@
   position: absolute;
   right: 0;
   top: 22px;
-  -webkit-transition: fill 0.2s ease, -webkit-transform 0.2s ease;
   transition: fill 0.2s ease, -webkit-transform 0.2s ease;
   transition: transform .2s ease,fill .2s ease;
   transition: transform 0.2s ease, fill 0.2s ease, -webkit-transform 0.2s ease;
@@ -4820,9 +4798,12 @@
   font-family: Open Sans;
   text-transform: none;
   font-size: 20px;
+  font-style: normal;
+  line-height: 1em;
+  text-decoration: none;
+  letter-spacing: 0;
   padding-bottom: 20px;
   padding-top: 20px;
-  -webkit-transition: color 0.2s ease, padding-top 0.2s ease;
   transition: color 0.2s ease, padding-top 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-form__toggle.et-fb-form__toggle-opened {
@@ -4867,7 +4848,6 @@
   margin: 0;
   margin-left: -4px !important;
   margin-top: -6px !important;
-  -webkit-transition: fill 0.2s ease, -webkit-transform 0.2s ease;
   transition: fill 0.2s ease, -webkit-transform 0.2s ease;
   transition: transform .2s ease,fill .2s ease;
   transition: transform 0.2s ease, fill 0.2s ease, -webkit-transform 0.2s ease;
@@ -4923,7 +4903,6 @@
   font-size: .8125rem;
   line-height: normal;
   padding: 7px 10px;
-  -webkit-transition: background .2s ease;
   transition: background 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content input.et-fb-form-input:focus {
@@ -4979,7 +4958,6 @@
   line-height: normal;
   padding: 7px 10px;
   box-sizing: border-box;
-  -webkit-transition: background .2s ease;
   transition: background 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content textarea.et-fb-form-textarea:focus {
@@ -5097,11 +5075,8 @@
   box-shadow: none!important;
   margin-left: 15px!important;
   padding: 0 16px!important;
-  -webkit-transition-duration: .2s;
   transition-duration: .2s;
-  -webkit-transition-property: background;
   transition-property: background;
-  -webkit-transition-timing-function: ease;
   transition-timing-function: ease;
   color: #fff!important;
   font-size: 13px;
@@ -5164,7 +5139,6 @@
   opacity: 0;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
-  -webkit-transition: opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: opacity .2s ease,transform .2s ease;
   transition: opacity 0.2s ease, transform 0.2s ease, -webkit-transform 0.2s ease;
@@ -5190,7 +5164,6 @@
   opacity: 0;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
-  -webkit-transition: left 0.2s ease, right 0.2s ease, border-radius 0.2s ease, height 0.2s ease, width 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: left 0.2s ease, right 0.2s ease, border-radius 0.2s ease, height 0.2s ease, width 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: left 0.2s ease, right 0.2s ease, border-radius 0.2s ease, height 0.2s ease, width 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   transition: left 0.2s ease, right 0.2s ease, border-radius 0.2s ease, height 0.2s ease, width 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease, -webkit-transform 0.2s ease;
@@ -5210,11 +5183,9 @@
   content: "";
   width: 280px;
   height: 280px;
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.9), transparent 95%);
   background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 95%);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
-  -webkit-transition: top .2s ease,left .2s ease;
   transition: top .2s ease,left .2s ease;
   z-index: 10;
 }
@@ -5329,7 +5300,6 @@
   opacity: 0;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
-  -webkit-transition: opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: opacity .2s ease,transform .2s ease;
   transition: opacity 0.2s ease, transform 0.2s ease, -webkit-transform 0.2s ease;
@@ -5357,7 +5327,6 @@
   height: 20px;
   border-radius: 10px;
   left: -6px;
-  -webkit-transition: box-shadow 0.5s ease;
   transition: box-shadow 0.5s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-color--gradient .wp-picker-container .iris-strip .ui-slider-handle:focus,
@@ -5426,7 +5395,6 @@
   opacity: 0;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
-  -webkit-transition: opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: opacity 0.2s ease, -webkit-transform 0.2s ease;
   transition: opacity .2s ease,transform .2s ease;
   transition: opacity 0.2s ease, transform 0.2s ease, -webkit-transform 0.2s ease;
@@ -5531,7 +5499,6 @@
   bottom: 0;
   left: 0;
   opacity: 0;
-  -webkit-transition: opacity .2s ease;
   transition: opacity .2s ease;
   z-index: 40;
   pointer-events: none;
@@ -5779,7 +5746,6 @@
   box-shadow: none;
   margin: 0;
   padding: 8px 10px;
-  -webkit-transition: border-color 0.2s ease;
   transition: border-color 0.2s ease;
   color: #4c5866;
   font-size: .8125rem;
@@ -5787,13 +5753,11 @@
 }
 .et_divi_builder #et_builder_outer_content textarea.et-fb-settings-option-textarea:focus {
   background: #e0e5ea;
-  -webkit-transition: background ease;
   transition: background ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-tabs__panel--css textarea.et-fb-settings-option-textarea {
   color: #29c4a9;
   font-weight: 700;
-  -webkit-transition: background .2s ease,color .2s ease;
   transition: background 0.2s ease, color 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-tabs__panel--css textarea.et-fb-settings-option-textarea:focus {
@@ -5949,7 +5913,6 @@
   background: #f1f5f9;
   margin: 0;
   padding: 10px;
-  -webkit-transition: background .2s ease,color .2s ease;
   transition: background .2s ease,color .2s ease;
   color: #4c5866;
   font-size: 16px;
@@ -6019,7 +5982,6 @@
   margin-right: 1%;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-select-fontstyle-button:after {
-  -webkit-transition: opacity .2s ease;
   transition: opacity .2s ease;
   color: #4c5866;
   font: normal 20px/1 etbuilder;
@@ -6044,7 +6006,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et-fb-select-fontstyle-button--active {
   background: #2b87da!important;
-  -webkit-transition: color .2s ease;
   transition: color .2s ease;
   color: #fff !important;
 }
@@ -6065,7 +6026,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et-fb-select-fontstyle--reset:after {
   content: "\E61F";
-  -webkit-transition: opacity .2s ease;
   transition: opacity .2s ease;
   color: #4c5866;
   font-family: ETmodules;
@@ -6215,7 +6175,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et-fb .mce-menu .mce-menu-item,
 .et_divi_builder.et-fb .mce-menu .mce-menu-item {
-  -webkit-transition: background .2s ease;
   transition: background 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb .mce-menu .mce-menu-item.mce-selected,
@@ -6307,7 +6266,6 @@
   border-radius: 2px;
   padding: 5px;
   box-sizing: border-box;
-  -webkit-transition: background-color 0.2s ease, color 0.2s ease;
   transition: background-color 0.2s ease, color 0.2s ease;
   color: #a2b0c1;
   vertical-align: top;
@@ -6322,7 +6280,6 @@
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin: 0 50% 0 0;
-  -webkit-transition: margin .2s ease;
   transition: margin .2s ease;
   cursor: pointer;
 }
@@ -6425,7 +6382,6 @@
   border-bottom-right-radius: 0;
   padding: 11px 10px;
   box-sizing: border-box;
-  -webkit-transition: background .2s ease;
   transition: background .2s ease;
   color: #4c5866;
   font-family: Open Sans;
@@ -6444,7 +6400,6 @@
   right: 0;
   width: 90px;
   height: 40px;
-  -webkit-transition: background .2s ease;
   transition: background .2s ease;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
@@ -6476,7 +6431,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et_options_list_row.et_condition_row .et-fb-settings-conditional-logic .et-fb-settings-option-select + .et-fb-settings-option-select {
   margin-left: 2%;
-  -webkit-transition: opacity .3s;
   transition: opacity 0.3s;
 }
 .et_divi_builder #et_builder_outer_content .et_options_list_row.et_condition_row .et-fb-settings-conditional-logic .et-fb-settings-option-input {
@@ -6485,7 +6439,6 @@
   border-bottom-right-radius: 3px;
   width: 32%;
   margin-left: 2%;
-  -webkit-transition: opacity .3s;
   transition: opacity 0.3s;
 }
 .et_divi_builder #et_builder_outer_content .et_options_list_row.et_condition_row .et-fb-settings-conditional-logic .et-fb-settings-option-input:disabled,
@@ -6609,11 +6562,9 @@
   text-decoration: initial;
   border: 2px solid #f1f5f9;
   border-bottom: none;
-  -webkit-transition: background-color 0.4s ease, color 0.2s ease;
   transition: background-color 0.4s ease, color 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab-nav > div {
-  -webkit-transition: fill .2s ease;
   transition: fill 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab-nav--active,
@@ -6641,7 +6592,6 @@
   left: 0;
   pointer-events: none;
   display: none;
-  -webkit-transition: opacity .4s ease;
   transition: opacity 0.4s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab--active {
@@ -6791,11 +6741,9 @@
   content: "";
   width: 280px;
   height: 280px;
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.9), transparent 95%);
   background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 95%);
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
-  -webkit-transition: top .2s ease,right .2s ease;
   transition: top 0.2s ease, right 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-preview:hover:before {
@@ -6840,7 +6788,6 @@
   background: #bec9d6;
   padding: 7px;
   max-height: none;
-  -webkit-transition: padding 0.2s ease, margin 0.2s ease, box-shadow 0.2s ease;
   transition: padding 0.2s ease, margin 0.2s ease, box-shadow 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-preview--empty:hover .et-fb-settings-option-edit.et-fb-button {
@@ -7168,7 +7115,6 @@
   box-shadow: none!important;
   margin-left: 15px!important;
   padding: 0 20px!important;
-  -webkit-transition: background .2s ease;
   transition: background .2s ease;
   color: #fff!important;
   font-size: .8125rem;
@@ -7389,11 +7335,8 @@
   box-shadow: none;
   margin-left: 14px;
   padding: 0 9px;
-  -webkit-transition-duration: .2s;
   transition-duration: .2s;
-  -webkit-transition-property: background;
   transition-property: background;
-  -webkit-transition-timing-function: ease;
   transition-timing-function: ease;
   color: #fff;
   font-size: 11px;
@@ -7472,7 +7415,6 @@
   color: rgba(255, 255, 255, 0.6);
   font-size: .9375rem;
   line-height: 1.25rem;
-  -webkit-transition: color .2s ease;
   transition: color .2s ease;
   cursor: pointer;
 }
@@ -7489,7 +7431,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et-fb-select__option--active {
   font-weight: 600;
-  -webkit-transition: none;
   transition: none;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-select__option--active,
@@ -7792,7 +7733,6 @@
   margin: 0;
   padding: 0;
   bottom: 0!important;
-  -webkit-transition: height .2s ease,width .2s ease,margin .2s ease;
   transition: height 0.2s ease, width 0.2s ease, margin 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-skeleton__content .et-fb-add-wrap.et-fb-children--column .et-fb-button:hover,
@@ -8071,7 +8011,6 @@
   text-align: center;
   text-indent: -9999em;
   padding: 2px 0;
-  -webkit-transition: background .2s ease;
   transition: background 0.2s ease;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-columns-layout li.et-fb-selected-item .column-block {
@@ -8486,7 +8425,6 @@
 }
 .et_divi_builder #et_builder_outer_content .et-fb-modal-add-module-container li.et_fb_specialty_layout_item:hover {
   background: #e9edf0;
-  -webkit-transition: background .5s;
   transition: background 0.5s;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-modal-add-module-container li.et_fb_specialty_layout_item:hover .et_pb_specialty_column {
@@ -8867,7 +8805,6 @@
 .et_divi_builder #et_builder_outer_content #et-fb-right-click-controls > ul li .et_fb_right_click_menu_item .et_fb_right_click_inner--hidden {
   position: absolute;
   left: -100%;
-  -webkit-transition: left 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   transition: left 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 .et_divi_builder #et_builder_outer_content #et-fb-right-click-controls > ul li .et_fb_right_click_menu_item .et_fb_right_click_inner--disable_options {
@@ -8880,7 +8817,6 @@
 .et_divi_builder #et_builder_outer_content #et-fb-right-click-controls > ul li .et_fb_right_click_menu_item .et_fb_right_click_inner--disable_options--visible {
   position: relative;
   right: 0;
-  -webkit-transition: right 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   transition: right 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 .et_divi_builder #et_builder_outer_content #et-fb-right-click-controls > ul li .et_fb_right_click_menu_item .et_fb_right_click_inner--disable_option {

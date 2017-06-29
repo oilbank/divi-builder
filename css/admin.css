@@ -78,6 +78,11 @@ a.et_dashboard_icon.et_dashboard_get_lists:before { content: '\e02a'; }
 
 .current_tab_et_dashboard_tab_content_updates_main .et_dashboard_row h2 { display: block; }
 
+div.et_dashboard_action_button { float: left; margin-left: 25px; transition: all 0.2s linear; }
+div.et_dashboard_action_button a { padding: 12.5px 30px; }
+div.et_dashboard_action_button a:hover { padding: 12.5px 19px 12.5px 65px; }
+div.et_dashboard_action_button a.et_dashboard_icon:before { line-height: 40px; content: '\e651' !important; font-family: 'ETdashboard'; }
+
 /*!
 Animate.css - http://daneden.me/animate
 Licensed under the MIT license - http://opensource.org/licenses/MIT

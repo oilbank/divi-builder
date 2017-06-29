@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 2.0.13
+ * Version: 2.0.14
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ET_BUILDER_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'ET_BUILDER_PLUGIN_URI', plugins_url('', __FILE__) );
-define( 'ET_BUILDER_PLUGIN_VERSION', '2.0.13' );
+define( 'ET_BUILDER_PLUGIN_VERSION', '2.0.14' );
 
 if ( ! class_exists( 'ET_Dashboard_v2' ) ) {
 	require_once( ET_BUILDER_PLUGIN_DIR . 'dashboard/dashboard.php' );
@@ -252,11 +252,12 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 		wp_enqueue_style( 'et-builder-css', ET_BUILDER_PLUGIN_URI . '/css/admin.css', array(), $this->plugin_version );
 		wp_enqueue_script( 'et-builder-js', ET_BUILDER_PLUGIN_URI . '/js/admin.js', array( 'jquery' ), $this->plugin_version, true );
 		wp_localize_script( 'et-builder-js', 'builder_settings', array(
-			'et_builder_nonce'           => wp_create_nonce( 'et_builder_nonce' ),
-			'ajaxurl'                    => admin_url( 'admin-ajax.php', $this->protocol ),
-			'authorize_text'             => esc_html__( 'Authorize', 'et_builder_plugin' ),
-			'reauthorize_text'           => esc_html__( 'Re-Authorize', 'et_builder_plugin' ),
-			'save_settings'              => wp_create_nonce( 'save_settings' ),
+			'et_builder_nonce' => wp_create_nonce( 'et_builder_nonce' ),
+			'ajaxurl'          => admin_url( 'admin-ajax.php', $this->protocol ),
+			'authorize_text'   => esc_html__( 'Authorize', 'et_builder_plugin' ),
+			'reauthorize_text' => esc_html__( 'Re-Authorize', 'et_builder_plugin' ),
+			'save_settings'    => wp_create_nonce( 'save_settings' ),
+			'et_core_nonces'   => et_core_get_nonces(),
 		) );
 	}
 
