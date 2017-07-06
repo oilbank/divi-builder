@@ -781,6 +781,8 @@ class ET_Dashboard_v2 {
 								$hint_output = $this->generate_hint( $option[ 'hint_text' ], $escape );
 							}
 
+							$current_option_value = apply_filters( 'et_' . $this->plugin_name . '_option_value', $current_option_value, $option );
+
 							switch( $option[ 'type' ] ) {
 								case 'select_shape' :
 									printf(

@@ -1,3 +1,23 @@
+version 2.0.22 ( updated 7-4-2017 )
+- Fixed a bug that prevented the Module Customizer styles from working in some situations. 
+- Fixed a compatibility issue with the Yoast SEO and WPL plugins that prevented the Divi Builder from loading when both of these plugins were activated together. 
+	* includes/builder/framework.php
+	* includes/builder/functions.php
+
+version 2.0.21 ( updated 7-2-2017 )
+- Fixed a bug that caused unwanted static CSS files to generate for index pages that contained posts with Divi Builder shortcodes.
+- Updated the function that clears the et cache upon update to work more effectively on high traffic websites.
+- The Output Inline Styles option is now conditional on Static CSS being enabled.
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/ class-et-builder-settings.php
+	* core/components/PageResource.php
+	* core/components/init.php
+
+version 2.0.20 ( updated 7-2-2017 )
+- Updated core framework to the latest version.
+	* core/components/init.php
+	* core/components/PageResource.php
+
 version 2.0.19 ( updated 7-1-2017 )
 - Updated core framework to the latest version.
 	* core/init.php
