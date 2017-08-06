@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 2.0.27
+ * Version: 2.0.28
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ET_BUILDER_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'ET_BUILDER_PLUGIN_URI', plugins_url('', __FILE__) );
-define( 'ET_BUILDER_PLUGIN_VERSION', '2.0.27' );
+define( 'ET_BUILDER_PLUGIN_VERSION', '2.0.28' );
 
 if ( ! class_exists( 'ET_Dashboard_v2' ) ) {
 	require_once( ET_BUILDER_PLUGIN_DIR . 'dashboard/dashboard.php' );
@@ -60,6 +60,12 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 		add_filter( 'body_class', array( $this, 'add_body_class' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'et_pb_hide_options_menu' ) );
+
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts_styles' ) );
+
+		add_filter( 'et_shortcodes_strings_handle', array( $this, 'shortcodes_strings_handle' ) );
+
+		add_filter( 'et_builder_modules_script_handle', array( $this, 'builder_modules_script_handle' ) );
 
 		add_filter( 'the_content', array( $this, 'add_builder_content_wrapper' ) );
 
@@ -231,6 +237,20 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 		}
 
 		wp_enqueue_script( 'et-builder-custom-admin-menu', ET_BUILDER_PLUGIN_URI . '/js/menu_fix.js', array( 'jquery' ), $this->plugin_version, true );
+	}
+
+	function load_scripts_styles() {
+		if ( ! et_load_unminified_scripts() ) {
+			wp_enqueue_script( 'divi-builder-custom-script', ET_BUILDER_PLUGIN_URI . '/js/divi-builder.min.js', array( 'jquery' ) , $this->plugin_version, true );
+		}
+	}
+
+	function shortcodes_strings_handle( $handle ) {
+		return et_load_unminified_scripts() ? $handle : 'divi-builder-custom-script';
+	}
+
+	function builder_modules_script_handle( $handle ) {
+		return et_load_unminified_scripts() ? $handle : 'divi-builder-custom-script';
 	}
 
 	function register_scripts( $hook ) {
@@ -436,3 +456,38 @@ function et_fb_set_builder_locale() {
 }
 endif;
 add_action( 'after_setup_theme', 'et_fb_set_builder_locale' );
+
+if ( ! function_exists( 'et_divi_builder_minify_combine_scripts' ) ) :
+function et_divi_builder_minify_combine_scripts( $load ) {
+	$options = get_option( 'et_pb_builder_options', array() );
+	$option  = isset( $options['advanced_main_minify_combine_scripts'] ) ? $options['advanced_main_minify_combine_scripts'] : 'on';
+
+	if ( $option === 'off' ) {
+		return true;
+	}
+
+	return $load;
+}
+endif;
+
+if ( ! function_exists( 'et_divi_builder_minify_combine_styles' ) ) :
+function et_divi_builder_minify_combine_styles( $load ) {
+	$options = get_option( 'et_pb_builder_options', array() );
+	$option  = isset( $options['advanced_main_minify_combine_styles'] ) ? $options['advanced_main_minify_combine_styles'] : 'on';
+
+	if ( $option === 'off' ) {
+		return true;
+	}
+
+	return $load;
+}
+endif;
+
+if ( ! function_exists( 'et_divi_builder_after_theme_setup' ) ) :
+function et_divi_builder_after_theme_setup() {
+	// Load unminified scripts & styles based on selected plugin options field
+	add_filter( 'et_load_unminified_scripts', 'et_divi_builder_minify_combine_scripts' );
+	add_filter( 'et_load_unminified_styles', 'et_divi_builder_minify_combine_styles' );
+}
+endif;
+add_action( 'wp_enqueue_scripts', 'et_divi_builder_after_theme_setup', 5 );

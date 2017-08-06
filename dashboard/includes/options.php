@@ -103,7 +103,6 @@ $dashboard_options_all = array(
 			'title'                => esc_html__( 'Google API Key:', 'et_builder_plugin' ),
 			'name'                 => 'google_api_key',
 			'class'                => 'google_api_key',
-			'hide_contents'        => true,
 			'validation_type'      => 'simple_text',
 			'hide_contents'        => true,
 			'hint_text'            => et_get_safe_localization( sprintf( __( 'The Maps module uses the Google Maps API and requires a valid Google API Key to function. Before using the map module, please make sure you have added your API key here. Learn more about how to create your Google API Key <a target="_blank" href="%1$s">here</a>.', 'et_builder_plugin' ), 'http://www.elegantthemes.com/gallery/divi/documentation/map/#gmaps-api-key' ) ),
@@ -129,6 +128,52 @@ $dashboard_options_all = array(
 		),
 	),
 
+	'minify_combine_scripts' => array(
+		'section_start' => array(
+			'type'      => 'section_start',
+			'title'     => esc_html__( 'Minify and Combine Javascript Files', 'et_builder' ),
+		),
+		'option' => array(
+			'type'               => 'yes_no_button',
+			'options'            => array(
+				'on'             => __( 'On', 'et_builder' ),
+				'off'            => __( 'Off', 'et_builder' ),
+			),
+			'default'            => 'on',
+			'label'              => esc_html__( 'Minify and Combine Javascript Files', 'et_builder_plugin' ),
+			'title'              => esc_html__( 'Minify and Combine Javascript Files', 'et_builder_plugin' ),
+			'name'               => 'minify_combine_scripts',
+			'class'              => 'minify_combine_scripts',
+			'hide_input'         => et_load_unminified_scripts(),
+			'hide_input_message' => esc_html__( 'Divi Builder uses uncombined and unminified script because "SCRIPT_DEBUG" constant on wp-config.php has been set to "true". Other plugin can enforce Divi Builder to use uncombined and unminified scripts by filtering "et_load_unminified_scripts" filter as well.', 'et_builder_plugin' ),
+			'validation_type'    => 'simple_text',
+			'hint_text'          => et_get_safe_localization( __( 'Use combined and minified javascript file for faster page load.', 'et_builder_plugin' ) ),
+		),
+	),
+
+	'minify_combine_styles' => array(
+		'section_start' => array(
+			'type'      => 'section_start',
+			'title'     => esc_html__( 'Minify and Combine CSS Files', 'et_builder' ),
+		),
+		'option' => array(
+			'type'               => 'yes_no_button',
+			'options'            => array(
+				'on'             => __( 'On', 'et_builder' ),
+				'off'            => __( 'Off', 'et_builder' ),
+			),
+			'default'            => 'on',
+			'label'              => esc_html__( 'Minify and Combine CSS Files', 'et_builder_plugin' ),
+			'title'              => esc_html__( 'Minify and Combine CSS Files', 'et_builder_plugin' ),
+			'name'               => 'minify_combine_styles',
+			'class'              => 'minify_combine_styles',
+			'hide_input'         => et_load_unminified_styles(),
+			'hide_input_message' => esc_html__( 'Divi Builder uses uncombined and unminified style because "SCRIPT_DEBUG" constant on wp-config.php has been set to "true". Other plugin can enforce Divi Builder to use uncombined and unminified styles by filtering "et_load_unminified_styles" filter as well.', 'et_builder_plugin' ),
+			'validation_type'    => 'simple_text',
+			'hint_text'          => et_get_safe_localization( __( 'Use combined and minified CSS file for faster page load.', 'et_builder_plugin' ) ),
+		),
+	),
+
 	'updates_title' => array(
 		'type'  => 'main_title',
 		'title' => esc_html__( 'Authenticate Your Subscription', 'et_builder_plugin' ),
@@ -137,6 +182,16 @@ $dashboard_options_all = array(
 	'api_title' => array(
 		'type'  => 'main_title',
 		'title' => esc_html__( 'Configure the API Settings', 'et_builder_plugin' ),
+	),
+
+	'minify_combine_scripts_title' => array(
+		'type'  => 'main_title',
+		'title' => esc_html__( 'Minify and Combine Javascript Files', 'et_builder_plugin' ),
+	),
+
+	'minify_combine_styles_title' => array(
+		'type'  => 'main_title',
+		'title' => esc_html__( 'Minify and Combine CSS Files', 'et_builder_plugin' ),
 	),
 
 	'end_of_section' => array(
@@ -173,6 +228,16 @@ $assigned_options = array(
 			$dashboard_options_all[ 'google_api' ][ 'option' ],
 			$dashboard_options_all[ 'google_api' ][ 'option_maps_script_enqueue' ],
 			$dashboard_options_all[ 'google_api' ][ 'update_button' ],
+			$dashboard_options_all[ 'end_of_section' ],
+	),
+	'advanced_main_options' => array(
+		$dashboard_options_all[ 'minify_combine_scripts_title' ],
+		$dashboard_options_all[ 'minify_combine_scripts' ][ 'section_start' ],
+			$dashboard_options_all[ 'minify_combine_scripts' ][ 'option' ],
+			$dashboard_options_all[ 'end_of_section' ],
+		$dashboard_options_all[ 'minify_combine_styles_title' ],
+		$dashboard_options_all[ 'minify_combine_styles' ][ 'section_start' ],
+			$dashboard_options_all[ 'minify_combine_styles' ][ 'option' ],
 			$dashboard_options_all[ 'end_of_section' ],
 	),
 );

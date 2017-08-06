@@ -214,6 +214,7 @@ span.et_pb_value_text.et_pb_on_value {  color: #FFF;  }
 .et_pb_yes_no_button_wrapper { float: left; clear: right; font-size: 13px; line-height: 18px; width: 200px; }
 .et_pb_yes_no_button { max-height: 40px; }
 .et_pb_yes_no_button_wrap { float: left; max-height: 40px;  width: 75% !important;  max-width: 450px !important; position: relative; clear: right; }
+.et_dashboard_hidden_input .et_pb_yes_no_button_wrapper { display: none; }
 
 
 /*------------------------------------------------*/

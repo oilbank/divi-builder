@@ -1,3 +1,27 @@
+version 2.0.28 ( updated 8-3-2017 )
+- Improved Google Page Speed scores.
+- Automatically combined and minified Divi CSS assets. 
+- Automatically combined and minified Divi JavaScript assets. 
+- Reduced Google Font requests when multiple fonts are used on the same page.
+- Removed duplicate Open Sans font requests that occurred in some situations.
+- Removed some unneeded inline CSS from all pages.
+- Fixed Uncaught TypeError: Cannot read property 'clientHeight' of undefined error that occurred when SmoothScroll was called to early in Visual Builder.
+- Fixed Uncaught TypeError: Cannot read property 'content' of undefined error that occurred in some cases when using the editing history modal and discarding your recent state change.
+- Prompt to add modules will now appear when you enable the Visual Builder on a blank page and add a new row.
+- Options search will now work correctly when searching the page settings modal in the Visual Builder.
+- Disabling slider module elements will now render correctly in the Visual Builder.
+- Fixed a bug that prevented slider module images from appearing after adding them in the Visual Builder.
+- Fixed a bug that caused fullwidth header content text settings to fail when TinyMCE was in text mode due to missing paragraph selector.
+- Fixed a bug that caused modal size and position to not be recorded correctly, causing the custom modal size to reset after the modal was closed in the Visual Builder in some cases.
+- Translated the new Divi product tour into 33 languages.
+- Fixed compatibility issue with the latest version of the Lightspeed Cache plugin.
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/class-et-builder-settings.php
+	* includes/builder/core.php
+	* includes/builder/framework.php
+	* includes/builder/frontend-builder/assets.php
+	* includes/builder/functions.php
+
 version 2.0.27 ( updated 7-27-2017 )
 - Added new UI for contact form checkbox field types that allows multiple checkboxes to be added to a single field group.
 - Added line height and letter spacing options to the Fullwidth Header text elements.

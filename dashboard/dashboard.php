@@ -1357,6 +1357,13 @@ class ET_Dashboard_v2 {
 								break;
 
 								case 'yes_no_button' :
+									$yes_no_button_option_classname = isset( $option['no_clearfix'] ) ? '' : ' clearfix';
+									$is_hidden_yes_no_input = isset( $option['hide_input'] ) && $option['hide_input'];
+
+									if ( $is_hidden_yes_no_input ) {
+										$yes_no_button_option_classname .= ' et_dashboard_hidden_input';
+									}
+
 									printf(
 										'<li class="input%1$s">
 											<p>%2$s</p>
@@ -1367,16 +1374,17 @@ class ET_Dashboard_v2 {
 														<span class="et_pb_button_slider"></span>
 														<span class="et_pb_value_text et_pb_off_value">%6$s</span>
 													</div>
-	
-													<select name="et_dashboard[%3$s]" id="et_dashboard_%3$s" class="et-pb-main-setting regular-text">
+
+													<select name="et_dashboard[%3$s]" id="et_dashboard_%3$s" class="et-pb-main-setting regular-text"%11$s>
 														<option value="on"%7$s>%5$s</option>
 														<option value="off"%8$s>%6$s</option>
 													</select>
 												</div><span class="et-pb-reset-setting"></span>
+												%12$s
 											</div>
 											%9$s
 										%10$s',
-										isset( $option['no_clearfix'] ) ? '' : ' clearfix',
+										$yes_no_button_option_classname,
 										isset( $option[ 'title_' . $current_location ] ) ? esc_html( $option[ 'title_' . $current_location ] ) : esc_html( $option['title'] ),
 										esc_attr( $current_option_name ),
 										esc_html( $option['label'] ),
@@ -1385,7 +1393,9 @@ class ET_Dashboard_v2 {
 										selected( $current_option_value, 'on', false ),
 										selected( $current_option_value, 'off', false ),
 										$hint_output,
-										isset( $option['after'] ) ? '' : '</li>' //#10
+										isset( $option['after'] ) ? '' : '</li>', //#10,
+										$is_hidden_yes_no_input ? ' disabled' : '',
+										$is_hidden_yes_no_input && isset( $option['hide_input_message'] ) ? sprintf( '<div class="et_dashboard_hidden_input_message">%1$s</div>', esc_html( $option['hide_input_message'] ) ) : ''
 									);
 								break;
 
