@@ -8576,6 +8576,9 @@
     margin: 10px 0 0;
     padding-bottom: 0;
   }
+  .et_divi_builder #et_builder_outer_content .et_pb_gutters1 .et_pb_portfolio_grid .et_pb_grid_item h2:last-child {
+    line-height: normal;
+  }
   .et_divi_builder #et_builder_outer_content .et_pb_portfolio_item .post-meta,
   .et_divi_builder #et_builder_outer_content .et_pb_gallery_item .et_pb_gallery_caption {
     font-size: 14px;
