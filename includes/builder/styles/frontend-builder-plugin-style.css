@@ -2474,6 +2474,9 @@
 .et_divi_builder #et_builder_outer_content .et_pb_counters > li.et_pb_section_video .et_pb_counter_amount {
   position: relative;
 }
+.et_divi_builder #et_builder_outer_content .et_pb_counters li:last-of-type .et_pb_counter_container {
+  margin-bottom: 0;
+}
 .et_divi_builder #et_builder_outer_content .et_pb_post {
   margin-bottom: 60px;
 }
@@ -3504,6 +3507,7 @@
   -webkit-transition: opacity 1s;
   -moz-transition: opacity 1s;
 }
+.et_divi_builder #et_builder_outer_content .et-fb .et_pb_number_counter,
 .et_divi_builder #et_builder_outer_content .et_pb_number_counter.active {
   opacity: 1;
 }
