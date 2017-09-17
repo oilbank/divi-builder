@@ -6119,6 +6119,23 @@
   margin-left: 0;
   margin-right: 8px;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-settings-option-select-align {
+  margin-top: 5px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-option-select-align-button {
+  cursor: pointer;
+  margin-right: 3%;
+  background-color: #f3f6fa;
+  border: none;
+  padding: 7px 0;
+  border-radius: 5px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-option-select-align-button .et-fb-icon {
+  pointer-events: none;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-option-select-align-button:last-child {
+  margin-right: 0;
+}
 .et_divi_builder #et_builder_outer_content .et-fb-option--tiny-mce .et-fb-option-container .mce-panel {
   background-color: #f1f5f9;
   border: 0;
@@ -6752,8 +6769,7 @@
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--bg_img_1 .et-fb-form__label,
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--bg_img_2 .et-fb-form__label,
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--bg_img_3 .et-fb-form__label,
-.et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--bg_img_4 .et-fb-form__label,
-.et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--module_bg_color .et-fb-form__label {
+.et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--bg_img_4 .et-fb-form__label {
   display: none;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--background_color_gradient_end,
@@ -6836,6 +6852,7 @@
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--background_color_gradient_end_4 .et-fb-form__global-sync {
   left: 50%;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--background_use_color_gradient,
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient,
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_1,
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_2,
@@ -6843,6 +6860,7 @@
 .et_divi_builder #et_builder_outer_content .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_4 {
   display: none;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--background_use_color_gradient,
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient,
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_1,
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_2,
@@ -6853,6 +6871,8 @@
   top: 20px;
   left: 0;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--background_use_color_gradient .et-fb-settings-options,
+.et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--background_use_color_gradient label,
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient .et-fb-settings-options,
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_1 .et-fb-settings-options,
 .et_divi_builder #et_builder_outer_content .et-fb-modal__selective-sync .et-fb-settings-background-tab .et-fb-form__group--use_background_color_gradient_1 label,
