@@ -4724,14 +4724,14 @@
   background: #e0e5ea;
 }
 .et_divi_builder #et_builder_outer_content input.et-fb-settings-option-input::-webkit-input-placeholder {
-  color: rgba(76, 88, 102, 0.2);
+  color: #98a7b8;
 }
 .et_divi_builder #et_builder_outer_content input.et-fb-settings-option-input:-moz-placeholder,
 .et_divi_builder #et_builder_outer_content input.et-fb-settings-option-input::-moz-placeholder {
-  color: rgba(76, 88, 102, 0.2);
+  color: #98a7b8;
 }
 .et_divi_builder #et_builder_outer_content input.et-fb-settings-option-input:-ms-input-placeholder {
-  color: rgba(76, 88, 102, 0.2);
+  color: #98a7b8;
 }
 .et_divi_builder #et_builder_outer_content input.et-fb-settings-option-input--block {
   display: block;
@@ -7132,16 +7132,17 @@
   font-weight: 700;
   text-transform: uppercase;
 }
-.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__group {
-  opacity: 0.3;
+.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__toggle-enabled {
+  cursor: not-allowed;
 }
-.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__group:nth-child(3) {
-  opacity: 1;
+.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__toggle-enabled .et-fb-form__toggle-title {
+  pointer-events: none;
 }
-.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__group:nth-child(3) label,
-.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__group:nth-child(3) p,
-.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__group:nth-child(3) select {
-  opacity: 0.3;
+.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__toggle-opened {
+  cursor: auto;
+}
+.et_divi_builder #et_builder_outer_content body.et-fb--email-action-in-progress .et-fb-form__toggle-opened .et-fb-form__group:nth-child(2) {
+  display: none;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups {
   width: 100%;
@@ -7165,7 +7166,7 @@
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups .et-fb-settings-option-select.et-fb-settings-option--with-after-element ~ .et-fb-preloader {
   width: 31.33%;
   height: 30px;
-  margin-top: 13px;
+  margin-top: 15px;
   z-index: 2;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups .et-fb-settings-option-select.et-fb-settings-option--with-after-element ~ .et-fb-preloader .et-fb-preloader__loading {
@@ -7178,6 +7179,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups .et-fb-form__description,
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups .et-fb-settings-option-select + .et-fb-preloader:last-child {
   width: 100%;
 }
@@ -7193,17 +7195,22 @@
   width: 48% !important;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups.et-fb--email-add-new-in-progress button,
-.et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups.et-fb--email-fetch-lists-in-progress .et-pb-preloader:last-child,
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups.et-fb--email-remove-in-progress button {
   width: 100%;
 }
+.et_divi_builder #et_builder_outer_content body:not(.rtl) .et-fb-option--select-with-option-groups.et-fb--email-remove-in-progress .et-fb-preloader:nth-last-child(2) {
+  -webkit-box-ordinal-group: 3;
+  -ms-flex-order: 2;
+  order: 2;
+}
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups.et-fb--email-fetch-lists-in-progress .et-pb-preloader:last-child {
+  width: 100%;
   width: 0;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-with-option-groups .et-fb-option-container {
   width: 100%;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-option--email-api-key {
+.et_divi_builder #et_builder_outer_content .et-fb-option-group--last-field {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7219,22 +7226,36 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-option--email-api-key button {
+.et_divi_builder #et_builder_outer_content .et-fb-option-group--last-field button.et-fb-settings-button--additional-button {
   width: 48%;
   height: 30px;
   z-index: 1;
+  margin-top: 20px;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-option--email-api-key .et-fb-preloader {
+.et_divi_builder #et_builder_outer_content .et-fb-option-group--last-field .et-fb-preloader {
   width: 48%;
   height: 30px;
   z-index: 2;
-  margin-top: 15px;
+  margin-top: 20px;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-option--email-api-key .et-fb-preloader button {
+.et_divi_builder #et_builder_outer_content .et-fb-option-group--last-field .et-fb-preloader button.et-fb-settings-button--additional-button {
   width: 100%;
   margin-top: 0;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-option--email-api-key .et-fb-option-container {
+.et_divi_builder #et_builder_outer_content .et-fb-option-group--last-field .et-fb-option-container {
+  width: 100%;
+}
+.et_divi_builder #et_builder_outer_content .et-fb--email-ajax-in-progress .et-fb-button--cancel,
+.et_divi_builder #et_builder_outer_content .et-fb--email-ajax-in-progress .et-fb-form__group {
+  display: none;
+}
+.et_divi_builder #et_builder_outer_content .et-fb--email-ajax-in-progress .et-fb-form__group:last-child {
+  display: block;
+}
+.et_divi_builder #et_builder_outer_content .et-fb--email-ajax-in-progress .et-fb-form__group:last-child input {
+  display: none;
+}
+.et_divi_builder #et_builder_outer_content .et-fb--email-ajax-in-progress .et-fb-preloader {
   width: 100%;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-colorpalette-overview-item {

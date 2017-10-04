@@ -2981,8 +2981,10 @@
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_form p .et_pb_signup_error {
   border: 1px solid #f00 !important;
 }
-.et_divi_builder #et_builder_outer_content .et_pb_newsletter_result {
+.et_divi_builder #et_builder_outer_content .et_pb_newsletter_result,
+.et_divi_builder #et_builder_outer_content .et_pb_newsletter_success {
   display: none;
+  text-align: center;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_button {
   display: block;
@@ -3036,6 +3038,18 @@
 .et_divi_builder #et_builder_outer_content .et_pb_column_3_4 .et_pb_newsletter_form,
 .et_divi_builder #et_builder_outer_content .et_pb_column_2_3 .et_pb_newsletter_form {
   padding-left: 40px;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_column_4_4 > .et_pb_newsletter .et_pb_newsletter_description,
+.et_divi_builder #et_builder_outer_content .et_pb_column_3_4 > .et_pb_newsletter .et_pb_newsletter_description,
+.et_divi_builder #et_builder_outer_content .et_pb_column_2_3 > .et_pb_newsletter .et_pb_newsletter_description {
+  margin-bottom: 0;
+  align-self: start;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_column_4_4 > .et_pb_newsletter,
+.et_divi_builder #et_builder_outer_content .et_pb_column_3_4 > .et_pb_newsletter,
+.et_divi_builder #et_builder_outer_content .et_pb_column_2_3 > .et_pb_newsletter {
+  display: flex;
+  align-items: center;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_tabs {
   border: 1px solid #d9d9d9;
