@@ -696,7 +696,7 @@
 .et_divi_builder #et_builder_outer_content input.et-fb-hide {
   display: none;
 }
-.et_divi_builder #et_builder_outer_content .et_pb_pagebuilder_layout .et_pb_row .et_pb_column .et_pb_button_module_wrapper.et_pb_module {
+.et_divi_builder #et_builder_outer_content .et_pb_pagebuilder_layout .et_pb_row .et_pb_column .et_pb_button_module_wrapper.et_pb_module * {
   margin-bottom: 0;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_pagebuilder_layout .et_pb_column .et_pb_button_module_wrapper .et_pb_button {
@@ -894,6 +894,12 @@
 }
 .et_divi_builder #et_builder_outer_content .et_fb_preview_active--zoom_preview .et-fb-outline--left {
   width: 6px;
+}
+.et_divi_builder #et_builder_outer_content .et_fb_element_controls_visible.et_pb_module,
+.et_divi_builder #et_builder_outer_content .et_fb_element_controls_visible.et_pb_row,
+.et_divi_builder #et_builder_outer_content .et_fb_element_controls_visible.et_pb_row_inner,
+.et_divi_builder #et_builder_outer_content .et_fb_element_controls_visible.et_pb_section {
+  overflow: visible;
 }
 .et_divi_builder #et_builder_outer_content .et_fb_event_mode--click .et-fb-mousetrap--module,
 .et_divi_builder #et_builder_outer_content .et_fb_event_mode--grid .et-fb-mousetrap--module {
@@ -5131,6 +5137,12 @@
 .et_divi_builder #et_builder_outer_content .et-fb-form__global-sync.et-fb-form__global-sync-unsynced {
   background: #ef5555;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-form__reset .et-fb-settings-option-button--reset {
+  position: static;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-form__reset .et-fb-settings-option-button--reset:after {
+  font-size: 14px;
+}
 .et_divi_builder #et_builder_outer_content .et-fb-form-checkbox {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5235,6 +5247,128 @@
 }
 .et_divi_builder #et_builder_outer_content textarea.et-fb-form-textarea:focus {
   background: #e0e5ea;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preloader__page-loading {
+  background-color: #fff;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-loader-inline {
+  position: relative;
+  min-height: 60px;
+  text-align: center;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-loader-inline .et-fb-preloader__top-level {
+  position: static;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-loader-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #fff;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  box-shadow: 0 5px 30px rgba(43, 135, 218, 0.15);
+  margin: -50px auto auto -50px;
+  -webkit-animation: et-fb-loader-wrapper ease infinite 1.5s;
+  animation: et-fb-loader-wrapper ease infinite 1.5s;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-loader,
+.et_divi_builder #et_builder_outer_content .et-fb-page-preloading:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  box-shadow: 0 -17px #7e3bd0, 17px 0 #7e3bd0, 0 17px #7e3bd0, -17px 0 #7e3bd0;
+  margin: -6px auto auto -6px;
+  -webkit-animation: et-fb-loader ease infinite 3s;
+  animation: et-fb-loader ease infinite 3s;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preloader__top-level {
+  z-index: 200000;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preloader__top-level .et-fb-loader {
+  top: 50%;
+}
+@-webkit-keyframes et-fb-loader {
+  0% {
+    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
+  }
+  25% {
+    box-shadow: 17px 0 #2b87da, 0 17px #29c4a9, -17px 0 #2b87da, 0 -17px #29c4a9;
+  }
+  50% {
+    box-shadow: 0 17px #2b87da, -17px 0 #ff9232, 0 -17px #2b87da, 17px 0 #ff9232;
+  }
+  75% {
+    box-shadow: -17px 0 #7e3bd0, 0 -17px #ff9232, 17px 0 #7e3bd0, 0 17px #ff9232;
+  }
+  to {
+    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
+  }
+}
+@keyframes et-fb-loader {
+  0% {
+    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
+  }
+  25% {
+    box-shadow: 17px 0 #2b87da, 0 17px #29c4a9, -17px 0 #2b87da, 0 -17px #29c4a9;
+  }
+  50% {
+    box-shadow: 0 17px #2b87da, -17px 0 #ff9232, 0 -17px #2b87da, 17px 0 #ff9232;
+  }
+  75% {
+    box-shadow: -17px 0 #7e3bd0, 0 -17px #ff9232, 17px 0 #7e3bd0, 0 17px #ff9232;
+  }
+  to {
+    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
+  }
+}
+@-webkit-keyframes et-fb-loader-wrapper {
+  0%,
+  to {
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 5px 30px rgba(43, 135, 218, 0.15);
+    margin: -50px auto auto -50px;
+  }
+  50% {
+    width: 70px;
+    height: 70px;
+    box-shadow: 0 5px 15px rgba(43, 135, 218, 0.3);
+    margin: -35px auto auto -35px;
+  }
+}
+@keyframes et-fb-loader-wrapper {
+  0%,
+  to {
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 5px 30px rgba(43, 135, 218, 0.15);
+    margin: -50px auto auto -50px;
+  }
+  50% {
+    width: 70px;
+    height: 70px;
+    box-shadow: 0 5px 15px rgba(43, 135, 218, 0.3);
+    margin: -35px auto auto -35px;
+  }
+}
+.et_divi_builder #et_builder_outer_content .et-fb-button.et-fb-settings-button--additional-button {
+  margin-top: 15px;
+  height: 30px;
+  font-size: .75rem;
+  padding: 0 20px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-preset-container {
   width: 100%;
@@ -6206,6 +6340,41 @@
   left: auto;
   right: 0;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer {
+  position: relative;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-settings-option-button--reset {
+  position: absolute;
+  right: 30px;
+  top: 5px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container {
+  padding: 0!important;
+  margin-right: 65px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle {
+  display: inline-block;
+  font-size: 15px;
+  text-align: center;
+  margin-right: 3%;
+  cursor: pointer;
+  font-weight: 700;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle:last-child {
+  margin-right: 0;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle .et-fb-multiple-buttons-toggle-internal {
+  display: block;
+  color: #bec9d5;
+  padding: 0;
+  height: 30px;
+  border-radius: 3px;
+  background: #f1f5f9;
+  transition: background-color 0.4s ease, color 0.2s ease;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle .et-fb-multiple-buttons-toggle-internal__active {
+  color: #2b96e1;
+}
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-select {
   background: #f1f5f9;
   width: 100%;
@@ -6847,41 +7016,6 @@
   background: #f1f5f9;
   color: #a2b0c1;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer {
-  position: relative;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-settings-option-button--reset {
-  position: absolute;
-  right: 30px;
-  top: 5px;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container {
-  padding: 0!important;
-  margin-right: 65px;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle {
-  display: inline-block;
-  font-size: 15px;
-  text-align: center;
-  margin-right: 3%;
-  cursor: pointer;
-  font-weight: 700;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle:last-child {
-  margin-right: 0;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle .et-fb-multiple-buttons-toggle-internal {
-  display: block;
-  color: #bec9d5;
-  padding: 0;
-  height: 30px;
-  border-radius: 3px;
-  background: #f1f5f9;
-  transition: background-color 0.4s ease, color 0.2s ease;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-multiple-buttons-outer .et-fb-multiple-buttons-container .et-fb-multiple-buttons-toggle .et-fb-multiple-buttons-toggle-internal__active {
-  color: #2b96e1;
-}
 .et_divi_builder #et_builder_outer_content .et_options_list textarea {
   display: none !important;
 }
@@ -7085,64 +7219,6 @@
 .et_divi_builder #et_builder_outer_content .et_select_animation .et_animation_button a:hover .et_animation_button_icon svg g {
   fill: #2b87da;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset {
-  width: 33.33333%;
-  background: #f1f5f9;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  height: 100%;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-size: 36px;
-  font-family: Open Sans;
-  font-weight: 900;
-  color: #fff;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset {
-  transition: text-shadow 0.3s;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset1 {
-  text-shadow: 0 5px 5px rgba(0, 50, 82, 0.4);
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset2 {
-  text-shadow: 5px 5px 5px rgba(0, 50, 82, 0.4);
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset3 {
-  text-shadow: 0 0 15px rgba(0, 50, 82, 0.4);
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset4 {
-  text-shadow: 0 5px 0 rgba(0, 50, 82, 0.4);
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset5 {
-  text-shadow: 5px 5px 0 rgba(0, 50, 82, 0.4);
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset1,
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset1 {
-  text-shadow: 0 5px 5px #2b87da;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset2,
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset2 {
-  text-shadow: 5px 5px 5px #2b87da;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset3,
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset3 {
-  text-shadow: 0 0 15px #2b87da;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset4,
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset4 {
-  text-shadow: 0 5px 0 #2b87da;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset5,
-.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset5 {
-  text-shadow: 5px 5px 0 #2b87da;
-}
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset {
   background: #f1f5f9;
 }
@@ -7213,6 +7289,64 @@
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset7,
 .et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset7 {
   box-shadow: inset 4px 4px 0 0 #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset {
+  width: 33.33333%;
+  background: #f1f5f9;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 36px;
+  font-family: Open Sans;
+  font-weight: 900;
+  color: #fff;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset {
+  transition: text-shadow 0.3s;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset1 {
+  text-shadow: 0 5px 5px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset2 {
+  text-shadow: 5px 5px 5px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset3 {
+  text-shadow: 0 0 15px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset4 {
+  text-shadow: 0 5px 0 rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset5 {
+  text-shadow: 5px 5px 0 rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset1,
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset1 {
+  text-shadow: 0 5px 5px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset2,
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset2 {
+  text-shadow: 5px 5px 5px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset3,
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset3 {
+  text-shadow: 0 0 15px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset4,
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset4 {
+  text-shadow: 0 5px 0 #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset5,
+.et_divi_builder #et_builder_outer_content .et-fb-option--presets-shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset5 {
+  text-shadow: 5px 5px 0 #2b87da;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option--upload .et-fb-settings-option-inputs-wrap {
   width: 100%;
@@ -7618,127 +7752,169 @@
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-color-gradient-button:hover {
   background: #dce6f0;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-preloader__page-loading {
-  background-color: #fff;
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap {
+  border: 2px solid #f1f5f9;
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  direction: ltr;
+  height: 160px;
+  box-sizing: content-box;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-loader-inline {
-  position: relative;
-  min-height: 60px;
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-column:first-child,
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-column:nth-child(3) {
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin: 20px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-column:nth-child(2) {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap .et-fb-settings-option-input {
+  width: 61px;
   text-align: center;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-loader-inline .et-fb-preloader__top-level {
-  position: static;
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-link-button {
+  text-align: center;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-loader-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-link-button > button {
+  text-align: center;
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-wrap-link-button > button > div {
+  transition: fill .2s ease;
   background: #fff;
-  width: 100px;
-  height: 100px;
-  border-radius: 100px;
-  box-shadow: 0 5px 30px rgba(43, 135, 218, 0.15);
-  margin: -50px auto auto -50px;
-  -webkit-animation: et-fb-loader-wrapper ease infinite 1.5s;
-  animation: et-fb-loader-wrapper ease infinite 1.5s;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-loader,
-.et_divi_builder #et_builder_outer_content .et-fb-page-preloading:before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  border-radius: 12px;
-  box-shadow: 0 -17px #7e3bd0, 17px 0 #7e3bd0, 0 17px #7e3bd0, -17px 0 #7e3bd0;
-  margin: -6px auto auto -6px;
-  -webkit-animation: et-fb-loader ease infinite 3s;
-  animation: et-fb-loader ease infinite 3s;
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-radius-preview {
+  background: #fff;
+  border: 4px solid #2b87da;
+  height: 72px;
+  box-sizing: content-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
-.et_divi_builder #et_builder_outer_content .et-fb-preloader__top-level {
-  z-index: 200000;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-styles-wrap {
+  border: 2px solid #f1f5f9;
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  direction: ltr;
+  height: 160px;
+  box-sizing: content-box;
+  margin-bottom: 20px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-styles-wrap-column {
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin: 0 101px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-styles-preview,
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-styles-wrap-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-border-styles-preview {
+  background: #f1f5f9;
+  height: 72px;
+  box-sizing: content-box;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-titles {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0!important;
+  border-bottom: 2px solid #f1f5f9;
+  margin-bottom: 20px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-titles li {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  list-style: none;
+  vertical-align: top;
+  padding: 0 1px;
+  margin-bottom: 0;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-titles li:first-child {
+  padding-left: 0;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-titles li:last-child {
+  padding-right: 0;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-title {
   width: 100%;
-}
-.et_divi_builder #et_builder_outer_content .et-fb-preloader__top-level .et-fb-loader {
-  top: 50%;
-}
-@-webkit-keyframes et-fb-loader {
-  0% {
-    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
-  }
-  25% {
-    box-shadow: 17px 0 #2b87da, 0 17px #29c4a9, -17px 0 #2b87da, 0 -17px #29c4a9;
-  }
-  50% {
-    box-shadow: 0 17px #2b87da, -17px 0 #ff9232, 0 -17px #2b87da, 17px 0 #ff9232;
-  }
-  75% {
-    box-shadow: -17px 0 #7e3bd0, 0 -17px #ff9232, 17px 0 #7e3bd0, 0 17px #ff9232;
-  }
-  to {
-    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
-  }
-}
-@keyframes et-fb-loader {
-  0% {
-    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
-  }
-  25% {
-    box-shadow: 17px 0 #2b87da, 0 17px #29c4a9, -17px 0 #2b87da, 0 -17px #29c4a9;
-  }
-  50% {
-    box-shadow: 0 17px #2b87da, -17px 0 #ff9232, 0 -17px #2b87da, 17px 0 #ff9232;
-  }
-  75% {
-    box-shadow: -17px 0 #7e3bd0, 0 -17px #ff9232, 17px 0 #7e3bd0, 0 17px #ff9232;
-  }
-  to {
-    box-shadow: 0 -17px #7e3bd0, 17px 0 #29c4a9, 0 17px #7e3bd0, -17px 0 #29c4a9;
-  }
-}
-@-webkit-keyframes et-fb-loader-wrapper {
-  0%,
-  to {
-    width: 100px;
-    height: 100px;
-    box-shadow: 0 5px 30px rgba(43, 135, 218, 0.15);
-    margin: -50px auto auto -50px;
-  }
-  50% {
-    width: 70px;
-    height: 70px;
-    box-shadow: 0 5px 15px rgba(43, 135, 218, 0.3);
-    margin: -35px auto auto -35px;
-  }
-}
-@keyframes et-fb-loader-wrapper {
-  0%,
-  to {
-    width: 100px;
-    height: 100px;
-    box-shadow: 0 5px 30px rgba(43, 135, 218, 0.15);
-    margin: -50px auto auto -50px;
-  }
-  50% {
-    width: 70px;
-    height: 70px;
-    box-shadow: 0 5px 15px rgba(43, 135, 218, 0.3);
-    margin: -35px auto auto -35px;
-  }
-}
-.et_divi_builder #et_builder_outer_content .et-fb-button.et-fb-settings-button--additional-button {
-  margin-top: 15px;
-  height: 30px;
-  font-size: .75rem;
-  padding: 0 20px;
+  text-align: center;
+  background-color: #f1f5f9;
+  color: #bec9d6;
+  cursor: pointer;
+  padding: 10px 0;
+  border-radius: 5px 5px 0 0;
+  box-sizing: border-box;
   font-weight: 700;
-  text-transform: uppercase;
+  font-style: normal;
+  text-transform: none;
+  text-decoration: initial;
+  border: 2px solid #f1f5f9;
+  border-bottom: none;
+  transition: background-color 0.4s ease, color 0.2s ease;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-title > div {
+  transition: fill 0.2s ease;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-title-active,
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-title:hover {
+  color: #2b87da;
+  background: #fff;
+  border-color: #f1f5f9;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-settings-tab-title .et-fb-icon {
+  pointer-events: none;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option-select {
   background: #f1f5f9;
