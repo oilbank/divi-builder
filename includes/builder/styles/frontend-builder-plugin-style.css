@@ -1940,6 +1940,7 @@
   background-size: cover;
   background-position: center;
   position: relative;
+  z-index: 9;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_column.et_pb_section_parallax {
   position: relative;
@@ -2142,6 +2143,7 @@
   display: inline-block;
   margin-bottom: 30px;
   line-height: 0;
+  max-width: 100%;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_blurb h4 a,
 .et_divi_builder #et_builder_outer_content .et_pb_blurb .et_pb_module_header a {
@@ -2557,6 +2559,7 @@
 .et_divi_builder #et_builder_outer_content .et_pb_has_overlay.et_pb_post .et_pb_image_container a {
   display: block;
   position: relative;
+  overflow: hidden;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_posts .et_pb_post {
   position: relative;
