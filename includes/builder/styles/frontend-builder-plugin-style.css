@@ -277,6 +277,7 @@
   /* Social Media Follow Module */
   /* Icons */
   /* Sections */
+  /* Section Dividers */
   /* Background Videos */
   /* Rows */
   /* Divider Module */
@@ -5461,6 +5462,15 @@
   -webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.07);
   -moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.07);
   box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.07);
+}
+.et_divi_builder #et_builder_outer_content .et_pb_top_inside_divider,
+.et_divi_builder #et_builder_outer_content .et_pb_bottom_inside_divider {
+  display: block;
+  background-repeat-y: no-repeat;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  width: 100%;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_section_video:not(.et_pb_fullwidth_menu) {
   overflow: hidden;
