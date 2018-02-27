@@ -2834,12 +2834,12 @@
 							// Store the labels of the conditionally hidden fields so that they can be
 							// removed later if a custom message pattern is enabled
 							if ( ! $this_el.is(':visible') && 'hidden' !== $this_el.attr('type') && 'radio' !== $this_el.attr('type') ) {
-								hidden_fields.push( this_label );
+								hidden_fields.push( original_id );
 								return;
 							}
 
 							if ( ( 'hidden' === $this_el.attr('type') || 'radio' === $this_el.attr('type') ) && ! $this_el.parents('.et_pb_contact_field').is(':visible') ) {
-								hidden_fields.push( this_label );
+								hidden_fields.push( original_id );
 								return;
 							}
 
@@ -2925,18 +2925,20 @@
 								} );
 							}
 
-							$this_contact_container.fadeTo( 'fast', 0.2 ).load( $href + ' #' + $this_contact_form.closest( '.et_pb_contact_form_container' ).attr( 'id' ), form_data, function( responseText ) {
-								if ( ! $( responseText ).find( '.et_pb_contact_error_text').length ) {
+							$this_contact_container.removeClass('et_animated').removeAttr('style').fadeTo( 'fast', 0.2, function() {
+								$this_contact_container.load( $href + ' #' + $this_contact_form.closest( '.et_pb_contact_form_container' ).attr( 'id' ) + '> *', form_data, function( responseText ) {
+									if ( ! $( responseText ).find( '.et_pb_contact_error_text').length ) {
 
-									et_pb_maybe_log_event( $this_contact_container, 'con_goal' );
+										et_pb_maybe_log_event( $this_contact_container, 'con_goal' );
 
-									// redirect if redirect URL is not empty and no errors in contact form
-									if ( '' !== redirect_url ) {
-										window.location.href = redirect_url;
+										// redirect if redirect URL is not empty and no errors in contact form
+										if ( '' !== redirect_url ) {
+											window.location.href = redirect_url;
+										}
 									}
-								}
 
-								$this_contact_container.fadeTo( 'fast', 1 );
+									$this_contact_container.fadeTo( 'fast', 1 );
+								} );
 							} );
 						}
 
