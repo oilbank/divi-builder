@@ -70,6 +70,9 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 				'settings' => array(
 					'color' => 'alpha',
 				),
+				'css' => array(
+					'important' => true,
+				),
 			),
 			'border' => array(),
 			'custom_margin_padding' => array(
@@ -86,6 +89,7 @@ class ET_Builder_Module_Audio extends ET_Builder_Module {
 			'text'      => array(
 				'css' => array(
 					'text_orientation' => '%%order_class%% .et_pb_audio_module_content',
+					'text_shadow'      => '%%order_class%% .et_pb_audio_module_content',
 				),
 			),
 		);

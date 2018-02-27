@@ -1,3 +1,77 @@
+version 2.0.48 ( updated 11-3-2017 )
+- Fixed the issue when some sub item options did not inherit Parent values as defaults in BB.
+- Fixed the issue when migration was wrongly applied in BB if Visual Editor disabled for current user.
+- Fixed an issue that caused builder shortcode output to be wrapped in paragraph tags when used on custom post types.
+- Fixed the issue when copy/paste styles between different section types.
+- Fixed the issue when mobile style options were not copied during Copy Styles.
+- Fixed the issue when predefined layouts were not preloaded on VB startup.
+- Added "Background Gradient Overlays Image" Option.
+- Fixed the issue when Blog Module was not scrolled to top when pagination used.
+- Fixed two CSS typos in `styles/style.css`.
+- Fixed the issue with translation of Date to different languages in Countdown Timer Module.
+- Fixed issue with conditional default value inheritance from parent module to child module.
+- Fixed the issue when <script> tag was added into custom excerpts in some cases.
+- Fixed the issue when Global Module cloning resets the synced options in BB.
+- Fixed the issue when Row Settings popover was not accessible for library items in VB.
+- Fixed the person module image not being centered in 4 columns layout on specific resolutions.
+- Fixed Divi library styling of Use Visual Builder button.
+- Improved Row Custom width option to apply the width > 80%.
+- Fixed PHP Undefined Index error when loading Specialty Section with empty Global Row inside.
+- Fixed ability to click on add new row button due to section height.
+- Optimized size of ajax payload that loads BB templates.
+- Fixed broken Email Optin module on Backend Builder due to recent BB Template optimization.
+- Fixed Range Slider options not working in IE browser.
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/class-et-global-settings.php
+	* includes/builder/core.php
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/helpers.php
+	* includes/builder/functions.php
+	* includes/builder/main-structure-elements.php
+	* includes/builder/module/Audio.php
+	* includes/builder/module/Slider.php
+	* includes/builder/scripts/builder.js
+	* includes/builder/scripts/frontend-builder-scripts.js
+	* includes/builder/styles/frontend-builder-style.css
+	* includes/builder/styles/style.css
+
+version 2.0.47 ( updated 10-26-2017 )
+- Added new text shadow options to all modules
+- Fixed disappearing parent module setting when module item settings modal was opened and saved.
+- Fixed over-sized images bug in image module in IE.
+- Disabled gzip compression when output has been sent already, which fixed some errors that were preventing the builder from loading on some servers.
+    * includes/builder/styles/frontend-builder-style.css
+    * includes/builder/class-et-builder-element.php
+    * includes/builder/frontend-builder/bundle.js
+    * includes/builder/module/Audio.php
+    * includes/builder/module/Blog.php
+    * includes/builder/module/Blurb.php
+    * includes/builder/module/Button.php
+    * includes/builder/module/Code.php
+    * includes/builder/module/Comments.php
+    * includes/builder/module/ContactForm.php
+    * includes/builder/module/CountdownTimer.php
+    * includes/builder/module/Cta.php
+    * includes/builder/module/FullwidthCode.php
+    * includes/builder/module/FullwidthPostSlider.php
+    * includes/builder/module/FullwidthSlider.php
+    * includes/builder/module/Gallery.php
+    * includes/builder/module/Login.php
+    * includes/builder/module/PostSlider.php
+    * includes/builder/module/PricingTables.php
+    * includes/builder/module/PricingTablesItem.php
+    * includes/builder/module/Search.php
+    * includes/builder/module/Shop.php
+    * includes/builder/module/Signup.php
+    * includes/builder/module/Slider.php
+    * includes/builder/module/SliderItem.php
+    * includes/builder/module/Testimonial.php
+    * includes/builder/module/Text.php
+    * includes/builder/module/Toggle.php
+    * includes/builder/module/field/TextShadow.php
+    * includes/builder/styles/frontend-builder-style.css
+    * includes/builder/styles/style.css
+
 version 2.0.46 ( updated 10-23-2017 )
 - Greatly reduce the size of the Visual Builder ajax payload by removing redundancies in field definitions.
 - Added gzip compression to the Visual Builder and standard Divi Builder ajax payloads to avoid substitute max length errors.

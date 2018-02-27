@@ -19,6 +19,7 @@
   color: #fff !important;
 }
 #et_builder_outer_content {
+  text-shadow: none;
   /* Browser Reset */
   /* Basic Styles */
 }
@@ -61,7 +62,7 @@
   box-shadow: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  text-shadow: none;
+  text-shadow: inherit;
   border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -2090,6 +2091,7 @@
 .et_divi_builder #et_builder_outer_content .et_pb_image .et_pb_image_wrap {
   display: inline-block;
   position: relative;
+  max-width: 100%;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_image img {
   position: relative;
@@ -4368,6 +4370,7 @@
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-shadow: 0px 0px;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_login .et_pb_custom_button_icon.et_pb_button:after,
 .et_divi_builder #et_builder_outer_content .et_pb_custom_button_icon.et_pb_button:after {
@@ -9717,10 +9720,17 @@
     margin: 0 auto 20px;
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_team_member_image {
-    float: left !important;
-    width: 280px !important;
-    margin: 0 30px 0 0 !important;
-    text-align: left !important;
+    float: left;
+    width: 280px;
+    margin: 0 30px 0 0;
+    text-align: left;
+  }
+  .et_divi_builder #et_builder_outer_content .et_pb_row_4col .et_pb_column.et_pb_column_1_4 .et_pb_team_member_image {
+    float: none;
+    width: auto;
+    max-width: none;
+    margin: 0 0 12px 0;
+    text-align: center;
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_team_member_description {
     display: table-cell;
