@@ -5170,6 +5170,77 @@
 .et_divi_builder #et_builder_outer_content textarea.et-fb-form-textarea:focus {
   background: #e0e5ea;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container {
+  width: 100%;
+  overflow: hidden;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset {
+  float: left;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  height: 74px;
+  box-sizing: border-box;
+  color: #bec9d6;
+  transition: color .2s ease;
+  width: 25%;
+  border: 3px solid #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+  padding: 8px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__title {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 16px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__icon {
+  display: block;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__icon svg {
+  max-width: 37px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__icon svg g {
+  fill: #bec9d6;
+  transition: fill 0.2s ease;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__icon + .et-fb-preset__content,
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__title + .et-fb-preset__content,
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__title + .et-fb-preset__icon {
+  margin-top: 8px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset .et-fb-preset__content {
+  position: relative;
+  display: block;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 100%;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset.et-fb-preset--active,
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset:hover {
+  color: #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__icon svg g,
+.et_divi_builder #et_builder_outer_content .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__icon svg g {
+  fill: #2b87da;
+}
 .et_divi_builder #et_builder_outer_content .et-fb-option--color-alpha .wp-color-result,
 .et_divi_builder #et_builder_outer_content .et-fb-option--color-alpha .wp-picker-container,
 .et_divi_builder #et_builder_outer_content .et-fb-option--color .wp-color-result,
@@ -6751,6 +6822,77 @@
 .et_divi_builder #et_builder_outer_content .et_select_animation .et_animation_button a.et_active_animation .et_animation_button_icon svg g,
 .et_divi_builder #et_builder_outer_content .et_select_animation .et_animation_button a:hover .et_animation_button_icon svg g {
   fill: #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset {
+  background: #f1f5f9;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset {
+  width: 70%;
+  height: 60%;
+  background: #fff;
+  transition: box-shadow 0.3s;
+  border-radius: 2px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset1 {
+  box-shadow: 0 0 10px 1px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset2 {
+  box-shadow: 4px 4px 6px 0 rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset3 {
+  box-shadow: 0 8px 6px -6px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset4 {
+  box-shadow: 4px 4px 0 0 rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset5 {
+  box-shadow: 0 2px 0 4px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset6 {
+  box-shadow: inset 0 0 8px 2px rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset .et-fb-preset__content .preset.preset7 {
+  box-shadow: inset 4px 4px 0 0 rgba(0, 50, 82, 0.4);
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset1,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset1 {
+  box-shadow: 0 0 10px 1px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset2,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset2 {
+  box-shadow: 4px 4px 6px 0 #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset3,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset3 {
+  box-shadow: 0 8px 6px -6px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset4,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset4 {
+  box-shadow: 4px 4px 0 0 #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset5,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset5 {
+  box-shadow: 0 2px 0 4px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset6,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset6 {
+  box-shadow: inset 0 0 8px 2px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset.et-fb-preset--active .et-fb-preset__content .preset.preset7,
+.et_divi_builder #et_builder_outer_content .et-fb-option--select-box_shadow .et-fb-preset-container .et-fb-preset:hover .et-fb-preset__content .preset.preset7 {
+  box-shadow: inset 4px 4px 0 0 #2b87da;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-settings-option--upload .et-fb-settings-option-inputs-wrap {
   width: 100%;
