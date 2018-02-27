@@ -2091,6 +2091,7 @@
 .et_divi_builder #et_builder_outer_content .et_pb_with_border .et_pb_testimonial_portrait,
 .et_divi_builder #et_builder_outer_content .et_pb_with_border .et_pb_image_wrap,
 .et_divi_builder #et_builder_outer_content .et_pb_with_border .et_pb_newsletter_form input,
+.et_divi_builder #et_builder_outer_content .et_pb_with_focus_border .et_pb_newsletter_form input:focus,
 .et_divi_builder #et_builder_outer_content .et_pb_with_border .et_pb_contact_form input,
 .et_divi_builder #et_builder_outer_content .et_pb_with_border .et_pb_contact_form textarea,
 .et_divi_builder #et_builder_outer_content .et_pb_with_border .et_pb_contact_form select,
@@ -3152,6 +3153,9 @@
 .et_divi_builder #et_builder_outer_content .et_pb_column_1_3 .et_pb_promo,
 .et_divi_builder #et_builder_outer_content .et_pb_column_1_4 .et_pb_promo {
   padding: 40px;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_button_module_wrapper.et_pb_button_alignment_left {
+  text-align: left;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_button_module_wrapper.et_pb_button_alignment_right {
   text-align: right;
@@ -5140,9 +5144,11 @@
 }
 .et_divi_builder #et_builder_outer_content .et_pb_slides .et_pb_container {
   display: table;
+  table-layout: fixed;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_slides .et_pb_slider_container_inner {
   display: table-cell;
+  width: 100%;
   vertical-align: middle;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_slides .et_pb_empty_slide.et_pb_container,
