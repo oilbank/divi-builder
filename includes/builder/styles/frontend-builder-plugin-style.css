@@ -191,6 +191,7 @@
   /* Accent Color */
   /* Containers */
   /* Columns */
+  /* Module */
   /* Button Styles */
   /* Button Hover */
   /* Button Hover Light Text */
@@ -1950,6 +1951,9 @@
 .et_divi_builder #et_builder_outer_content .et_pb_css_mix_blend_mode_passthrough {
   mix-blend-mode: unset !important;
 }
+.et_divi_builder #et_builder_outer_content .et_pb_module_inner {
+  position: relative;
+}
 .et_divi_builder #et_builder_outer_content .et_pb_button {
   font-size: 20px;
   font-weight: 500;
@@ -2260,18 +2264,35 @@
   margin-right: 0;
   margin-left: 20px;
 }
-.et_divi_builder #et_builder_outer_content .et_pb_pricing > .box-shadow-overlay {
-  z-index: 11;
+.et_divi_builder #et_builder_outer_content .et_pb_pricing_table_wrap {
+  display: block;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_pricing_table {
   float: left;
   width: 33.33%;
+  max-width: 34%;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
   border: 1px solid #bebebe;
   background-color: #fcfcfc;
   padding-bottom: 30px;
   text-align: center;
   margin: 30px -1px 0 0;
   position: relative;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_pricing > .box-shadow-overlay {
+  z-index: 11;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_featured_table {
   background-color: #fff;
@@ -2287,20 +2308,24 @@
 }
 .et_divi_builder #et_builder_outer_content .et_pb_column_4_4 .et_pb_pricing_table {
   width: 25%;
+  max-width: 25.5%;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_column_4_4 .et_pb_pricing_3 .et_pb_pricing_table {
   width: 33.33%;
+  max-width: 34%;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_pricing_2 .et_pb_pricing_table,
 .et_divi_builder #et_builder_outer_content .et_pb_column_2_3 .et_pb_pricing_table,
 .et_divi_builder #et_builder_outer_content .et_pb_column_1_2 .et_pb_pricing_table {
   width: 50%;
+  max-width: 50.5%;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_pricing_1 .et_pb_pricing_table,
 .et_divi_builder #et_builder_outer_content .et_pb_column_3_8 .et_pb_pricing_table,
 .et_divi_builder #et_builder_outer_content .et_pb_column_1_3 .et_pb_pricing_table,
 .et_divi_builder #et_builder_outer_content .et_pb_column_1_4 .et_pb_pricing_table {
   width: 100%;
+  max-width: none;
   margin: 0 0 30px;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_pricing_1 .et_pb_pricing_table:last-child,
@@ -9816,9 +9841,11 @@
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_pricing_table {
     width: 50% !important;
+    max-width: 50.5% !important;
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_pricing_1 .et_pb_pricing_table {
     width: 100% !important;
+    max-width: none !important;
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_pricing_table:nth-child(2n+1) {
     clear: both;
@@ -10340,6 +10367,7 @@
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_pricing_table {
     width: 100% !important;
+    max-width: 100% !important;
     margin: 0 0 30px !important;
   }
   .et_divi_builder #et_builder_outer_content .et_pb_column .et_pb_pricing_table:last-child,
@@ -11805,6 +11833,12 @@
   height: 100%;
   z-index: 10;
   pointer-events: none;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_section > .box-shadow-overlay ~ .et_pb_row {
+  z-index: 11;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_row > .box-shadow-overlay {
+  z-index: 8;
 }
 .et_divi_builder #et_builder_outer_content .has-box-shadow-overlay {
   position: relative;
