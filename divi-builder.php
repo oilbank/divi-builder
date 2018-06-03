@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 2.3
+ * Version: 2.4.1
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ET_BUILDER_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'ET_BUILDER_PLUGIN_URI', plugins_url('', __FILE__) );
-define( 'ET_BUILDER_PLUGIN_VERSION', '2.3' );
+define( 'ET_BUILDER_PLUGIN_VERSION', '2.4.1' );
 
 if ( ! class_exists( 'ET_Dashboard_v2' ) ) {
 	require_once( ET_BUILDER_PLUGIN_DIR . 'dashboard/dashboard.php' );
@@ -166,6 +166,7 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 		// prepare array of Google API settings
 		$processed_updates_settings['api_main_google_api_key'] = isset( $google_api_settings['api_key'] ) ? $google_api_settings['api_key'] : '';
 		$processed_updates_settings['api_main_enqueue_google_maps_script'] = isset( $google_api_settings['enqueue_google_maps_script'] ) ? $google_api_settings['enqueue_google_maps_script'] : false;
+		$processed_updates_settings['api_main_use_google_fonts'] = isset( $google_api_settings['use_google_fonts'] ) ? $google_api_settings['use_google_fonts'] : false;
 
 		$complete_options_set = array_merge( $builder_options, $processed_updates_settings );
 		return $complete_options_set;
@@ -309,10 +310,12 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 
 		$api_key = ! empty( $_POST['et_builder_google_api_key'] ) ? sanitize_text_field( $_POST['et_builder_google_api_key'] ) : '';
 		$enqueue_google_maps_script = ( isset( $_POST['et_builder_enqueue_google_maps_script'] ) && 'on' === $_POST['et_builder_enqueue_google_maps_script'] ) ? 'on' : 'off';
+		$use_google_fonts = ( isset( $_POST['et_builder_use_google_fonts'] ) && 'on' === $_POST['et_builder_use_google_fonts'] ) ? 'on' : 'off';
 
 		update_option( 'et_google_api_settings', array(
 			'api_key'                    => $api_key,
 			'enqueue_google_maps_script' => $enqueue_google_maps_script,
+			'use_google_fonts'           => $use_google_fonts,
 		));
 
 		die();
