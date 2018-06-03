@@ -4895,13 +4895,18 @@
   width: 0;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_slider .et_pb_slide {
-  display: none;
+  opacity: 0;
   float: left;
   margin-right: -100%;
   position: relative;
   width: 100%;
   text-align: center;
   list-style: none !important;
+  z-index: 1;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_slider .et_pb_slide.et-pb-active-slide {
+  opacity: 1;
+  z-index: 2;
 }
 .et_divi_builder #et_builder_outer_content .format-gallery .et_pb_slider.gallery-not-found .et_pb_slide {
   -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
