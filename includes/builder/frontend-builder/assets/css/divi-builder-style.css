@@ -3577,7 +3577,7 @@
 .et_divi_builder #et_builder_outer_content .et_fb_preview_active.et_fb_preview_active--wireframe_preview .et_fb_preview_container,
 .et_fb_preview_active.et_fb_preview_active--wireframe_preview .et_fb_preview_container {
   background: none!important;
-  padding: 0 20px;
+  padding: 1px 20px 40px;
   box-sizing: border-box;
   box-shadow: none;
 }

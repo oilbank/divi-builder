@@ -3856,7 +3856,7 @@
   display: block;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_contact_field_options_wrapper .et_pb_contact_field_options_title {
-  margin-bottom: 1.5%;
+  margin-bottom: 0.5em;
   font-weight: 600;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_contact_field_options_wrapper:after {
