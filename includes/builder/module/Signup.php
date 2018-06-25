@@ -260,7 +260,7 @@ class ET_Builder_Module_Signup extends ET_Builder_Module {
 			),
 			'newsletter_fields'      => array(
 				'label'    => esc_html__( 'Opt-in Form Fields', 'et_builder' ),
-				'selector' => '.et_pb_newsletter_form input',
+				'selector' => '%%order_class%% .et_pb_newsletter_form p input[type="text"], %%order_class%% .et_pb_newsletter_form p textarea, %%order_class%% .et_pb_newsletter_form p select, %%order_class%% .et_pb_newsletter_form p .input[type="radio"] + label i, %%order_class%% .et_pb_newsletter_form p .input[type="checkbox"] + label i',
 			),
 			'newsletter_button'      => array(
 				'label'                    => esc_html__( 'Subscribe Button', 'et_builder' ),
@@ -410,31 +410,6 @@ class ET_Builder_Module_Signup extends ET_Builder_Module {
 		}
 
 		return $fields;
-	}
-
-	public function after_content_processed( $unprocessed_content, $attrs, $_address, $is_VB ) {
-		// Email Optin module's 'content' setting was renamed to 'description' in 3.4. When migration
-		// ran earlier in the _render() method, the content was not set yet so we need to run the migration again.
-		// Also, 'content' is a special case where we need to clear the value after migrating it.
-		if ( $is_VB ) {
-			// Content isn't set on props for the VB. We'll add it to the props so it can
-			// be migrated and then we'll remove it.
-			$this->props['content'] = $this->content;
-		}
-
-		$before_migration = $this->props;
-		$this->props      = apply_filters( 'et_pb_module_shortcode_attributes', $this->props, $attrs, $this->slug, $_address );
-
-		if ( $this->props !== $before_migration ) {
-			// Migration was performed so let's clear the content
-			$this->props['content'] = $this->content = $unprocessed_content = '';
-		}
-
-		if ( $is_VB ) {
-			unset( $this->props['content'] );
-		}
-
-		return $unprocessed_content;
 	}
 
 	function get_fields() {

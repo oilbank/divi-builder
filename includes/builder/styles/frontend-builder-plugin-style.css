@@ -3267,9 +3267,10 @@
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_form p .et_pb_subscribe_error {
   border: 1px solid #f00 !important;
 }
-.et_divi_builder #et_builder_outer_content .et_pb_newsletter_result,
-.et_divi_builder #et_builder_outer_content .et_pb_newsletter_success {
+.et_divi_builder #et_builder_outer_content .et_pb_newsletter_result {
   display: none;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_newsletter_success {
   text-align: center;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_button {
@@ -5666,6 +5667,12 @@
   position: absolute;
   pointer-events: none;
   width: 100%;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_top_inside_divider {
+  margin-top: -1px;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_bottom_inside_divider {
+  margin-bottom: -1px;
 }
 .et_divi_builder #et_builder_outer_content .et_pb_section_video:not(.et_pb_fullwidth_menu) {
   overflow: hidden;
