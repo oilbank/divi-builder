@@ -13788,6 +13788,106 @@
   top: auto!important;
   bottom: 30px !important;
 }
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access {
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: 99;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator {
+  position: absolute;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator__highlight {
+  z-index: 1;
+  border-radius: 1px;
+  position: absolute;
+  cursor: pointer;
+  pointer-events: none;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator__item {
+  z-index: 2;
+  border-radius: 1px;
+  position: absolute;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator__button.et-fb-button {
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  max-width: 16px;
+  border-radius: 100%;
+  position: absolute;
+  background-color: #0088e1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+  padding: 0;
+  cursor: pointer;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator__button.et-fb-button:hover {
+  background-color: #1f9aea;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator__button.et-fb-button .et-fb-icon {
+  margin: auto;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator--hovered .et-fb-quick-access__indicator__highlight {
+  box-shadow: 0 0 0 2px #2b87da;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator--hovered.et-fb-quick-access__indicator--animated .et-fb-quick-access__indicator__highlight {
+  box-shadow: 0 0 0 2px rgba(43, 135, 218, 0);
+  -webkit-animation-duration: .4s;
+  animation-duration: .4s;
+  -webkit-animation-fill-mode: both!important;
+  animation-fill-mode: both!important;
+  -webkit-animation-name: l;
+  animation-name: l;
+  -webkit-animation-delay: .4s;
+  animation-delay: 0.4s;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access__indicator--hovered.et-fb-quick-access__indicator--animated .et-fb-quick-access__indicator__highlight.et-fb-quick-access__indicator__highlight--settings {
+  -webkit-animation-delay: .2s;
+  animation-delay: 0.2s;
+}
+@-webkit-keyframes l {
+  to {
+    box-shadow: 0 0 0 2px #2b87da;
+  }
+}
+@keyframes l {
+  to {
+    box-shadow: 0 0 0 2px #2b87da;
+  }
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access-item-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access-item-overlay--hovered {
+  border-radius: 1px;
+}
+.et_divi_builder #et_builder_outer_content .et-fb-quick-access-item-testimonial-icon {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  margin-left: -16px;
+  z-index: 9;
+}
+.et_divi_builder #et_builder_outer_content .et_fb_editing_enabled.et_pb_post_slider,
+.et_divi_builder #et_builder_outer_content .et_fb_editing_enabled.et_pb_search,
+.et_divi_builder #et_builder_outer_content .et_fb_editing_enabled.et_pb_slider {
+  overflow: visible;
+}
+.et_divi_builder #et_builder_outer_content .et_pb_toggle_open .et_pb_toggle_content {
+  z-index: 2;
+}
 .et_divi_builder #et_builder_outer_content .et-fb-skeleton {
   z-index: 1;
   position: relative;
@@ -14557,8 +14657,8 @@
   align-self: center;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-page-creation-card-content-animate img {
-  -webkit-animation: 1s ease-out l;
-  animation: 1s ease-out l;
+  -webkit-animation: 1s ease-out m;
+  animation: 1s ease-out m;
 }
 .et_divi_builder #et_builder_outer_content .et-fb-page-creation-card-content h3 {
   font-family: Open Sans, Helvetica, Roboto, Arial, sans-serif;
@@ -14695,7 +14795,7 @@
     line-height: 1.3em;
   }
 }
-@-webkit-keyframes l {
+@-webkit-keyframes m {
   0% {
     -webkit-transform: scale(0.95);
     transform: scale(0.95);
@@ -14707,7 +14807,7 @@
     opacity: 1;
   }
 }
-@keyframes l {
+@keyframes m {
   0% {
     -webkit-transform: scale(0.95);
     transform: scale(0.95);
