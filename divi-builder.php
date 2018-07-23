@@ -3,7 +3,7 @@
  * Plugin Name: Divi Builder
  * Plugin URI: http://elegantthemes.com
  * Description: A drag and drop page builder for any WordPress theme.
- * Version: 2.9
+ * Version: 2.10
  * Author: Elegant Themes
  * Author URI: http://elegantthemes.com
  * License: GPLv2 or later
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ET_BUILDER_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'ET_BUILDER_PLUGIN_URI', plugins_url('', __FILE__) );
-define( 'ET_BUILDER_PLUGIN_VERSION', '2.9' );
+define( 'ET_BUILDER_PLUGIN_VERSION', '2.10' );
 
 if ( ! class_exists( 'ET_Dashboard_v2' ) ) {
 	require_once( ET_BUILDER_PLUGIN_DIR . 'dashboard/dashboard.php' );
@@ -57,8 +57,6 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 
 		add_action( 'wp_ajax_et_builder_save_google_api_settings', array( $this, 'save_google_api_settings' ) );
 
-		add_filter( 'body_class', array( $this, 'add_body_class' ) );
-
 		add_action( 'admin_enqueue_scripts', array( $this, 'et_pb_hide_options_menu' ) );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts_styles' ) );
@@ -69,10 +67,6 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 
 		add_filter( 'et_builder_optimized_style_handle', array( $this, 'builder_optimized_style_handle' ) );
 
-		add_filter( 'the_content', array( $this, 'add_builder_content_wrapper' ) );
-
-		add_filter( 'et_builder_inner_content_class', array( $this, 'add_builder_inner_content_class' ) );
-
 		add_filter( 'et_pb_builder_options_array', array( $this, 'get_builder_options' ) );
 
 		$theme_file_path_length = strlen( get_theme_file_path() );
@@ -81,54 +75,6 @@ class ET_Builder_Plugin extends ET_Dashboard_v2 {
 			add_action( 'et_pb_shop_before_print_shop', array( $this, 'force_woocommerce_default_templates' ) );
 			add_action( 'et_pb_shop_after_print_shop', array( $this, 'return_woocommerce_default_templates' ) );
 		}
-	}
-
-	function add_builder_content_wrapper( $content ) {
-		if ( ! et_pb_is_pagebuilder_used( get_the_ID() ) && ! is_et_pb_preview() ) {
-			return $content;
-		}
-
-		// Divi builder layout should only be used in singular template
-		if ( ! is_singular() ) {
-			return $content;
-		}
-
-		$outer_class   = apply_filters( 'et_builder_outer_content_class', array( 'et_builder_outer_content' ) );
-		$outer_classes = implode( ' ', $outer_class );
-
-		$outer_id      = apply_filters( "et_builder_outer_content_id", "et_builder_outer_content" );
-
-		$inner_class   = apply_filters( 'et_builder_inner_content_class', array( 'et_builder_inner_content' ) );
-		$inner_classes = implode( ' ', $inner_class );
-
-		$content = sprintf(
-			'<div class="%2$s" id="%4$s">
-				<div class="%3$s">
-					%1$s
-				</div>
-			</div>',
-			$content,
-			esc_attr( $outer_classes ),
-			esc_attr( $inner_classes ),
-			esc_attr( $outer_id )
-		);
-
-		return $content;
-	}
-
-	function add_body_class( $classes ) {
-		$classes[] = 'et_divi_builder';
-
-		return $classes;
-	}
-
-	function add_builder_inner_content_class( $classes ) {
-		$page_custom_gutter = get_post_meta( get_the_ID(), '_et_pb_gutter_width', true );
-		$valid_gutter_width = array( '1', '2', '3', '4' );
-		$gutter_width       = in_array( $page_custom_gutter, $valid_gutter_width ) ? $page_custom_gutter : '3';
-		$classes[]          = "et_pb_gutters{$gutter_width}";
-
-		return $classes;
 	}
 
 	function construct_dashboard() {
@@ -500,3 +446,12 @@ function et_divi_builder_after_theme_setup() {
 }
 endif;
 add_action( 'wp_enqueue_scripts', 'et_divi_builder_after_theme_setup', 5 );
+
+if ( ! function_exists( 'et_dbp_body_class_backwards_compatibility' ) ):
+function et_dbp_body_class_backwards_compatibility( $classes ) {
+	$classes[] = 'et_divi_builder';
+
+	return $classes;
+}
+add_filter( 'body_class', 'et_dbp_body_class_backwards_compatibility' );
+endif;

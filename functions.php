@@ -395,3 +395,26 @@ function et_pb_append_theme_class( $body_class ) {
 }
 endif;
 add_filter( 'body_class', 'et_pb_append_theme_class' );
+
+/**
+ * Filter the list of post types the Divi Builder is enabled on based on plugin options.
+ *
+ * @since ??
+ *
+ * @param array<string, string> $options
+ *
+ * @return array<string, string>
+ */
+if ( ! function_exists( 'et_divi_builder_filter_enabled_builder_post_type_options' ) ) :
+function et_divi_builder_filter_enabled_builder_post_type_options( $options ) {
+	// Cache results to avoid unnecessary option fetching multiple times per request.
+	static $stored_options = null;
+
+	if ( null === $stored_options ) {
+		$stored_options = et_get_option( 'et_pb_post_type_integration', array() );
+	}
+
+	return $stored_options;
+}
+endif;
+add_filter( 'et_builder_enabled_builder_post_type_options', 'et_divi_builder_filter_enabled_builder_post_type_options' );
