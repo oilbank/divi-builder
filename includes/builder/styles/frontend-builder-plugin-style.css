@@ -3245,6 +3245,9 @@
   padding-bottom: 1em;
   margin-bottom: 0;
 }
+.et_divi_builder #et_builder_outer_content .et_pb_newsletter_form p.et_pb_newsletter_field.et_pb_signup_custom_field {
+  padding-left: 0;
+}
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_form input[type="text"],
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_form input[type="password"],
 .et_divi_builder #et_builder_outer_content .et_pb_newsletter_form p.et_pb_newsletter_field input[type="text"],
