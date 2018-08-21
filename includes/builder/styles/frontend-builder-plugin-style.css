@@ -7226,6 +7226,7 @@
 .et-db #et-boc .et_pb_section_parallax .et_pb_parallax_css,
 .et-db #et-boc .et_pb_slides .et_parallax_bg.et_pb_parallax_css {
   background-attachment: fixed;
+  -webkit-transform: translate3d(0, 0, 0);
 }
 .et-db #et-boc .et_pb_section_parallax.et_pb_row .et_pb_column,
 .et-db #et-boc .et_pb_section_parallax.et_pb_row .et_pb_module,
@@ -9564,6 +9565,7 @@
     display: flex;
     direction: ltr;
   }
+  .et-db #et-boc .et_pb_section.et_pb_equal_columns > .et_pb_row > .et_pb_column,
   .et-db #et-boc .et_pb_row.et_pb_equal_columns > .et_pb_column {
     order: 1;
   }
