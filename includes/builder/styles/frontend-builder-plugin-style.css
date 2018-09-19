@@ -674,6 +674,7 @@
   /* Fold: Left */
   /* Roll: Center */
   /* BoxShadow */
+  /* Text meant only for screen readers. */
   /* Pagebuilder On Posts */
 }
 .et-db #et-boc .et_pb_module a {
@@ -14958,6 +14959,18 @@
 }
 .et-db #et-boc .has-box-shadow-overlay {
   position: relative;
+}
+.et-db #et-boc .screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important;
 }
 .et-db #et-boc .et_pb_row {
   width: 100%;
