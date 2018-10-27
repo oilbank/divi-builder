@@ -192,6 +192,16 @@ function truncate_post( $amount, $echo = true, $post = '' ) {
 	// remove caption shortcode from the post content
 	$truncate = preg_replace('@\[caption[^\]]*?\].*?\[\/caption]@si', '', $truncate);
 
+	/**
+	 * Filter automatically generated post excerpt before it gets truncated.
+	 *
+	 * @since ??
+	 *
+	 * @param string $excerpt
+	 * @param integer $post_id
+	 */
+	$truncate = apply_filters( 'et_truncate_post', $truncate, $post->ID );
+
 	// apply content filters
 	$truncate = apply_filters( 'the_content', $truncate );
 
