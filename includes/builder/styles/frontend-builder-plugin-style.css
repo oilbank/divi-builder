@@ -6699,6 +6699,9 @@
 .et-db #et-boc .et_pb_module_inner {
   position: relative;
 }
+.et-db #et-boc .et_hover_enabled_preview {
+  z-index: 2;
+}
 .et-db #et-boc .et_hover_enabled:hover {
   position: relative;
   z-index: 2;
@@ -8712,6 +8715,7 @@
   width: 100%;
   text-align: center;
   position: relative;
+  vertical-align: top;
 }
 .et-db #et-boc .et_pb_countdown_timer .title {
   font-weight: 500;
@@ -8729,6 +8733,7 @@
 .et-db #et-boc .et_pb_countdown_timer .section.values {
   width: 17%;
   max-width: 160px;
+  vertical-align: top;
 }
 .et-db #et-boc .et_pb_countdown_timer .section p {
   font-size: 54px;
@@ -8751,7 +8756,9 @@
 }
 .et-db #et-boc .et_pb_countdown_timer .sep {
   position: relative;
-  top: -28px;
+}
+.et-db #et-boc .et_pb_countdown_timer .sep.sep.sep.sep.sep p {
+  text-decoration: none !important;
 }
 .et-db #et-boc .et_pb_column_1_2 .et_pb_countdown_timer .section p,
 .et-db #et-boc .et_pb_column_3_5 .et_pb_countdown_timer .section p {
@@ -8762,18 +8769,6 @@
 .et-db #et-boc .et_pb_column_3_5 .et_pb_countdown_timer .section p.label {
   font-size: 12px;
   line-height: 20px;
-}
-.et-db #et-boc .et_pb_column_1_2 .et_pb_countdown_timer .sep,
-.et-db #et-boc .et_pb_column_3_5 .et_pb_countdown_timer .sep {
-  top: -22px;
-}
-.et-db #et-boc .et_pb_column_3_8 .et_pb_countdown_timer .sep,
-.et-db #et-boc .et_pb_column_1_3 .et_pb_countdown_timer .sep,
-.et-db #et-boc .et_pb_column_2_5 .et_pb_countdown_timer .sep,
-.et-db #et-boc .et_pb_column_1_4 .et_pb_countdown_timer .sep,
-.et-db #et-boc .et_pb_column_1_5 .et_pb_countdown_timer .sep,
-.et-db #et-boc .et_pb_column_1_6 .et_pb_countdown_timer .sep {
-  top: -22px;
 }
 .et-db #et-boc .et_pb_column_1_3 .et_pb_countdown_timer .title,
 .et-db #et-boc .et_pb_column_2_5 .et_pb_countdown_timer .title,
@@ -8948,8 +8943,8 @@
 .et-db #et-boc #ie8 .et_overlay {
   display: none;
 }
-.et-db #et-boc .et_pb_fullwidth_menu {
-  position: relative;
+.et-db #et-boc .et_pb_fullwidth_menu.et_hover_enabled:hover {
+  z-index: initial;
 }
 .et-db #et-boc .et_pb_fullwidth_menu .fullwidth-menu-nav,
 .et-db #et-boc .et_pb_fullwidth_menu .fullwidth-menu-nav > ul {
@@ -13057,15 +13052,12 @@
     font-size: 14px !important;
     line-height: 25px !important;
   }
-  .et-db #et-boc .et_pb_countdown_timer .sep {
-    top: -28px !important;
+  .et-db #et-boc .et_pb_countdown_timer .sep.sep.sep.sep.sep p {
+    text-decoration: none !important;
   }
   .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .section p {
     font-size: 32px !important;
     line-height: 32px !important;
-  }
-  .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .sep {
-    top: -27px !important;
   }
   .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .section p.label {
     font-size: 14px !important;
@@ -13292,9 +13284,6 @@
   .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .section p {
     font-size: 25px !important;
     line-height: 25px !important;
-  }
-  .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .sep {
-    top: -25px !important;
   }
 }
 @media all and (max-width: 767px) {
@@ -13539,15 +13528,9 @@
     font-size: 14px !important;
     line-height: 25px !important;
   }
-  .et-db #et-boc .et_pb_countdown_timer .sep {
-    top: -28px !important;
-  }
   .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .section p {
     font-size: 16px !important;
     line-height: 16px !important;
-  }
-  .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .sep {
-    top: -21px !important;
   }
   .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .section p.label {
     font-size: 14px !important;
@@ -13852,9 +13835,6 @@
     font-size: 32px !important;
     line-height: 32px !important;
   }
-  .et-db #et-boc .et_pb_row_1-4_1-4 .et_pb_column_1_4 .et_pb_countdown_timer .sep {
-    top: -25px !important;
-  }
 }
 @media all and (max-width: 380px) {
   .et-db #et-boc .et_pb_countdown_timer .section p,
@@ -13865,9 +13845,6 @@
   .et-db #et-boc .et_pb_countdown_timer .section p.label {
     font-size: 12px !important;
     line-height: 25px !important;
-  }
-  .et-db #et-boc .et_pb_countdown_timer .sep {
-    top: -24px !important;
   }
 }
 .et-db #et-boc .et_animated {
