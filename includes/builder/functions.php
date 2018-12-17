@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ET_BUILDER_PRODUCT_VERSION' ) ) {
 	// Note, this will be updated automatically during grunt release task.
-	define( 'ET_BUILDER_PRODUCT_VERSION', '3.18.2' );
+	define( 'ET_BUILDER_PRODUCT_VERSION', '3.18.3' );
 }
 
 if ( ! defined( 'ET_BUILDER_VERSION' ) ) {
@@ -6627,7 +6627,7 @@ function et_builder_update_settings( $settings, $post_id = 'global' ) {
 					absint( $fields[ $setting_key ]['range_settings']['max'] ) : -1;
 
 				if ( $setting_value < $range_min || $range_max < $setting_value ) {
-					continue;
+					continue 2;
 				}
 
 				break;
@@ -8772,7 +8772,7 @@ function et_fb_process_shortcode( $content, $parent_address = '', $global_parent
 
 // Whitelist any additional attributes
 function et_fb_add_additional_attrs( $processed_attrs, $output ) {
-	if ( ! isset( $output['attrs'] ) ) {
+	if ( empty( $output['attrs'] ) ) {
 		return $output;
 	}
 
