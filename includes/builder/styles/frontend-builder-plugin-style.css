@@ -7848,6 +7848,9 @@
   position: relative;
   z-index: 5;
 }
+.et_pb_fullwidth_section .et-db #et-boc .et_pb_row {
+  z-index: 11;
+}
 .et-db #et-boc .et_pb_column {
   float: left;
   background-size: cover;

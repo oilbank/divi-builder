@@ -206,7 +206,7 @@ function truncate_post( $amount, $echo = true, $post = '' ) {
 	/**
 	 * Filter automatically generated post excerpt before it gets truncated.
 	 *
-	 * @since ??
+	 * @since 2.17
 	 *
 	 * @param string $excerpt
 	 * @param integer $post_id
@@ -420,7 +420,7 @@ add_filter( 'body_class', 'et_pb_append_theme_class' );
 /**
  * DBP implementation for BFB enabled check.
  *
- * @since {BFB_VERSION}
+ * @since 2.18
  *
  * @return bool
  */
@@ -444,7 +444,7 @@ add_filter( 'et_builder_bfb_enabled', 'dbp_filter_bfb_enabled' );
 /**
  * DBP implementation for fresh install check.
  *
- * @since {BFB_VERSION}
+ * @since 2.18
  *
  * @return bool
  */
@@ -458,7 +458,7 @@ add_filter( 'et_builder_is_fresh_install', 'dbp_filter_is_fresh_install' );
 /**
  * DBP implementation for BFB toggle.
  *
- * @since {BFB_VERSION}
+ * @since 2.18
  *
  * @param bool $enable
  *
@@ -474,7 +474,7 @@ add_action( 'et_builder_toggle_bfb', 'dbp_action_toggle_bfb' );
 /**
  * Theme implementation for show BFB opt-in modal check.
  *
- * @since {BFB_VERSION}
+ * @since 2.18
  *
  * @param bool $default
  *
@@ -497,7 +497,7 @@ add_filter( 'et_builder_show_bfb_optin_modal', 'dbp_filter_show_bfb_optin_modal'
 /**
  * DBP implementation for BFB opt-in modal shown.
  *
- * @since {BFB_VERSION}
+ * @since 2.18
  *
  * @return void
  */
@@ -511,7 +511,7 @@ add_action( 'et_builder_bfb_optin_modal_shown', 'dbp_action_bfb_optin_modal_show
 /**
  * DBP implementation for queue BFB opt-in modal.
  *
- * @since {BFB_VERSION}
+ * @since 2.18
  *
  * @return void
  */
@@ -528,7 +528,7 @@ add_action( 'et_builder_queue_bfb_optin_modal', 'dbp_action_queue_bfb_optin_moda
 /**
  * Filter the list of post types the Divi Builder is enabled on based on plugin options.
  *
- * @since ??
+ * @since 2.10
  *
  * @param array<string, string> $options
  *
