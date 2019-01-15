@@ -10411,6 +10411,12 @@
   margin-right: 90px;
   line-height: inherit;
 }
+.et-db #et-boc .et_audio_container .mejs-android .mejs-time,
+.et-db #et-boc .et_audio_container .mejs-ios .mejs-time,
+.et-db #et-boc .et_audio_container .mejs-ipad .mejs-time,
+.et-db #et-boc .et_audio_container .mejs-iphone .mejs-time {
+  margin-right: 0;
+}
 .et-db #et-boc .et_audio_container .mejs-controls .mejs-time-rail .mejs-time-total,
 .et-db #et-boc .et_audio_container .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
   background: rgba(255, 255, 255, 0.5);
@@ -10579,6 +10585,12 @@
 .et-db #et-boc body.rtl.et-db:not(.et-fb-no-rtl) .et_audio_container .mejs-time {
   margin-left: 90px;
   margin-right: 10px;
+}
+.et-db #et-boc body.rtl.et-db:not(.et-fb-no-rtl) .et_audio_container .mejs-android .mejs-time,
+.et-db #et-boc body.rtl.et-db:not(.et-fb-no-rtl) .et_audio_container .mejs-ios .mejs-time,
+.et-db #et-boc body.rtl.et-db:not(.et-fb-no-rtl) .et_audio_container .mejs-ipad .mejs-time,
+.et-db #et-boc body.rtl.et-db:not(.et-fb-no-rtl) .et_audio_container .mejs-iphone .mejs-time {
+  margin-left: 0;
 }
 .et-db #et-boc body.rtl.et-db:not(.et-fb-no-rtl) .et_audio_container .mejs-button.mejs-volume-button {
   right: auto;
@@ -13230,6 +13242,21 @@
     line-height: 3rem;
     margin-left: -1.5rem;
     margin-top: -1.5rem;
+  }
+  .et-db #et-boc .et_pb_column_4_4:not(.et_pb_column_inner) > .et_pb_newsletter .et_pb_newsletter_form,
+  .et-db #et-boc .et_pb_column_3_4:not(.et_pb_column_inner) > .et_pb_newsletter .et_pb_newsletter_form,
+  .et-db #et-boc .et_pb_column_2_3:not(.et_pb_column_inner) > .et_pb_newsletter .et_pb_newsletter_form {
+    padding-left: 0;
+  }
+  .et-db #et-boc .et_pb_column_4_4:not(.et_pb_column_inner) > .et_pb_newsletter,
+  .et-db #et-boc .et_pb_column_3_4:not(.et_pb_column_inner) > .et_pb_newsletter,
+  .et-db #et-boc .et_pb_column_2_3:not(.et_pb_column_inner) > .et_pb_newsletter {
+    display: block;
+  }
+  .et-db #et-boc .et_pb_column_4_4:not(.et_pb_column_inner) > .et_pb_newsletter .et_pb_newsletter_description,
+  .et-db #et-boc .et_pb_column_3_4:not(.et_pb_column_inner) > .et_pb_newsletter .et_pb_newsletter_description,
+  .et-db #et-boc .et_pb_column_2_3:not(.et_pb_column_inner) > .et_pb_newsletter .et_pb_newsletter_description {
+    margin-bottom: 25px;
   }
 }
 @media all and (min-width: 480px) {
