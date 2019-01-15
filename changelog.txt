@@ -1,3 +1,33 @@
+version 2.19.3 ( updated 12-31-2018 )
+- Fixed incompatibility issue with some third party themes and plugins that caused the Visual Builder to fail to load with a "Cannot read property 'id' of undefined" error.
+- Fixed a bug that caused the 3rd page in the blog module not to load in some situations. 
+- Fixed compatibility issue with the WP Ultimate Recipe plugin, and other plugins that create null shortcode objects. 
+- Fixed Divi navbar overlap in the Visual Builder when switching from Wireframe mode to Desktop mode. 
+	* js/custom.js
+	* scripts/frontend-builder-scripts.js
+
+version 2.19.2 ( updated 12-28-2018 )
+- Fixed "is_shop()", "is_woocommerce()" and other woo checks not working properly on pages with Divi Builder.
+- Prevent adding ID and CSS Class on modules in wireframe mode.
+- Fixed drag and drop preview position on Firefox.
+- Fixed FullWidth Header button not scrolling to the correct location when primary navigation had a transparent background.
+- Fixed cases where Integration scripts where not working correctly in Visual Builder.
+	* core/functions.php
+	* core/ui/utils/frames.js
+	* images/icon-author.gif
+	* images/icon-boxes.gif
+	* images/icon-buttons.gif
+	* images/icon-tabs.gif
+	* images/icon-toggle.gif
+	* images/shortcodes-sprite.png
+	* includes/builder/compat/woocommerce.php
+	* includes/builder/feature/BlockEditorIntegration.php
+	* includes/builder/frontend-builder/assets/scripts/preboot.js
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/scripts/frontend-builder-scripts.js
+	* theme-compat/css/elegant-shortcodes.css
+
 version 2.19.1 ( updated 12-26-2018 )
 - Fixed unwanted z-index issue after module is animated.
 - Fixed a bug where Reset Advanced Styles action were not resetting Custom CSS fields.
