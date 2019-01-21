@@ -148,7 +148,7 @@
   line-height: 20px;
 }
 /* Circle Counter Module */
-.et-fb .et_pb_number_counter {
+.et-fb.et-db #et-boc .et_pb_number_counter {
   opacity: 1;
 }
 /* Fullwidth Gallery */
@@ -11090,7 +11090,6 @@
 .et-db #et-boc .et_pb_section_parallax .et_pb_parallax_css,
 .et-db #et-boc .et_pb_slides .et_parallax_bg.et_pb_parallax_css {
   background-attachment: fixed;
-  -webkit-transform: translate3d(0, 0, 0);
 }
 .et-db #et-boc body.et-bfb .et_pb_section_parallax .et_pb_parallax_css,
 .et-db #et-boc body.et-bfb .et_pb_slides .et_parallax_bg.et_pb_parallax_css {
